@@ -1,8 +1,8 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    kotlin("jvm")
-    id("org.jetbrains.compose")
+    kotlin("jvm") version libs.versions.kotlin
+    alias(libs.plugins.compose)
 }
 
 group = "gemini"
