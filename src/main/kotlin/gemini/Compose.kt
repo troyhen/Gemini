@@ -8,10 +8,11 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun Gemini(modifier: Modifier = Modifier, builder: GeminiScope.() -> Unit) {
-    val scope = remember { GeminiScope() }
     val stage = remember(builder) {
-        scope.run(builder)
-        scope.build()
+        GeminiScope().run {
+            builder()
+            build()
+        }
     }
     Canvas(modifier) {
         stage.run {
