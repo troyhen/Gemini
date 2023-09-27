@@ -5,11 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.rememberTextMeasurer
 
 @Composable
-fun Gemini(modifier: Modifier = Modifier, builder: GeminiScope.() -> Unit) {
+fun Gemini(modifier: Modifier = Modifier, builder: SceneScope.() -> Unit) {
+    val textMeasurer = rememberTextMeasurer()
     val stage = remember(builder) {
-        GeminiScope().run {
+        SceneScope(textMeasurer).run {
             builder()
             build()
         }

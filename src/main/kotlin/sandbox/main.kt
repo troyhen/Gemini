@@ -6,13 +6,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.singleWindowApplication
 import gemini.Gemini
 import gemini.background
+import gemini.frameRate
 
 fun main() = singleWindowApplication(title = "Gemini Sandbox") {
     Gemini(Modifier.fillMaxSize()) {
         background(Color.Black)
-        rectangle(0f, 0f, 20f, 20f, Color.Red) { time ->
+        rectangle(0f, 0f, 20f, 20f, Color.Red) { rect, time ->
             val offset = time.inWholeMilliseconds / 100f
-            orientation.location.move(offset, offset)
+            rect.orientation.location.move(offset, offset)
         }
+        frameRate(Color.White)
     }
 }
