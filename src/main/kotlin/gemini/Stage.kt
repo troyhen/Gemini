@@ -50,7 +50,7 @@ class Stage(val textMeasurer: TextMeasurer) : Scene() {
         drawContext.transform.transform(camera.matrix)
         toDraw?.fastForEach { thing ->
             thing.run {
-                draw()
+                orientAndDraw()
             }
         }
         frame++

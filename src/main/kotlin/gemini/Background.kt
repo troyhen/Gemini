@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 
 class Background(private val color: Color) : Thing() {
-    override fun DrawScope.draw() {
+    override fun DrawScope.orientAndDraw() {
         drawRect(color)
     }
 }

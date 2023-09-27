@@ -36,4 +36,8 @@ value class Location private constructor(private val data: FloatArray) {
         this.y = y
         this.z = z
     }
+
+    companion object {
+        val Zero = Location()
+    }
 }

@@ -1,5 +1,7 @@
 package sandbox
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import gemini.*
@@ -12,7 +14,7 @@ class MovingRectangle(
 ) : Thing(Orientation(location = Location(x, y), scale = Scale(width, height))) {
 
     override fun DrawScope.draw() {
-        drawRect(color, orientation.location.offset, orientation.scale.size)
+        drawRect(color, Offset.Zero, Size(1f, 1f))
     }
 }
 

@@ -11,13 +11,25 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.toSize
 import kotlin.time.TimeSource
 
-class FrameRate(private val color: Color) : Thing() {
+class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.SouthEast) : Thing() {
     private var lastMark: TimeSource.Monotonic.ValueTimeMark? = null
     private var frameRate by mutableStateOf(0f)
 
-    override fun DrawScope.draw() {
+    override fun DrawScope.orientAndDraw() {
         val layout = measureFrameRate() ?: return
-        val offset = Offset(size.width - layout.size.width / density, layout.size.height / density)
+        val textSize = layout.size.toSize() / density
+        val center = Offset((size.width - textSize.width) / 2, (size.height - textSize.height) / 2)
+        val offset = when (pivot) {
+            Pivot.NorthEast -> Offset(size.width - textSize.width, 0f)
+            Pivot.NorthWest -> Offset(0f, 0f)
+            Pivot.North -> Offset(center.x, 0f)
+            Pivot.West -> Offset(0f, center.y)
+            Pivot.Center -> center
+            Pivot.East -> Offset(size.width - textSize.width, center.y)
+            Pivot.SouthWest -> Offset(0f, size.height - textSize.height)
+            Pivot.South -> Offset(center.x, size.height - textSize.height)
+            Pivot.SouthEast -> Offset(size.width - textSize.width, size.height - textSize.height)
+        }
         drawRect(Color.Black, offset, layout.size.toSize() / density)
         drawText(layout, color, offset)
         val end = Stage.time.markNow()
