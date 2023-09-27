@@ -14,6 +14,8 @@ import kotlin.time.TimeSource
 
 class Stage(val textMeasurer: TextMeasurer) : Scene() {
     private var camera: Camera = Camera()
+    private var frame by mutableStateOf(0)
+    private var frameMark: TimeSource.Monotonic.ValueTimeMark? = null
     private var frameRate by mutableStateOf(0f)
     private var toAct: List<Actor>? = null
     private var toDraw: List<Thing>? = null
@@ -45,7 +47,6 @@ class Stage(val textMeasurer: TextMeasurer) : Scene() {
     }
 
     fun DrawScope.draw() {
-        val start = time.markNow()
         if (toDraw == null) synchronized(this) {
             toDraw = things.toList()
         }
@@ -55,8 +56,12 @@ class Stage(val textMeasurer: TextMeasurer) : Scene() {
                 draw()
             }
         }
+        frame++
         val end = time.markNow()
-        frameRate = (frameRate * 59 + 1e6f / (end - start).inWholeMicroseconds) / 60 // trigger recompose
+        frameMark?.let { start ->
+            frameRate = (frameRate * 59 + 1e6f / (end - start).inWholeMicroseconds) / 60 // trigger recompose
+        }
+        frameMark = end
     }
 
     fun measureFrameRate(): TextLayoutResult {
