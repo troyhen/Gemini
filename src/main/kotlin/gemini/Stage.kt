@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextMeasurer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -15,8 +14,6 @@ import kotlin.time.TimeSource
 class Stage(val textMeasurer: TextMeasurer) : Scene() {
     private var camera: Camera = Camera()
     private var frame by mutableStateOf(0)
-    private var frameMark: TimeSource.Monotonic.ValueTimeMark? = null
-    private var frameRate by mutableStateOf(0f)
     private var toAct: List<Actor>? = null
     private var toDraw: List<Thing>? = null
     private var thread: Thread? = null
@@ -57,16 +54,6 @@ class Stage(val textMeasurer: TextMeasurer) : Scene() {
             }
         }
         frame++
-        val end = time.markNow()
-        frameMark?.let { start ->
-            frameRate = (frameRate * 59 + 1e6f / (end - start).inWholeMicroseconds) / 60 // trigger recompose
-        }
-        frameMark = end
-    }
-
-    fun measureFrameRate(): TextLayoutResult {
-        val text = "%.1f f/s".format(frameRate)
-        return textMeasurer.measure(text)
     }
 
     private fun loop() {
@@ -109,6 +96,6 @@ class Stage(val textMeasurer: TextMeasurer) : Scene() {
     companion object {
         var instance: Stage? = null
             private set
-        private val time = TimeSource.Monotonic
+        val time = TimeSource.Monotonic
     }
 }
