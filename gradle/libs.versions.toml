@@ -3,6 +3,6 @@ compose = "1.5.2"
 kotlin = "1.9.10"
 
 [plugins]
-compose = {id = "org.jetbrains.compose", version.ref = "compose" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 
 [libraries]

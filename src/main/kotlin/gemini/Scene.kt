@@ -1,0 +1,4 @@
+package gemini
+
+interface Scene {
+}
