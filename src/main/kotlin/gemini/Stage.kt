@@ -29,7 +29,7 @@ class Stage(val textMeasurer: TextMeasurer) : Scene() {
             toAct = actors.toList()
         }
         toAct?.fastForEach { actor ->
-            actor(elapsed)
+            actor.act(elapsed)
         }
     }
 

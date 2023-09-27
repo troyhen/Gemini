@@ -16,12 +16,12 @@ class MovingRectangle(
     }
 }
 
-fun SceneScope.rectangle(x: Float, y: Float, width: Float, height: Float, color: Color, actor: (suspend (MovingRectangle, Duration) -> Unit)? = null) {
+fun SceneScope.rectangle(x: Float, y: Float, width: Float, height: Float, color: Color, act: (suspend (MovingRectangle, Duration) -> Unit)? = null) {
     val thing = MovingRectangle(x, y, width, height, color)
     add(thing)
-    actor?.let {
+    act?.let {
         add {
-            actor(thing, it)
+            act(thing, it)
         }
     }
 }

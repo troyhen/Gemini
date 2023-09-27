@@ -2,4 +2,6 @@ package gemini
 
 import kotlin.time.Duration
 
-typealias Actor = suspend (Duration) -> Unit
+fun interface Actor {
+    suspend fun act(elapsed: Duration)
+}
