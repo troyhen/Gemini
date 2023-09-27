@@ -1,22 +1,26 @@
 package gemini
 
 @JvmInline
-value class Angle(val value: Float = 0f)
+value class Angle(val degrees: Float = 0f) {
+    val radians: Float get() = degrees * DEGREES_TO_RADIANS
+}
 
 const val PI = Math.PI.toFloat()
+const val DEGREES_TO_RADIANS = PI / 180
+const val RADIANS_TO_DEGREES = 180 / PI
 
-val Double.degrees get() = Angle(toFloat() * PI / 180)
-val Float.degrees get() = Angle(this * PI / 180)
-val Int.degrees get() = Angle(this * PI / 180)
-val Long.degrees get() = Angle(this * PI / 180)
-val Double.radians get() = Angle(toFloat())
-val Float.radians get() = Angle(this)
-val Int.radians get() = Angle(toFloat())
-val Long.radians get() = Angle(toFloat())
+val Double.radians get() = Angle(toFloat() * RADIANS_TO_DEGREES)
+val Float.radians get() = Angle(this * RADIANS_TO_DEGREES)
+val Int.radians get() = Angle(this * RADIANS_TO_DEGREES)
+val Long.radians get() = Angle(this * RADIANS_TO_DEGREES)
+val Double.degrees get() = Angle(toFloat())
+val Float.degrees get() = Angle(this)
+val Int.degrees get() = Angle(toFloat())
+val Long.degrees get() = Angle(toFloat())
 
-operator fun Angle.minus(other: Angle): Angle = Angle(value - other.value)
-operator fun Angle.minus(radians: Float): Angle = Angle(value - radians)
-operator fun Angle.plus(other: Angle): Angle = Angle(value + other.value)
-operator fun Angle.plus(radians: Float): Angle = Angle(value + radians)
-operator fun Angle.times(other: Float): Angle = Angle(value * other)
-operator fun Angle.div(other: Float): Angle = Angle(value / other)
+operator fun Angle.minus(other: Angle): Angle = Angle(degrees - other.degrees)
+operator fun Angle.minus(radians: Float): Angle = Angle(degrees - radians)
+operator fun Angle.plus(other: Angle): Angle = Angle(degrees + other.degrees)
+operator fun Angle.plus(radians: Float): Angle = Angle(degrees + radians)
+operator fun Angle.times(other: Float): Angle = Angle(degrees * other)
+operator fun Angle.div(other: Float): Angle = Angle(degrees / other)
