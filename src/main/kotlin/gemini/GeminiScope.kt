@@ -9,6 +9,10 @@ class GeminiScope {
         things.add(block())
     }
 
+    fun add(thing: Thing) {
+        things.add(thing)
+    }
+
     fun build(): Stage {
         val stage = Stage()
         stage.set(camera)

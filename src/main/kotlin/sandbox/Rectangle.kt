@@ -22,7 +22,5 @@ class Rectangle(
 }
 
 fun GeminiScope.rectangle(x: Float, y: Float, width: Float, height: Float, color: Color, action: (Rectangle.(Duration) -> Unit)? = null) {
-    add {
-        Rectangle(x, y, width, height, color, action)
-    }
+    add(Rectangle(x, y, width, height, color, action))
 }

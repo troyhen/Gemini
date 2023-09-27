@@ -10,7 +10,5 @@ class Background(private val color: Color) : Thing() {
 }
 
 fun GeminiScope.background(color: Color) {
-    add {
-        Background(color)
-    }
+    add(Background(color))
 }
