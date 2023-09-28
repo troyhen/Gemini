@@ -11,8 +11,7 @@ import kotlin.concurrent.thread
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
-class Stage(val textMeasurer: TextMeasurer) : Scene() {
-    private var camera: Camera = Camera()
+class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
     private var frame by mutableStateOf(0)
     private var toAct: List<Actor>? = null
     private var toDraw: List<Thing>? = null
@@ -54,6 +53,13 @@ class Stage(val textMeasurer: TextMeasurer) : Scene() {
             }
         }
         frame++
+    }
+
+    fun load(scene: Scene) {
+        replaceAll(scene)
+        if (scene is SceneScope) {
+            set(scene.camera)
+        }
     }
 
     private fun loop() {

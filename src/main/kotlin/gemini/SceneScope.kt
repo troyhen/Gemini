@@ -1,15 +1,14 @@
 package gemini
 
-import androidx.compose.ui.text.TextMeasurer
-
-class SceneScope(val textMeasurer: TextMeasurer) : Scene() {
+open class SceneScope : Scene() {
 
     var camera = Camera()
+    var scene: Scene? = null
 
-    fun build(): Stage {
-        val stage = Stage(textMeasurer)
-        stage.set(camera)
-        stage.replaceAll(this)
-        return stage
+    fun build(): Scene {
+        scene?.let {
+            replaceAll(it)
+        }
+        return this
     }
 }

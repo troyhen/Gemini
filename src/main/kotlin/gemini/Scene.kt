@@ -1,5 +1,8 @@
 package gemini
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+
 open class Scene {
     val actors = mutableListOf<Actor>()
     val things = mutableListOf<Thing>()
@@ -20,5 +23,15 @@ open class Scene {
         things.clear()
         actors.addAll(scene.actors)
         things.addAll(scene.things)
+    }
+}
+
+@Composable
+fun rememberScene(vararg keys: Any, builder: SceneScope.() -> Unit): Scene {
+    return remember(keys) {
+        SceneScope().run {
+            builder()
+            build()
+        }
     }
 }
