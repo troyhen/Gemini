@@ -2,7 +2,6 @@ package sandbox
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.singleWindowApplication
 import gemini.*
@@ -26,7 +25,7 @@ fun main() = singleWindowApplication(title = "Gemini Sandbox") {
     }
     Gemini(Modifier.fillMaxSize()) {
         background(Color.Black)
-        sprite(symbol, Location(100f, 100f), Size(100f, 130f)) { time ->
+        sprite(symbol, 100f, 100f, 100f, 130f) { time ->
             val rotation = -time.inWholeMilliseconds / 100f
             position.rotation.rotate(rotation.degrees)
         }

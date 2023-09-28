@@ -45,6 +45,6 @@ class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.South
     }
 }
 
-fun SceneScope.frameRate(color: Color) {
-    add(FrameRate(color))
+fun SceneScope.frameRate(color: Color, pivot: Pivot = Pivot.SouthEast) {
+    add(FrameRate(color, pivot))
 }

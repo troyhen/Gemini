@@ -8,12 +8,10 @@ import io.kamel.core.getOrNull
 import kotlin.time.Duration
 
 class Sprite(
-    location: Location,
-    size: Size = Size.Zero,
-    pivot: Pivot = Pivot.Center,
+    position: Position,
     val painter: Painter? = null,
     val resource: Resource<Painter>? = null,
-) : Thing(Position(location, size, pivot = pivot)) {
+) : Thing(position) {
 
     override fun DrawScope.draw() {
         (painter ?: resource?.getOrNull())?.run {
@@ -22,8 +20,8 @@ class Sprite(
     }
 }
 
-fun SceneScope.sprite(painter: Painter, location: Location, size: Size = Size.Zero, pivot: Pivot = Pivot.Center, act: (suspend Sprite.(Duration) -> Unit)? = null) {
-    val thing = Sprite(location, size, pivot, painter)
+fun SceneScope.sprite(painter: Painter, x: Float, y: Float, width: Float, height: Float, pivot: Pivot = Pivot.Center, act: (suspend Sprite.(Duration) -> Unit)? = null) {
+    val thing = Sprite(Position(Location(x, y), Size(width, height), pivot = pivot), painter = painter)
     add(thing)
     act?.let {
         add { elapsed ->
@@ -32,8 +30,8 @@ fun SceneScope.sprite(painter: Painter, location: Location, size: Size = Size.Ze
     }
 }
 
-fun SceneScope.sprite(resource: Resource<Painter>, location: Location, size: Size = Size.Zero, pivot: Pivot = Pivot.Center, act: (suspend Sprite.(Duration) -> Unit)? = null) {
-    val thing = Sprite(location, size, pivot, resource = resource)
+fun SceneScope.sprite(resource: Resource<Painter>, x: Float, y: Float, width: Float, height: Float, pivot: Pivot = Pivot.Center, act: (suspend Sprite.(Duration) -> Unit)? = null) {
+    val thing = Sprite(Position(Location(x, y), Size(width, height), pivot = pivot), resource = resource)
     add(thing)
     act?.let {
         add { elapsed ->

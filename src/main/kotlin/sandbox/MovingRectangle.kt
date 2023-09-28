@@ -11,10 +11,9 @@ import gemini.Thing
 import kotlin.time.Duration
 
 class MovingRectangle(
-    x: Float, y: Float,
-    width: Float, height: Float,
+    position: Position,
     private val color: Color,
-) : Thing(Position(location = Location(x, y), size = Size(width, height))) {
+) : Thing(position) {
 
     override fun DrawScope.draw() {
         drawRect(color, Offset.Zero, position.size)
@@ -22,7 +21,7 @@ class MovingRectangle(
 }
 
 fun SceneScope.rectangle(x: Float, y: Float, width: Float, height: Float, color: Color, act: (suspend MovingRectangle.(Duration) -> Unit)? = null) {
-    val thing = MovingRectangle(x, y, width, height, color)
+    val thing = MovingRectangle(Position(location = Location(x, y), size = Size(width, height)), color)
     add(thing)
     act?.let {
         add {
