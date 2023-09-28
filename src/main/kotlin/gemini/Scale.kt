@@ -1,7 +1,5 @@
 package gemini
 
-import androidx.compose.ui.geometry.Size
-
 @JvmInline
 value class Scale private constructor(private val data: FloatArray) {
     var x: Float
@@ -20,9 +18,7 @@ value class Scale private constructor(private val data: FloatArray) {
             data[2] = value
         }
 
-    val size: Size get() = Size(x, y)
-
-    constructor() : this(FloatArray(3))
+    constructor() : this(floatArrayOf(1f, 1f, 1f))
     constructor(x: Float, y: Float, z: Float = ONE.z) : this(floatArrayOf(x, y, z))
 
     fun scale(x: Float, y: Float, z: Float = ONE.z) {

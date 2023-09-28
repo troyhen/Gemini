@@ -1,6 +1,7 @@
 package gemini
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Matrix
 
 enum class Pivot(val offset: Offset) {
@@ -9,8 +10,9 @@ enum class Pivot(val offset: Offset) {
     SouthWest(Offset(0f, 1f)), South(Offset(.5f, 1f)), SouthEast(Offset(1f, 1f)),
 }
 
-data class Orientation(
+data class Position(
     val location: Location = Location(),
+    val size: Size = Size(1f, 1f),
     val rotation: Rotation = Rotation(),
     val scale: Scale = Scale(),
     val pivot: Pivot = Pivot.Center,
@@ -24,6 +26,6 @@ data class Orientation(
         if (rotation.y.degrees != 0f) rotateY(rotation.y.degrees)
         if (rotation.r.degrees != 0f) rotateZ(rotation.r.degrees)
         if (scale != Scale.ONE) scale(scale.x, scale.y, scale.z)
-        if (pivot != Pivot.NorthWest) translate(-pivot.offset.x, -pivot.offset.y)
+        if (pivot != Pivot.NorthWest) translate(-pivot.offset.x * size.width, -pivot.offset.y * size.height)
     }
 }

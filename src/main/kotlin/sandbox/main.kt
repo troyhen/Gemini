@@ -2,20 +2,38 @@ package sandbox
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.singleWindowApplication
-import gemini.Gemini
-import gemini.background
-import gemini.degrees
-import gemini.frameRate
+import gemini.*
+import io.kamel.image.asyncPainterResource
 
 fun main() = singleWindowApplication(title = "Gemini Sandbox") {
+//    val symbol = remember {
+//        javaClass.getResource("/gemini_symbol.svg").also {
+//            println("1 $it")
+//        }
+//    }?.let {
+//        asyncPainterResource(it).also {
+//            println("2 $it")
+//        }
+//    }
+//    val symbol = asyncPainterResource("https://en.wikipedia.org/wiki/Gemini_%28astrology%29#/media/File:Gemini_symbol_(bold).svg").also {
+//        println("2 $it")
+//    }
+    val symbol = asyncPainterResource("https://sarahscoop.com/wp-content/uploads/2023/03/gemini-ascendant-man-1.jpg").also {
+        println("2 $it")
+    }
     Gemini(Modifier.fillMaxSize()) {
         background(Color.Black)
-        rectangle(10f, 10f, 100f, 20f, Color.Red) { rect, time ->
+        sprite(symbol, Location(100f, 100f), Size(100f, 130f)) { time ->
+            val rotation = -time.inWholeMilliseconds / 100f
+            position.rotation.rotate(rotation.degrees)
+        }
+        rectangle(10f, 10f, 100f, 20f, Color.Red) { time ->
             val offset = time.inWholeMilliseconds / 100f
-            rect.orientation.location.move(offset, offset)
-            rect.orientation.rotation.rotate(offset.degrees)
+            position.location.move(offset, offset)
+            position.rotation.rotate(offset.degrees)
         }
         frameRate(Color.White)
     }
