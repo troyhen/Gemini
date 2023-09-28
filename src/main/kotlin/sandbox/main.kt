@@ -8,18 +8,6 @@ import gemini.*
 import io.kamel.image.asyncPainterResource
 
 fun main() = singleWindowApplication(title = "Gemini Sandbox") {
-//    val symbol = remember {
-//        javaClass.getResource("/gemini_symbol.svg").also {
-//            println("1 $it")
-//        }
-//    }?.let {
-//        asyncPainterResource(it).also {
-//            println("2 $it")
-//        }
-//    }
-//    val symbol = asyncPainterResource("https://en.wikipedia.org/wiki/Gemini_%28astrology%29#/media/File:Gemini_symbol_(bold).svg").also {
-//        println("2 $it")
-//    }
     val symbol = asyncPainterResource("https://sarahscoop.com/wp-content/uploads/2023/03/gemini-ascendant-man-1.jpg").also {
         println("2 $it")
     }
