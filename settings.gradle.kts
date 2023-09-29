@@ -1,3 +1,5 @@
+include("examples", "gemini")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()

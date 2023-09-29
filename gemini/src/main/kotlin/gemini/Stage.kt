@@ -7,7 +7,6 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextMeasurer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlin.concurrent.thread
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
