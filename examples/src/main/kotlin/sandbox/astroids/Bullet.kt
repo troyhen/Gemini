@@ -14,13 +14,13 @@ class Bullet(position: Position, speed: Velocity) : MovingThing(position, speed)
     private val startTime: TimeSource.Monotonic.ValueTimeMark = Stage.time.markNow()
 
     override suspend fun act(elapsed: Duration) {
-        if (Stage.time.markNow() - startTime > LIFE_SPAN) Stage.instance?.remove(this)
         super.act(elapsed)
         wrap()
+        if (Stage.time.markNow() - startTime > LIFE_SPAN) Stage.instance?.remove(this)
     }
 
     override fun DrawScope.draw() {
-        drawOval(Color.Gray, position.location.offset, position.size)
+        drawOval(Color.Red, position.location.offset, position.size)
     }
 
     override fun collidesWith(collider: Collider): Boolean {
