@@ -27,18 +27,16 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
     var mouse by remember { mutableStateOf(Offset(0f, 0f)) }
     var pressed by remember { mutableStateOf(false) }
     BoxWithConstraints(modifier.fillMaxSize()) {
-        val spaceSize = Size(maxWidth.value, maxHeight.value) // 2f
-        val spaceSize2 = spaceSize / 2f // todo why do I need this?
-        println("spaceSize $spaceSize")
+        val screenSize = Size(maxWidth.value, maxHeight.value)
+        val spaceSize = screenSize / 2f // todo why do I need this?
+        println("spaceSize $screenSize")
         val game = rememberScene(iteration) {
             background(Color.Black)
             ship(spaceSize) { time ->
-                act(spaceSize, time, false, false)
+                act(spaceSize, time, false, true)
             }
             repeat(4) {
-                asteroid(spaceSize2) { time ->
-                    act(spaceSize2, time)
-                }
+                asteroid(spaceSize)
             }
         }
         Gemini(Modifier.fillMaxSize().onPointerEvent(PointerEventType.Move) {

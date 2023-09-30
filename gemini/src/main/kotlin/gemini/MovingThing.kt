@@ -3,11 +3,13 @@ package gemini
 import androidx.compose.ui.geometry.Size
 import kotlin.time.Duration
 
-open class MovingThing(position: Position = Position()) : Thing(position) {
-    val velocity: Velocity = Velocity()
-    val spin: Angle = Angle()
+open class MovingThing(
+    position: Position = Position(),
+    val velocity: Velocity = Velocity(),
+    val spin: Angle = Angle(),
+) : Thing(position), Actor {
 
-    fun act(elapsed: Duration) {
+    override suspend fun act(elapsed: Duration) {
         val seconds = elapsed.inSeconds
         position.location.x += velocity.x * seconds
         position.location.y += velocity.y * seconds

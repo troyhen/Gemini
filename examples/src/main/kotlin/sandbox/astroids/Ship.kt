@@ -40,7 +40,7 @@ class Ship(position: Position) : MovingThing(position), Collider {
         if (fire) {
             val timeSinceLastFire = lastFire?.elapsedNow() ?: COOL_DOWN_TIME
             if (timeSinceLastFire >= COOL_DOWN_TIME) {
-//                fireBullet()
+                fireBullet()
             }
             lastFire = Stage.time.markNow()
         }
@@ -57,21 +57,31 @@ class Ship(position: Position) : MovingThing(position), Collider {
         drawPath(path, Color.Cyan)
     }
 
+    private fun fireBullet() {
+        Stage.instance?.run {
+            val end = position.size.width / 2
+            val dx = cos(position.rotation.r.radians)
+            val dy = sin(position.rotation.r.radians)
+            val tip = Location(end * dx, end * dy, 0f)
+            val location = position.location + tip
+            val speed = Velocity(10 * dx, 10 * dy, 0f)
+            bullet(location, velocity + speed)
+        }
+    }
+
     companion object {
         private val COOL_DOWN_TIME = 2.seconds
     }
 }
 
-fun SceneScope.ship(spaceSize: Size, act: (suspend Ship.(Duration) -> Unit)? = null): Ship {
+fun SceneScope.ship(spaceSize: Size, act: suspend Ship.(Duration) -> Unit): Ship {
     val location = Location(spaceSize.width / 2, spaceSize.height / 2)
     val length = min(spaceSize.width, spaceSize.height) / 20
     val width = length / 2
     return Ship(Position(location, Size(length, width))).also { thing ->
         add(thing)
-        act?.let {
-            add {
-                act(thing, it)
-            }
+        add {
+            act(thing, it)
         }
     }
 }

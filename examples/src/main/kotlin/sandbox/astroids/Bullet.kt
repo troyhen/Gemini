@@ -5,20 +5,16 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import gemini.*
-import kotlin.math.cos
-import kotlin.math.min
-import kotlin.math.sin
-import kotlin.random.Random
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
 
-class Asteroid(position: Position, speed: Float) : MovingThing(position), Collider {
+class Bullet(position: Position, speed: Velocity) : MovingThing(position, speed), Collider {
 
-    init {
-        val direction = Random.nextFloat() * PI2
-        velocity.set(speed * cos(direction), speed * sin(direction))
-    }
+    private val startTime: TimeSource.Monotonic.ValueTimeMark = Stage.time.markNow()
 
-    suspend fun act(spaceSize: Size, elapsed: Duration) {
+    fun act(spaceSize: Size, elapsed: Duration) {
+        if (Stage.time.markNow() - startTime > LIFE_SPAN) Stage.instance?.remove(this)
         act(elapsed)
         wrap(spaceSize)
     }
@@ -33,14 +29,14 @@ class Asteroid(position: Position, speed: Float) : MovingThing(position), Collid
             else -> false
         }
     }
+
+    companion object {
+        private val LIFE_SPAN = 5.seconds
+    }
 }
 
-fun SceneScope.asteroid(spaceSize: Size, size: Int = 4): Asteroid {
-    val ratio = min(spaceSize.width, spaceSize.width) / 20
-    val diameter = ratio * size
-    val speed = ratio * .75f
-    val location = Location(Random.nextFloat() * spaceSize.width, Random.nextFloat() * spaceSize.height)
-    return Asteroid(Position(location, Size(diameter, diameter)), speed).also { thing ->
+fun SceneScope.bullet(location: Location, speed: Velocity, size: Size = Size(3f, 3f)): Bullet {
+    return Bullet(Position(location, size), speed).also { thing ->
         add(thing)
         add {
             thing.act(Stage.screenSize, it)
