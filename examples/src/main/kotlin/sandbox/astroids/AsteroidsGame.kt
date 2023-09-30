@@ -27,7 +27,7 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
     var mouse by remember { mutableStateOf(Offset(0f, 0f)) }
     var pressed by remember { mutableStateOf(false) }
     BoxWithConstraints(modifier.fillMaxSize()) {
-        val spaceSize = Size(maxWidth.value, maxHeight.value) // 2f
+        val spaceSize = Size(maxWidth.value, maxHeight.value)
         val spaceSize2 = spaceSize / 2f // todo why do I need this?
         val game = rememberScene(iteration) {
             background(Color.Black)

@@ -9,6 +9,9 @@ open class Scene {
     @Synchronized
     open fun add(thing: Thing) {
         things.add(thing)
+        if (thing is Actor) {
+            actors.add(thing)
+        }
     }
 
     @Synchronized

@@ -47,6 +47,18 @@ class Ship(position: Position) : MovingThing(position), Collider {
         drawPath(path, Color.Cyan)
     }
 
+    private fun fireBullet() {
+        Stage.instance?.run {
+            val end = position.size.width / 2
+            val dx = cos(position.rotation.r.radians)
+            val dy = sin(position.rotation.r.radians)
+            val tip = Location(end * dx, end * dy, 0f)
+            val location = position.location + tip
+            val speed = Velocity(10 * dx, 10 * dy, 0f)
+            bullet(location, velocity + speed)
+        }
+    }
+
     fun update(accelerate: Boolean, fire: Boolean) {
         if (accelerate) {
             velocity.x += .1f * cos(position.rotation.r.radians)
@@ -55,7 +67,7 @@ class Ship(position: Position) : MovingThing(position), Collider {
         if (fire) {
             val timeSinceLastFire = lastFire?.elapsedNow() ?: COOL_DOWN_TIME
             if (timeSinceLastFire >= COOL_DOWN_TIME) {
-//                fireBullet()
+                fireBullet()
             }
             lastFire = Stage.time.markNow()
         }

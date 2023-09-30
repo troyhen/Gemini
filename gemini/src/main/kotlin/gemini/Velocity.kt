@@ -41,3 +41,8 @@ value class Velocity private constructor(private val data: FloatArray) {
         val Zero = Velocity()
     }
 }
+
+operator fun Velocity.div(scale: Float) = Velocity(x / scale, y / scale, z / scale)
+operator fun Velocity.minus(velocity: Velocity) = Velocity(x - velocity.x, y - velocity.y, z - velocity.z)
+operator fun Velocity.plus(velocity: Velocity) = Velocity(x + velocity.x, y + velocity.y, z + velocity.z)
+operator fun Velocity.times(scale: Float) = Velocity(x * scale, y * scale, z * scale)

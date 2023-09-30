@@ -13,6 +13,8 @@ import kotlin.time.Duration
 import kotlin.time.TimeSource
 
 class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
+    var screenSize: Size = Size.Zero
+        private set
     private var frame by mutableStateOf(0)
     var screenSize: Size = Size.Zero
         private set
@@ -43,6 +45,7 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
     override fun add(thing: Thing) {
         toAct = null
         toDraw = null
+        if (thing is Actor) toAct = null
         super.add(thing)
     }
 
