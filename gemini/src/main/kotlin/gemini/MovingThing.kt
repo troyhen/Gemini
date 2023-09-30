@@ -7,7 +7,7 @@ open class MovingThing(
     position: Position = Position(),
     val velocity: Velocity = Velocity(),
     val spin: Angle = Angle(),
-) : Thing(position), Actor {
+) : Thing(position) {
 
     override suspend fun act(elapsed: Duration) {
         val seconds = elapsed.inSeconds

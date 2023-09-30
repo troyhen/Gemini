@@ -13,10 +13,10 @@ class Bullet(position: Position, speed: Velocity) : MovingThing(position, speed)
 
     private val startTime: TimeSource.Monotonic.ValueTimeMark = Stage.time.markNow()
 
-    fun act(spaceSize: Size, elapsed: Duration) {
+    override suspend fun act(elapsed: Duration) {
         if (Stage.time.markNow() - startTime > LIFE_SPAN) Stage.instance?.remove(this)
-        act(elapsed)
-        wrap(spaceSize)
+        super.act(elapsed)
+        wrap()
     }
 
     override fun DrawScope.draw() {
@@ -38,8 +38,5 @@ class Bullet(position: Position, speed: Velocity) : MovingThing(position, speed)
 fun SceneScope.bullet(location: Location, speed: Velocity, size: Size = Size(3f, 3f)): Bullet {
     return Bullet(Position(location, size), speed).also { thing ->
         add(thing)
-        add {
-            thing.act(Stage.screenSize, it)
-        }
     }
 }

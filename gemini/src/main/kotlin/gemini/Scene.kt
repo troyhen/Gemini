@@ -9,9 +9,11 @@ open class Scene {
     @Synchronized
     open fun add(thing: Thing) {
         things.add(thing)
-        if (thing is Actor) {
-            actors.add(thing)
-        }
+    }
+
+    @Synchronized
+    open fun remove(thing: Thing) {
+        things.remove(thing)
     }
 
     @Synchronized
