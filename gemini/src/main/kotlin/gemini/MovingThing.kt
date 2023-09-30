@@ -6,7 +6,7 @@ import kotlin.time.Duration
 open class MovingThing(
     position: Position = Position(),
     val velocity: Velocity = Velocity(),
-    val spin: Angle = Angle(),
+    var spin: Angle = Angle(),
 ) : Thing(position) {
 
     override suspend fun act(elapsed: Duration) {

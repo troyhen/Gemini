@@ -13,7 +13,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
-class Ship(position: Position) : MovingThing(position), Collider {
+class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingThing(position), Collider {
 
     private var lastFire: TimeSource.Monotonic.ValueTimeMark? = null
 
@@ -34,6 +34,7 @@ class Ship(position: Position) : MovingThing(position), Collider {
         val friction = -seconds * .001f
         velocity.x += velocity.x * friction
         velocity.y += velocity.y * friction
+        onUpdate()
     }
 
     override fun collidesWith(collider: Collider): Boolean {
@@ -59,10 +60,20 @@ class Ship(position: Position) : MovingThing(position), Collider {
         }
     }
 
-    fun update(accelerate: Boolean, fire: Boolean) {
-        if (accelerate) {
-            velocity.x += .1f * cos(position.rotation.r.radians)
-            velocity.y += .1f * sin(position.rotation.r.radians)
+    fun update(forward: Boolean, left: Boolean, right: Boolean, backward: Boolean, fire: Boolean) {
+        if (forward) {
+            velocity.x += .2f * cos(position.rotation.r.radians)
+            velocity.y += .2f * sin(position.rotation.r.radians)
+        }
+        if (backward) {
+            velocity.x -= .1f * cos(position.rotation.r.radians)
+            velocity.y -= .1f * sin(position.rotation.r.radians)
+        }
+        if (left) {
+            spin -= .2f
+        }
+        if (right) {
+            spin += .2f
         }
         if (fire) {
             val timeSinceLastFire = lastFire?.elapsedNow() ?: COOL_DOWN_TIME
@@ -78,11 +89,11 @@ class Ship(position: Position) : MovingThing(position), Collider {
     }
 }
 
-fun SceneScope.ship(spaceSize: Size): Ship {
+fun SceneScope.ship(spaceSize: Size, onUpdate: Ship.() -> Unit): Ship {
     val location = Location(spaceSize.width / 2, spaceSize.height / 2)
     val length = min(spaceSize.width, spaceSize.height) / 20
     val width = length / 2
-    return Ship(Position(location, Size(length, width))).also { thing ->
+    return Ship(Position(location, Size(length, width)), onUpdate).also { thing ->
         add(thing)
     }
 }
