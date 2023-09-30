@@ -17,6 +17,7 @@ import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.window.singleWindowApplication
 import gemini.Gemini
 import gemini.background
+import gemini.frameRate
 import gemini.rememberScene
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -35,6 +36,7 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
         val spaceSize2 = spaceSize / 2f // todo why do I need this?
         val game = rememberScene(iteration) {
             background(Color.Black)
+            frameRate(Color.White)
             ship(spaceSize) {
                 update(Key.DirectionUp in keys, Key.DirectionLeft in keys, Key.DirectionRight in keys, Key.DirectionDown in keys, Key.Spacebar in keys || 0 in pressed)
             }
@@ -52,14 +54,14 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
                     KeyEventType.KeyUp -> keys.remove(it.key)
                     else -> Unit
                 }
-                println(keys)
+//                println(keys)
                 true
             }.onPointerEvent(PointerEventType.Press) {
                 if (it.buttons.isPrimaryPressed) pressed.add(0)
-                println(pressed)
+//                println(pressed)
             }.onPointerEvent(PointerEventType.Release) {
                 if (!it.buttons.isPrimaryPressed) pressed.remove(0)
-                println(pressed)
+//                println(pressed)
             }) {
             scene = game
         }

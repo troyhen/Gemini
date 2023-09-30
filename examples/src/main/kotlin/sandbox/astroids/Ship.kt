@@ -31,9 +31,10 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
         super.act(elapsed)
         wrap()
         val seconds = elapsed.inSeconds
-        val friction = -seconds * .001f
+        val friction = -seconds * .1f
         velocity.x += velocity.x * friction
         velocity.y += velocity.y * friction
+        spin += spin * friction
         onUpdate()
     }
 
@@ -54,9 +55,8 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
             val dx = cos(position.rotation.r.radians)
             val dy = sin(position.rotation.r.radians)
             val tip = Location(end * dx, end * dy, 0f)
-            val location = position.location + tip
-            val speed = Velocity(10 * dx, 10 * dy, 0f)
-            bullet(location, velocity + speed)
+            val speed = Velocity(30 * dx, 30 * dy, 0f)
+            bullet(position.location + tip, velocity + speed)
         }
     }
 
