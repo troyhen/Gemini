@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import gemini.*
 import kotlin.math.cos
-import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sin
 import kotlin.random.Random
 import kotlin.time.Duration
@@ -20,10 +20,7 @@ class Asteroid(position: Position, speed: Float) : MovingThing(position), Collid
 
     fun act(spaceSize: Size, elapsed: Duration) {
         act(elapsed)
-        if (position.location.x < 0) position.location.x += spaceSize.width
-        if (position.location.y < 0) position.location.y += spaceSize.height
-        if (position.location.x >= spaceSize.width) position.location.x -= spaceSize.width
-        if (position.location.y >= spaceSize.height) position.location.y -= spaceSize.height
+        wrap(spaceSize)
     }
 
     override fun DrawScope.draw() {
@@ -36,21 +33,19 @@ class Asteroid(position: Position, speed: Float) : MovingThing(position), Collid
             else -> false
         }
     }
-
-    companion object {
-        const val PI2 = PI * 2
-    }
 }
 
-fun SceneScope.asteroid(spaceSize: Size, size: Int = 4, act: (suspend Asteroid.(Duration) -> Unit)? = null) {
-    val diameter = max(spaceSize.width, spaceSize.width) / 20 * size
-    val speed = diameter / 2
+fun SceneScope.asteroid(spaceSize: Size, size: Int = 4, act: (suspend Asteroid.(Duration) -> Unit)? = null): Asteroid {
+    val ratio = min(spaceSize.width, spaceSize.width) / 20
+    val diameter = ratio * size
+    val speed = ratio * .75f
     val location = Location(Random.nextFloat() * spaceSize.width, Random.nextFloat() * spaceSize.height)
-    val thing = Asteroid(Position(location, Size(diameter, diameter)), speed)
-    add(thing)
-    act?.let {
-        add {
-            act(thing, it)
+    return Asteroid(Position(location, Size(diameter, diameter)), speed).also { thing ->
+        add(thing)
+        act?.let {
+            add {
+                act(thing, it)
+            }
         }
     }
 }

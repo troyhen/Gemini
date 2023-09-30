@@ -6,6 +6,7 @@ value class Angle(val degrees: Float = 0f) {
 }
 
 const val PI = Math.PI.toFloat()
+const val PI2 = PI * 2
 const val DEGREES_TO_RADIANS = PI / 180
 const val RADIANS_TO_DEGREES = 180 / PI
 

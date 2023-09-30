@@ -14,4 +14,4 @@ inline fun <E> List<E>.fastForEach(block: (E) -> Unit) {
     }
 }
 
-val Duration.inSeconds: Float get() = inWholeMicroseconds / 1e-6f
+val Duration.inSeconds: Float get() = inWholeMicroseconds * 1e-6f

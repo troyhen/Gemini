@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import gemini.*
 import kotlin.math.cos
-import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sin
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -20,18 +20,15 @@ class Ship(position: Position) : MovingThing(position), Collider {
     private val path: Path by lazy {
         Path().apply {
             moveTo(position.size.width / 2, 0f)
-            lineTo(0f, position.size.height / 2)
+            lineTo(-position.size.width / 2, position.size.height / 2)
             lineTo(-position.size.width / 4, 0f)
-            lineTo(0f, -position.size.height / 2)
+            lineTo(-position.size.width / 2, -position.size.height / 2)
         }
     }
 
     fun act(spaceSize: Size, elapsed: Duration, accelerate: Boolean, fire: Boolean) {
         act(elapsed)
-        if (position.location.x < 0) position.location.x += spaceSize.width
-        if (position.location.y < 0) position.location.y += spaceSize.height
-        if (position.location.x >= spaceSize.width) position.location.x -= spaceSize.width
-        if (position.location.y >= spaceSize.height) position.location.y -= spaceSize.height
+        wrap(spaceSize)
         val seconds = elapsed.inSeconds
         val friction = -seconds * .001f
         velocity.x += velocity.x * friction
@@ -57,7 +54,7 @@ class Ship(position: Position) : MovingThing(position), Collider {
     }
 
     override fun DrawScope.draw() {
-        drawPath(path, Color.White)
+        drawPath(path, Color.Cyan)
     }
 
     companion object {
@@ -65,15 +62,16 @@ class Ship(position: Position) : MovingThing(position), Collider {
     }
 }
 
-fun SceneScope.ship(spaceSize: Size, act: (suspend Ship.(Duration) -> Unit)? = null) {
+fun SceneScope.ship(spaceSize: Size, act: (suspend Ship.(Duration) -> Unit)? = null): Ship {
     val location = Location(spaceSize.width / 2, spaceSize.height / 2)
-    val length = max(spaceSize.width, spaceSize.height) / 30
-    val width = length / 3
-    val thing = Ship(Position(location, Size(length, width)))
-    add(thing)
-    act?.let {
-        add {
-            act(thing, it)
+    val length = min(spaceSize.width, spaceSize.height) / 20
+    val width = length / 2
+    return Ship(Position(location, Size(length, width))).also { thing ->
+        add(thing)
+        act?.let {
+            add {
+                act(thing, it)
+            }
         }
     }
 }
