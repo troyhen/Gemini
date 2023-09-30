@@ -7,14 +7,14 @@ open class MovingThing(position: Position = Position()) : Thing(position) {
     val velocity: Velocity = Velocity()
     val spin: Angle = Angle()
 
-    fun act(elapsed: Duration) {
+    override suspend fun act(elapsed: Duration) {
         val seconds = elapsed.inSeconds
         position.location.x += velocity.x * seconds
         position.location.y += velocity.y * seconds
         position.rotation.r += spin * seconds
     }
 
-    fun bounce(spaceSize: Size) {
+    fun bounce(spaceSize: Size = Stage.screenSize) {
         if (position.location.x < 0) {
             position.location.x = -position.location.x
             velocity.x = -velocity.x
@@ -33,7 +33,7 @@ open class MovingThing(position: Position = Position()) : Thing(position) {
         }
     }
 
-    fun wrap(spaceSize: Size) {
+    fun wrap(spaceSize: Size = Stage.screenSize) {
         if (position.location.x > spaceSize.width * 2 || position.location.x < -spaceSize.width) position.location.x %= spaceSize.width
         if (position.location.y > spaceSize.height * 2 || position.location.y < -spaceSize.height) position.location.y %= spaceSize.height
         if (position.location.x < 0) position.location.x += spaceSize.width

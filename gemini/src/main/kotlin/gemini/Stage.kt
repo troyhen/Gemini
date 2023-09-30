@@ -3,6 +3,7 @@ package gemini
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextMeasurer
 import kotlinx.coroutines.delay
@@ -13,7 +14,9 @@ import kotlin.time.TimeSource
 
 class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
     private var frame by mutableStateOf(0)
-    private var toAct: List<Actor>? = null
+    var screenSize: Size = Size.Zero
+        private set
+    private var toAct: List<Thing>? = null
     private var toDraw: List<Thing>? = null
     private var thread: Thread? = null
 
@@ -24,35 +27,42 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
     }
 
     private suspend fun act(elapsed: Duration) {
-        if (toAct == null) synchronized(this) {
-            toAct = actors.toList()
-        }
-        toAct?.fastForEach { actor ->
+        actors().fastForEach { actor ->
             actor.act(elapsed)
         }
     }
 
-    override fun add(actor: Actor) {
-        toAct = null
-        super.add(actor)
+    private fun actors(): List<Thing> {
+        return toAct ?: let {
+            things.toList().also {
+                toAct = it
+            }
+        }
     }
 
     override fun add(thing: Thing) {
+        toAct = null
         toDraw = null
         super.add(thing)
     }
 
     fun DrawScope.draw() {
-        if (toDraw == null) synchronized(this) {
-            toDraw = things.toList()
-        }
+        screenSize = size
         drawContext.transform.transform(camera.matrix)
-        toDraw?.fastForEach { thing ->
+        drawables().fastForEach { thing ->
             thing.run {
                 orientAndDraw()
             }
         }
-        frame++
+        frame++ // triggers recompose
+    }
+
+    private fun drawables(): List<Thing> {
+        return toDraw ?: let {
+            things.toList().also {
+                toDraw = it
+            }
+        }
     }
 
     fun load(scene: Scene) {
@@ -73,6 +83,12 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
                 last = now
             }
         }
+    }
+
+    fun remove(thing: Thing) {
+        toAct = null
+        toDraw = null
+        things.remove(thing)
     }
 
     override fun replaceAll(scene: Scene) {
@@ -102,6 +118,7 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
     companion object {
         var instance: Stage? = null
             private set
+        val screenSize: Size get() = instance?.screenSize ?: Size.Zero
         val time = TimeSource.Monotonic
     }
 }

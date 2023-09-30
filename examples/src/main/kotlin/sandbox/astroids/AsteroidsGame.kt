@@ -29,16 +29,11 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
     BoxWithConstraints(modifier.fillMaxSize()) {
         val spaceSize = Size(maxWidth.value, maxHeight.value) // 2f
         val spaceSize2 = spaceSize / 2f // todo why do I need this?
-        println("spaceSize $spaceSize")
         val game = rememberScene(iteration) {
             background(Color.Black)
-            ship(spaceSize) { time ->
-                act(spaceSize, time, false, false)
-            }
+            ship(spaceSize)
             repeat(4) {
-                asteroid(spaceSize2) { time ->
-                    act(spaceSize2, time)
-                }
+                asteroid(spaceSize2)
             }
         }
         Gemini(Modifier.fillMaxSize().onPointerEvent(PointerEventType.Move) {
