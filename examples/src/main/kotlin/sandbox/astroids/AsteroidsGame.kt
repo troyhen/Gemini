@@ -32,16 +32,15 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
     val keys = remember { mutableSetOf<Key>() }
     val pressed = remember { mutableSetOf<Int>() }
     BoxWithConstraints(modifier.fillMaxSize()) {
-        val spaceSize = Size(maxWidth.value, maxHeight.value)
-        val spaceSize2 = spaceSize / 2f // todo why do I need this?
+        val screenSize = Size(maxWidth.value, maxHeight.value)
         val game = rememberScene(iteration) {
             background(Color.Black)
             frameRate(Color.White)
-            ship(spaceSize) {
-                update(Key.DirectionUp in keys, Key.DirectionLeft in keys, Key.DirectionRight in keys, Key.DirectionDown in keys, Key.Spacebar in keys || 0 in pressed)
+            ship(screenSize) {
+                input(Key.DirectionUp in keys, Key.DirectionLeft in keys, Key.DirectionRight in keys, Key.DirectionDown in keys, Key.Spacebar in keys || 0 in pressed)
             }
             repeat(4) {
-                asteroid(spaceSize2)
+                asteroid(screenSize)
             }
         }
         val requester = remember { FocusRequester() }

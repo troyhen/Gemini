@@ -1,5 +1,6 @@
 package sandbox.astroids
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -27,7 +28,7 @@ class Asteroid(
     }
 
     override fun DrawScope.draw() {
-        drawOval(Color.Gray, position.location.offset, position.size)
+        drawOval(Color.Gray, Offset.Zero, position.size)
     }
 
     override fun collidesWith(collider: Collider): Boolean {
@@ -38,11 +39,11 @@ class Asteroid(
     }
 }
 
-fun SceneScope.asteroid(spaceSize: Size, size: Int = 4): Asteroid {
-    val ratio = min(spaceSize.width, spaceSize.width) / 20
+fun SceneScope.asteroid(screenSize: Size, size: Int = 4): Asteroid {
+    val ratio = min(screenSize.width, screenSize.height) / 30
     val diameter = ratio * size
-    val speed = ratio * .75f
-    val location = Location(Random.nextFloat() * spaceSize.width, Random.nextFloat() * spaceSize.height)
+    val speed = ratio
+    val location = Location(Random.nextFloat() * screenSize.width, Random.nextFloat() * screenSize.height)
     return Asteroid(Position(location, Size(diameter, diameter)), speed).also {
         add(it)
     }

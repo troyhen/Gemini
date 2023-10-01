@@ -1,5 +1,6 @@
 package sandbox.astroids
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -20,7 +21,7 @@ class Bullet(position: Position, speed: Velocity) : MovingThing(position, speed)
     }
 
     override fun DrawScope.draw() {
-        drawOval(Color.Red, position.location.offset, position.size)
+        drawOval(Color.Red, Offset.Zero, position.size)
     }
 
     override fun collidesWith(collider: Collider): Boolean {
@@ -31,7 +32,7 @@ class Bullet(position: Position, speed: Velocity) : MovingThing(position, speed)
     }
 
     companion object {
-        private val LIFE_SPAN = 5.seconds
+        private val LIFE_SPAN = 6.seconds
     }
 }
 

@@ -18,16 +18,17 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
     private var lastFire: TimeSource.Monotonic.ValueTimeMark? = null
 
     private val path: Path by lazy {
+        val size = position.size
+        val center = size / 2f
         Path().apply {
-            moveTo(position.size.width / 2, 0f)
-            lineTo(-position.size.width / 2, position.size.height / 2)
-            lineTo(-position.size.width / 4, 0f)
-            lineTo(-position.size.width / 2, -position.size.height / 2)
+            moveTo(size.width, center.height)
+            lineTo(0f, size.height)
+            lineTo(size.width / 4, center.height)
+            lineTo(0f, 0f)
         }
     }
 
     override suspend fun act(elapsed: Duration) {
-        super.act(elapsed)
         super.act(elapsed)
         wrap()
         val seconds = elapsed.inSeconds
@@ -55,37 +56,41 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
             val dx = cos(position.rotation.r.radians)
             val dy = sin(position.rotation.r.radians)
             val tip = Location(end * dx, end * dy, 0f)
-            val speed = Velocity(30 * dx, 30 * dy, 0f)
+            val speed = Velocity(BULLET_SPEED * dx, BULLET_SPEED * dy)
             bullet(position.location + tip, velocity + speed)
         }
     }
 
-    fun update(forward: Boolean, left: Boolean, right: Boolean, backward: Boolean, fire: Boolean) {
+    fun input(forward: Boolean, left: Boolean, right: Boolean, backward: Boolean, fire: Boolean) {
         if (forward) {
-            velocity.x += .2f * cos(position.rotation.r.radians)
-            velocity.y += .2f * sin(position.rotation.r.radians)
+            velocity.x += FORWARD_THRUST * cos(position.rotation.r.radians)
+            velocity.y += FORWARD_THRUST * sin(position.rotation.r.radians)
         }
         if (backward) {
-            velocity.x -= .1f * cos(position.rotation.r.radians)
-            velocity.y -= .1f * sin(position.rotation.r.radians)
+            velocity.x -= BACKWARD_THRUST * cos(position.rotation.r.radians)
+            velocity.y -= BACKWARD_THRUST * sin(position.rotation.r.radians)
         }
         if (left) {
-            spin -= .2f
+            spin -= SPIN_INCREMENT
         }
         if (right) {
-            spin += .2f
+            spin += SPIN_INCREMENT
         }
         if (fire) {
             val timeSinceLastFire = lastFire?.elapsedNow() ?: COOL_DOWN_TIME
             if (timeSinceLastFire >= COOL_DOWN_TIME) {
                 fireBullet()
+                lastFire = Stage.time.markNow()
             }
-            lastFire = Stage.time.markNow()
         }
     }
 
     companion object {
-        private val COOL_DOWN_TIME = 2.seconds
+        private val COOL_DOWN_TIME = 1.seconds
+        private const val FORWARD_THRUST = .4f
+        private const val BACKWARD_THRUST = FORWARD_THRUST / 2
+        private const val BULLET_SPEED = 60f
+        private const val SPIN_INCREMENT = .3f
     }
 }
 
