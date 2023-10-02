@@ -1,4 +1,4 @@
-package sandbox.astroids
+package examples.astroids
 
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -15,10 +15,10 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isPrimaryPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.window.singleWindowApplication
-import gemini.Gemini
-import gemini.background
-import gemini.frameRate
-import gemini.rememberScene
+import gemini.engine.Gemini
+import gemini.engine.rememberScene
+import gemini.foundation.background
+import gemini.foundation.frameRate
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

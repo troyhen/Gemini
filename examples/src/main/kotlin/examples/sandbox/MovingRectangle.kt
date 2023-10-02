@@ -1,13 +1,13 @@
-package sandbox
+package examples.sandbox
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import gemini.Location
-import gemini.Position
-import gemini.SceneScope
-import gemini.Thing
+import gemini.engine.SceneScope
+import gemini.foundation.Thing
+import gemini.geometry.Location
+import gemini.geometry.Position
 import kotlin.time.Duration
 
 class MovingRectangle(

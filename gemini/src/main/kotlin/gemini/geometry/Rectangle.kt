@@ -1,4 +1,4 @@
-package gemini
+package gemini.geometry
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size

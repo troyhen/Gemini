@@ -1,10 +1,16 @@
-package sandbox.astroids
+package examples.astroids
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import gemini.*
+import gemini.engine.Collider
+import gemini.engine.SceneScope
+import gemini.engine.Stage
+import gemini.foundation.MovingThing
+import gemini.geometry.Location
+import gemini.geometry.Position
+import gemini.geometry.Velocity
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource

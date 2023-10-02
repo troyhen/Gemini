@@ -1,6 +1,7 @@
-package gemini
+package gemini.foundation
 
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import gemini.geometry.Position
 import kotlin.time.Duration
 
 open class Thing(val position: Position = Position()) {

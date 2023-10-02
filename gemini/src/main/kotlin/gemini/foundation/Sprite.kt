@@ -1,8 +1,12 @@
-package gemini
+package gemini.foundation
 
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
+import gemini.engine.SceneScope
+import gemini.geometry.Location
+import gemini.geometry.Pivot
+import gemini.geometry.Position
 import io.kamel.core.Resource
 import io.kamel.core.getOrNull
 import kotlin.time.Duration

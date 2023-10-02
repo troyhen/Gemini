@@ -1,4 +1,4 @@
-package gemini
+package gemini.geometry
 
 @JvmInline
 value class Rotation private constructor(private val data: FloatArray) {

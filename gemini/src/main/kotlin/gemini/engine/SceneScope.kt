@@ -1,4 +1,4 @@
-package gemini
+package gemini.engine
 
 open class SceneScope : Scene() {
 

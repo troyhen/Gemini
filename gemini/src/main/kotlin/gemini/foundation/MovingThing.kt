@@ -1,6 +1,9 @@
-package gemini
+package gemini.foundation
 
 import androidx.compose.ui.geometry.Size
+import gemini.engine.Stage
+import gemini.geometry.*
+import gemini.inSeconds
 import kotlin.time.Duration
 
 open class MovingThing(

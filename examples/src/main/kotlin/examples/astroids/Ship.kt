@@ -1,10 +1,15 @@
-package sandbox.astroids
+package examples.astroids
 
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import gemini.*
+import gemini.engine.Collider
+import gemini.engine.SceneScope
+import gemini.engine.Stage
+import gemini.foundation.MovingThing
+import gemini.geometry.*
+import gemini.inSeconds
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin

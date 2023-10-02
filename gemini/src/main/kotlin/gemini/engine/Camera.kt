@@ -1,6 +1,7 @@
-package gemini
+package gemini.engine
 
 import androidx.compose.ui.graphics.Matrix
+import gemini.geometry.Angle
 
 class Camera {
     val matrix: Matrix = Matrix()

@@ -2,6 +2,7 @@ package gemini
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import gemini.geometry.Scale
 import kotlin.random.Random
 import kotlin.time.Duration
 

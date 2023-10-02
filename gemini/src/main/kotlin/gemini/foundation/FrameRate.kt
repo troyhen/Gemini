@@ -1,4 +1,4 @@
-package gemini
+package gemini.foundation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +9,9 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.toSize
+import gemini.engine.SceneScope
+import gemini.engine.Stage
+import gemini.geometry.Pivot
 import kotlin.time.TimeSource
 
 class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.SouthEast) : Thing() {
@@ -33,7 +36,7 @@ class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.South
         }
         drawRect(Color.Black, offset, layout.size.toSize() / density)
         drawText(layout, color, offset)
-        val end = gemini.Stage.time.markNow()
+        val end = Stage.time.markNow()
         lastMark?.let { start ->
             frameRate = (frameRate * 59 + 1e6f / (end - start).inWholeMicroseconds) / 60 // trigger recompose
         }

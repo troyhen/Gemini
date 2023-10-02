@@ -1,4 +1,4 @@
-package gemini
+package gemini.geometry
 
 @JvmInline
 value class Angle(val degrees: Float = 0f) {

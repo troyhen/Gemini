@@ -1,8 +1,9 @@
-package gemini
+package gemini.geometry
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Matrix
+import gemini.times
 
 enum class Pivot(val offset: Offset) {
     NorthWest(Offset.Zero), North(Offset(.5f, 0f)), NorthEast(Offset(1f, 0f)),

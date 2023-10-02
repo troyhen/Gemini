@@ -1,4 +1,4 @@
-package sandbox
+package examples.sandbox
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
@@ -9,7 +9,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.window.singleWindowApplication
-import gemini.*
+import gemini.engine.Gemini
+import gemini.engine.rememberScene
+import gemini.foundation.background
+import gemini.foundation.frameRate
+import gemini.foundation.sprite
+import gemini.geometry.degrees
 import io.kamel.core.config.KamelConfig
 import io.kamel.core.config.takeFrom
 import io.kamel.image.asyncPainterResource

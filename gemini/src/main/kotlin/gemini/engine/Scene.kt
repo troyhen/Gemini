@@ -1,7 +1,8 @@
-package gemini
+package gemini.engine
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import gemini.foundation.Thing
 
 open class Scene {
     val things = mutableListOf<Thing>()

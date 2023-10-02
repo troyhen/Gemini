@@ -1,11 +1,11 @@
-package sandbox
+package examples.sandbox
 
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import gemini.Position
-import gemini.SceneScope
-import gemini.Thing
+import gemini.engine.SceneScope
+import gemini.foundation.Thing
+import gemini.geometry.Position
 import kotlin.time.Duration
 
 class Circle(

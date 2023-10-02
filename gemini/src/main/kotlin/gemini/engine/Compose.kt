@@ -1,4 +1,4 @@
-package gemini
+package gemini.engine
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
