@@ -1,5 +1,5 @@
 package gemini
 
-fun interface Collider {
-    fun collidesWith(collider: Collider): Boolean
+interface Collider {
+    fun collideWith(collider: Collider): Boolean
 }

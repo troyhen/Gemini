@@ -9,7 +9,6 @@ import androidx.compose.ui.text.TextMeasurer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
-import kotlin.time.Duration
 import kotlin.time.TimeSource
 
 class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
@@ -18,7 +17,11 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
         private set
     private var toAct: List<Thing>? = null
     private var toDraw: List<Thing>? = null
-    private var thread: Thread? = null
+    private var thread: Thread? by mutableStateOf(null)
+
+    private val collisionArea1 = Rectangle()
+    private val collisionArea2 = Rectangle()
+    private var timeMark = time.markNow()
 
     val isRunning get() = thread != null
 
@@ -26,9 +29,19 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
         instance = this
     }
 
-    private suspend fun act(elapsed: Duration) {
-        actors().fastForEach { actor ->
-            actor.act(elapsed)
+    private suspend fun act() {
+        val now = time.markNow()
+        val elapsed = now - timeMark
+        val actors = actors()
+        try {
+            actors.fastForEach { actor ->
+                actor.act(elapsed)
+            }
+            collider(actors)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            timeMark = now
         }
     }
 
@@ -46,6 +59,24 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
         super.add(thing)
     }
 
+    private fun collider(actors: List<Thing>) {
+        actors.fastForEachIndexed { index, actor ->
+            if (actor is Collider) {
+                actor.position.rectangle(collisionArea1)
+                actors.fastForEach(index + 1) { other ->
+                    if (other is Collider) {
+                        other.position.rectangle(collisionArea2)
+                        if (collisionArea1.overlaps(collisionArea2)) {
+                            if (!actor.collideWith(other)) {
+                                other.collideWith(actor)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun DrawScope.draw() {
         screenSize = size
         drawContext.transform.transform(camera.matrix)
@@ -54,7 +85,9 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
                 orientAndDraw()
             }
         }
-        frame++ // triggers recompose
+        if (isRunning) {
+            frame++ // triggers recompose
+        }
     }
 
     private fun drawables(): List<Thing> {
@@ -73,14 +106,11 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
     }
 
     private fun loop() {
-        var last = time.markNow()
+        timeMark = time.markNow()
         runBlocking {
             while (isRunning) {
-                delay(10)
-                val now = time.markNow()
-                val elapsed = now - last
-                act(elapsed)
-                last = now
+                delay(15)
+                act()
             }
         }
     }
@@ -103,11 +133,19 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
 
     @Synchronized
     fun start() {
-        if (thread == null) {
-            thread = thread(isDaemon = true, name = "Gemini update") {
-                loop()
-            }
+        if (isRunning) return
+        thread = thread(isDaemon = true, name = "Gemini update") {
+            loop()
         }
+    }
+
+    @Synchronized
+    fun step() {
+        if (isRunning) return
+        runBlocking {
+            act()
+        }
+        frame++ // recompose
     }
 
     @Synchronized

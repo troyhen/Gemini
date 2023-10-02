@@ -46,6 +46,8 @@ value class Location private constructor(private val data: FloatArray) {
 operator fun Location.div(scale: Float) = Location(x / scale, y / scale, z / scale)
 operator fun Location.div(scale: Int) = div(scale.toFloat())
 operator fun Location.minus(location: Location) = Location(x - location.x, y - location.y, z - location.z)
+operator fun Location.minus(offset: Offset) = Location(x - offset.x, y - offset.y, z)
 operator fun Location.plus(location: Location) = Location(x + location.x, y + location.y, z + location.z)
+operator fun Location.plus(offset: Offset) = Location(x + offset.x, y + offset.y, z)
 operator fun Location.times(scale: Float) = Location(x * scale, y * scale, z * scale)
 operator fun Location.times(scale: Int) = times(scale.toFloat())

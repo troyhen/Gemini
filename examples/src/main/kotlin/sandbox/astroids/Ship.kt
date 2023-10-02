@@ -1,6 +1,5 @@
 package sandbox.astroids
 
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -39,9 +38,13 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
         onUpdate()
     }
 
-    override fun collidesWith(collider: Collider): Boolean {
+    override fun collideWith(collider: Collider): Boolean {
         return when (collider) {
-            is MovingThing -> !Rect(position.location.offset, position.size).intersect(Rect(collider.position.location.offset, collider.position.size)).isEmpty
+            is Asteroid -> {
+                collider.explode()
+                Stage.instance?.stop()
+                true
+            }
             else -> false
         }
     }
@@ -89,8 +92,8 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
         private val COOL_DOWN_TIME = 1.seconds
         private const val FORWARD_THRUST = .4f
         private const val BACKWARD_THRUST = FORWARD_THRUST / 2
-        private const val BULLET_SPEED = 60f
-        private const val SPIN_INCREMENT = .3f
+        private const val BULLET_SPEED = 100f
+        private const val SPIN_INCREMENT = .5f
     }
 }
 

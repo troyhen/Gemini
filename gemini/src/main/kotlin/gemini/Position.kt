@@ -19,6 +19,21 @@ data class Position(
 ) {
     private val matrix: Matrix = Matrix()
 
+    fun rectangle(rectangle: Rectangle) {
+        val size = size * scale
+        when (pivot) {
+            Pivot.NorthWest -> rectangle.set(location.offset, size)
+            Pivot.North -> rectangle.set(location.offset - Offset(size.width / 2, 0f), size)
+            Pivot.NorthEast -> rectangle.set(location.offset - Offset(size.width, 0f), size)
+            Pivot.West -> rectangle.set(location.offset - Offset(0f, size.height / 2), size)
+            Pivot.Center -> rectangle.set(location.offset - Offset(size.width / 2, size.height / 2), size)
+            Pivot.East -> rectangle.set(location.offset - Offset(size.width, size.height / 2), size)
+            Pivot.SouthWest -> rectangle.set(location.offset - Offset(0f, size.height), size)
+            Pivot.South -> rectangle.set(location.offset - Offset(size.width / 2, size.height), size)
+            Pivot.SouthEast -> rectangle.set(location.offset - Offset(size.width, size.height), size)
+        }
+    }
+
     fun orient(): Matrix = matrix.apply {
         reset()
         if (location != Location.Zero) translate(location.x, location.y, location.z)

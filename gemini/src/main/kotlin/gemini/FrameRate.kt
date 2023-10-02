@@ -16,19 +16,20 @@ class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.South
     private var frameRate by mutableStateOf(0f)
 
     override fun DrawScope.orientAndDraw() {
+        if (Stage.instance?.isRunning != true) return
         val layout = measureFrameRate() ?: return
         val textSize = layout.size.toSize() / density
         val center = Offset((size.width - textSize.width) / 2, (size.height - textSize.height) / 2)
         val offset = when (pivot) {
-            gemini.Pivot.NorthEast -> Offset(size.width - textSize.width, 0f)
-            gemini.Pivot.NorthWest -> Offset(0f, 0f)
-            gemini.Pivot.North -> Offset(center.x, 0f)
-            gemini.Pivot.West -> Offset(0f, center.y)
-            gemini.Pivot.Center -> center
-            gemini.Pivot.East -> Offset(size.width - textSize.width, center.y)
-            gemini.Pivot.SouthWest -> Offset(0f, size.height - textSize.height)
-            gemini.Pivot.South -> Offset(center.x, size.height - textSize.height)
-            gemini.Pivot.SouthEast -> Offset(size.width - textSize.width, size.height - textSize.height)
+            Pivot.NorthEast -> Offset(size.width - textSize.width, 0f)
+            Pivot.NorthWest -> Offset(0f, 0f)
+            Pivot.North -> Offset(center.x, 0f)
+            Pivot.West -> Offset(0f, center.y)
+            Pivot.Center -> center
+            Pivot.East -> Offset(size.width - textSize.width, center.y)
+            Pivot.SouthWest -> Offset(0f, size.height - textSize.height)
+            Pivot.South -> Offset(center.x, size.height - textSize.height)
+            Pivot.SouthEast -> Offset(size.width - textSize.width, size.height - textSize.height)
         }
         drawRect(Color.Black, offset, layout.size.toSize() / density)
         drawText(layout, color, offset)

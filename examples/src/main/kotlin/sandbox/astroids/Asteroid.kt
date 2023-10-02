@@ -1,7 +1,6 @@
 package sandbox.astroids
 
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -9,33 +8,61 @@ import gemini.*
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
-import kotlin.random.Random
 import kotlin.time.Duration
 
 class Asteroid(
     position: Position,
-    speed: Float,
-) : MovingThing(position), Collider {
-
-    init {
-        val direction = Random.nextFloat() * PI2
-        velocity.set(speed * cos(direction), speed * sin(direction))
-    }
+    velocity: Velocity,
+    private val size: Int = 4,
+) : MovingThing(position, velocity), Collider {
 
     override suspend fun act(elapsed: Duration) {
         super.act(elapsed)
         wrap()
     }
 
-    override fun DrawScope.draw() {
-        drawOval(Color.Gray, Offset.Zero, position.size)
-    }
-
-    override fun collidesWith(collider: Collider): Boolean {
+    override fun collideWith(collider: Collider): Boolean {
         return when (collider) {
-            is MovingThing -> !Rect(position.location.offset, position.size).intersect(Rect(collider.position.location.offset, collider.position.size)).isEmpty
+//            is Asteroid -> {
+//                explode()
+//                collider.explode()
+//                true
+//            }
+
             else -> false
         }
+    }
+
+    fun explode() {
+        Stage.instance?.run {
+            remove(this@Asteroid)
+            if (size <= 1) return
+            add(
+                Asteroid(
+                    position = Position(position.location + Offset(position.size.width, position.size.height).random, position.size / 2f),
+                    velocity = velocity * 1.5f + Offset(20f, 20f).random,
+                    size = size / 2
+                )
+            )
+            add(
+                Asteroid(
+                    position = Position(position.location + Offset(position.size.width, position.size.height).random, position.size / 2f),
+                    velocity = velocity * 1.5f + Offset(20f, 20f).random,
+                    size = size / 2
+                )
+            )
+            add(
+                Asteroid(
+                    position = Position(position.location + Offset(position.size.width, position.size.height).random, position.size / 2f),
+                    velocity = velocity * 1.5f + Offset(20f, 20f).random,
+                    size = size / 2
+                )
+            )
+        }
+    }
+
+    override fun DrawScope.draw() {
+        drawOval(Color.Gray, Offset.Zero, position.size)
     }
 }
 
@@ -43,8 +70,10 @@ fun SceneScope.asteroid(screenSize: Size, size: Int = 4): Asteroid {
     val ratio = min(screenSize.width, screenSize.height) / 30
     val diameter = ratio * size
     val speed = ratio
-    val location = Location(Random.nextFloat() * screenSize.width, Random.nextFloat() * screenSize.height)
-    return Asteroid(Position(location, Size(diameter, diameter)), speed).also {
+    val location = Location(screenSize.width.random, screenSize.height.random)
+    val direction = PI2.random
+    val velocity = Velocity(speed * cos(direction), speed * sin(direction))
+    return Asteroid(Position(location, Size(diameter, diameter)), velocity).also {
         add(it)
     }
 }

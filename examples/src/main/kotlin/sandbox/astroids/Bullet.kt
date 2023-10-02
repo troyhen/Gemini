@@ -1,7 +1,6 @@
 package sandbox.astroids
 
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -20,15 +19,19 @@ class Bullet(position: Position, speed: Velocity) : MovingThing(position, speed)
         if (Stage.time.markNow() - startTime > LIFE_SPAN) Stage.instance?.remove(this)
     }
 
-    override fun DrawScope.draw() {
-        drawOval(Color.Red, Offset.Zero, position.size)
-    }
-
-    override fun collidesWith(collider: Collider): Boolean {
+    override fun collideWith(collider: Collider): Boolean {
         return when (collider) {
-            is MovingThing -> !Rect(position.location.offset, position.size).intersect(Rect(collider.position.location.offset, collider.position.size)).isEmpty
+            is Asteroid -> {
+                Stage.instance?.remove(this)
+                collider.explode()
+                true
+            }
             else -> false
         }
+    }
+
+    override fun DrawScope.draw() {
+        drawOval(Color.Red, Offset.Zero, position.size)
     }
 
     companion object {
