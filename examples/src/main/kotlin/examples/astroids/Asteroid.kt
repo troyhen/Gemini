@@ -27,15 +27,16 @@ class Asteroid(
     }
 
     override fun collideWith(collider: Collider): Boolean {
-        return when (collider) {
+//        return when (collider) {
 //            is Asteroid -> {
 //                explode()
 //                collider.explode()
 //                true
 //            }
 
-            else -> false
-        }
+//            else -> false
+//        }
+        return false
     }
 
     fun explode() {
