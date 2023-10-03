@@ -74,7 +74,7 @@ class Asteroid(
                 Asteroid(
                     position = Position(position.location + Offset(position.size.width, position.size.height).random, position.size / 2f),
                     velocity = velocity * 1.5f + Offset(20f, 20f).random,
-                    spin = spin + 10.degrees.random - 5.degrees,
+                    spin = spin * 2 + 10.degrees.random - 5.degrees,
                     baseSize = baseSize / 2,
                 )
             )
@@ -82,7 +82,7 @@ class Asteroid(
                 Asteroid(
                     position = Position(position.location + Offset(position.size.width, position.size.height).random, position.size / 2f),
                     velocity = velocity * 1.5f + Offset(20f, 20f).random,
-                    spin = spin + 10.degrees.random - 5.degrees,
+                    spin = spin * 2 + 10.degrees.random - 5.degrees,
                     baseSize = baseSize / 2,
                 )
             )
@@ -90,7 +90,7 @@ class Asteroid(
                 Asteroid(
                     position = Position(position.location + Offset(position.size.width, position.size.height).random, position.size / 2f),
                     velocity = velocity * 1.5f + Offset(20f, 20f).random,
-                    spin = spin + 10.degrees.random - 5.degrees,
+                    spin = spin * 2 + 10.degrees.random - 5.degrees,
                     baseSize = baseSize / 2,
                 )
             )
