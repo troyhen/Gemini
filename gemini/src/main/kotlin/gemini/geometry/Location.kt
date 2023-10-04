@@ -32,6 +32,12 @@ value class Location private constructor(private val data: FloatArray) {
         this.z += z
     }
 
+    fun set(location: Location) {
+        this.x = location.x
+        this.y = location.y
+        this.z = location.z
+    }
+
     fun set(x: Float, y: Float, z: Float = 0f) {
         this.x = x
         this.y = y

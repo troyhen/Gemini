@@ -4,6 +4,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import gemini.geometry.*
 import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sin
 import kotlin.random.Random
 import kotlin.time.Duration
@@ -63,6 +65,8 @@ operator fun Offset.div(scale: Int): Offset = Offset(x / scale, y / scale)
 operator fun Offset.times(scale: Int): Offset = Offset(x * scale, y * scale)
 operator fun Size.div(scale: Scale): Size = Size(width / scale.x, height / scale.y)
 operator fun Size.div(scale: Int): Size = Size(width / scale, height / scale)
+val Size.max get() = max(width, height)
+val Size.min get() = min(width, height)
 operator fun Size.minus(plus: Size): Size = Size(width - plus.width, height - plus.height)
 operator fun Size.plus(plus: Size): Size = Size(width + plus.width, height + plus.height)
 operator fun Size.times(scale: Scale): Size = Size(width * scale.x, height * scale.y)
