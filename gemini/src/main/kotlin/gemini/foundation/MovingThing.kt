@@ -14,27 +14,27 @@ open class MovingThing(
 
     override suspend fun act(elapsed: Duration) {
         val seconds = elapsed.inSeconds
-        position.location.x += velocity.x * seconds
-        position.location.y += velocity.y * seconds
+        position.location.x += velocity.xs * seconds
+        position.location.y += velocity.ys * seconds
         position.rotation.r += spin * seconds
     }
 
     fun bounce(spaceSize: Size = Stage.screenSize) {
         if (position.location.x < 0) {
             position.location.x = -position.location.x
-            velocity.x = -velocity.x
+            velocity.xs = -velocity.xs
         }
         if (position.location.y < 0) {
             position.location.y -= position.location.y
-            velocity.y = -velocity.y
+            velocity.ys = -velocity.ys
         }
         if (position.location.x > spaceSize.width) {
             position.location.x = spaceSize.width * 2 - position.location.x
-            velocity.x = -velocity.x
+            velocity.xs = -velocity.xs
         }
         if (position.location.y > spaceSize.height) {
             position.location.y = spaceSize.height * 2 - position.location.y
-            velocity.y = -velocity.y
+            velocity.ys = -velocity.ys
         }
     }
 

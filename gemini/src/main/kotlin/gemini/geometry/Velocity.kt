@@ -4,37 +4,35 @@ import androidx.compose.ui.geometry.Offset
 
 @JvmInline
 value class Velocity private constructor(private val data: FloatArray) {
-    var x: Float
+    var xs: Float
         get() = data[0]
         set(value) {
             data[0] = value
         }
-    var y: Float
+    var ys: Float
         get() = data[1]
         set(value) {
             data[1] = value
         }
-    var z: Float
+    var zs: Float
         get() = data[2]
         set(value) {
             data[2] = value
         }
 
-    val offset: Offset get() = Offset(x, y)
-
     constructor() : this(FloatArray(3))
-    constructor(x: Float, y: Float, z: Float = 0f) : this(floatArrayOf(x, y, z))
+    constructor(xs: Float, ys: Float, zs: Float = 0f) : this(floatArrayOf(xs, ys, zs))
 
-    fun move(x: Float, y: Float, z: Float = 0f) {
-        this.x += x
-        this.y += y
-        this.z += z
+    fun add(xs: Float, ys: Float, zs: Float = 0f) {
+        this.xs += xs
+        this.ys += ys
+        this.zs += zs
     }
 
-    fun set(x: Float, y: Float, z: Float = 0f) {
-        this.x = x
-        this.y = y
-        this.z = z
+    fun set(xs: Float, ys: Float, zz: Float = 0f) {
+        this.xs = xs
+        this.ys = ys
+        this.zs = zz
     }
 
     companion object {
@@ -42,11 +40,11 @@ value class Velocity private constructor(private val data: FloatArray) {
     }
 }
 
-operator fun Velocity.div(scale: Float) = Velocity(x / scale, y / scale, z / scale)
-operator fun Velocity.div(scale: Int) = Velocity(x / scale, y / scale, z / scale)
-operator fun Velocity.minus(velocity: Velocity) = Velocity(x - velocity.x, y - velocity.y, z - velocity.z)
-operator fun Velocity.minus(offset: Offset) = Velocity(x - offset.x, y - offset.y, z)
-operator fun Velocity.plus(velocity: Velocity) = Velocity(x + velocity.x, y + velocity.y, z + velocity.z)
-operator fun Velocity.plus(offset: Offset) = Velocity(x + offset.x, y + offset.y, z)
-operator fun Velocity.times(scale: Float) = Velocity(x * scale, y * scale, z * scale)
-operator fun Velocity.times(scale: Int) = Velocity(x * scale, y * scale, z * scale)
+operator fun Velocity.div(scale: Float) = Velocity(xs / scale, ys / scale, zs / scale)
+operator fun Velocity.div(scale: Int) = Velocity(xs / scale, ys / scale, zs / scale)
+operator fun Velocity.minus(velocity: Velocity) = Velocity(xs - velocity.xs, ys - velocity.ys, zs - velocity.zs)
+operator fun Velocity.minus(offset: Offset) = Velocity(xs - offset.x, ys - offset.y, zs)
+operator fun Velocity.plus(velocity: Velocity) = Velocity(xs + velocity.xs, ys + velocity.ys, zs + velocity.zs)
+operator fun Velocity.plus(offset: Offset) = Velocity(xs + offset.x, ys + offset.y, zs)
+operator fun Velocity.times(scale: Float) = Velocity(xs * scale, ys * scale, zs * scale)
+operator fun Velocity.times(scale: Int) = Velocity(xs * scale, ys * scale, zs * scale)

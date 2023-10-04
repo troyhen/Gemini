@@ -37,8 +37,8 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
         wrap()
         val seconds = elapsed.inSeconds
         val friction = -seconds * .1f
-        velocity.x += velocity.x * friction
-        velocity.y += velocity.y * friction
+        velocity.xs += velocity.xs * friction
+        velocity.ys += velocity.ys * friction
         spin += spin * friction
         onUpdate()
     }
@@ -71,12 +71,12 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
 
     fun input(forward: Boolean, left: Boolean, right: Boolean, backward: Boolean, fire: Boolean) {
         if (forward) {
-            velocity.x += FORWARD_THRUST * cos(position.rotation.r.radians)
-            velocity.y += FORWARD_THRUST * sin(position.rotation.r.radians)
+            velocity.xs += FORWARD_THRUST * cos(position.rotation.r.radians)
+            velocity.ys += FORWARD_THRUST * sin(position.rotation.r.radians)
         }
         if (backward) {
-            velocity.x -= BACKWARD_THRUST * cos(position.rotation.r.radians)
-            velocity.y -= BACKWARD_THRUST * sin(position.rotation.r.radians)
+            velocity.xs -= BACKWARD_THRUST * cos(position.rotation.r.radians)
+            velocity.ys -= BACKWARD_THRUST * sin(position.rotation.r.radians)
         }
         if (left) {
             spin -= SPIN_INCREMENT

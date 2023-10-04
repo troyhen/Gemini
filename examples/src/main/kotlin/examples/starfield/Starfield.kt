@@ -25,17 +25,20 @@ import gemini.engine.rememberScene
 import gemini.foundation.MovingThing
 import gemini.foundation.background
 import gemini.foundation.frameRate
+import gemini.geometry.Velocity
 import gemini.inSeconds
 import gemini.min
 import gemini.random
 import gemini.randomPlus
 import kotlin.time.Duration
 
+val cameraVelocity = Velocity(0f, 0f, -10f)
+
 private class Star(private val size: Size) : MovingThing() {
-    //    private val last = Location()
     override suspend fun act(elapsed: Duration) {
         super.act(elapsed)
-        position.location.z -= 10 * elapsed.inSeconds
+        val seconds = elapsed.inSeconds
+        position.location.move(cameraVelocity.xs * seconds, cameraVelocity.ys * seconds, cameraVelocity.zs * seconds)
     }
 
     override fun DrawScope.orientAndDraw() {
@@ -46,18 +49,19 @@ private class Star(private val size: Size) : MovingThing() {
         val r0 = size.min / (z * 5)
         val r = r0.coerceAtLeast(1f)
         val color = Color.White.copy(alpha = r0.coerceAtMost(1f))
-//        drawLine(Color.LightGray, Offset(last.x, last.y), Offset(x, y), r / 2)
         drawCircle(color, r, Offset(x, y))
-//        last.set(x, y, z)
-        if (x < 0 || x > size.width || y < 0 || y > size.height || position.location.z < 1) {
+        if (x < 0 || x > size.width || y < 0 || y > size.height || position.location.z < 1 || position.location.z > MAX_Z) {
             restart()
         }
     }
 
     private fun restart() {
-        val z = 200f.random + 200f
+        val z = MAX_Z.random
         position.location.set(size.width.randomPlus() * z, size.height.randomPlus() * z, z)
-//        last.set(position.location)
+    }
+
+    companion object {
+        private const val MAX_Z = 400f
     }
 }
 
@@ -84,11 +88,13 @@ fun StarField(modifier: Modifier = Modifier) {
             .focusable()
             .onKeyEvent {
                 when (it.type) {
-                    KeyEventType.KeyDown -> keys.add(it.key)
+                    KeyEventType.KeyDown -> {
+                        keys.add(it.key)
+                        detectKeys(keys)
+                    }
                     KeyEventType.KeyUp -> keys.remove(it.key)
                     else -> Unit
                 }
-//                println(keys)
                 true
             }.onPointerEvent(PointerEventType.Press) {
                 if (it.buttons.isPrimaryPressed) pressed.add(0)
@@ -103,6 +109,17 @@ fun StarField(modifier: Modifier = Modifier) {
             requester.requestFocus()
         }
     }
+}
+
+private fun detectKeys(keys: Set<Key>) {
+    cameraVelocity.set(0f, 0f, 0f)
+    if (Key.Enter in keys) cameraVelocity.zs = -10f
+    if (Key.Tab in keys) cameraVelocity.zs = 10f
+    if (Key.DirectionUp in keys) cameraVelocity.ys = -1000f
+    if (Key.DirectionDown in keys) cameraVelocity.ys = 1000f
+    if (Key.DirectionLeft in keys) cameraVelocity.xs = -1000f
+    if (Key.DirectionRight in keys) cameraVelocity.xs = 1000f
+//    println("$keys $cameraVelocity")
 }
 
 fun main() = singleWindowApplication(title = "Gemini Star Field") {

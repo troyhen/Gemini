@@ -26,10 +26,10 @@ value class Location private constructor(private val data: FloatArray) {
     constructor(offset: Offset) : this(floatArrayOf(offset.x, offset.y, 0f))
     constructor(x: Float, y: Float, z: Float = 0f) : this(floatArrayOf(x, y, z))
 
-    fun move(x: Float, y: Float, z: Float = 0f) {
-        this.x += x
-        this.y += y
-        this.z += z
+    fun move(xs: Float, ys: Float, zs: Float = 0f) {
+        this.x += xs
+        this.y += ys
+        this.z += zs
     }
 
     fun set(location: Location) {
