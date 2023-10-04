@@ -9,6 +9,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 inline fun <E> Array<E>.fastForEach(from: Int = 0, block: (E) -> Unit) {
     for (index in from until size) {
@@ -38,6 +39,7 @@ val Duration.inSeconds: Float get() = inWholeMicroseconds * 1e-6f
 
 val Angle.random: Angle get() = (Random.nextFloat() * degrees).degrees
 val Double.random: Double get() = Random.nextDouble() * this
+val Duration.random: Duration get() = inSeconds.random.seconds
 val Float.random: Float get() = Random.nextFloat() * this
 val Int.random: Int get() = Random.nextInt(this)
 val Long.random: Long get() = Random.nextLong(this)
@@ -51,3 +53,4 @@ fun Offset.rotate(angle: Angle): Offset {
 
 operator fun Size.times(scale: Scale): Size = Size(width * scale.x, height * scale.y)
 fun Size.toOffset(): Offset = Offset(width, height)
+val Float.seconds: Duration get() = this.toDouble().seconds

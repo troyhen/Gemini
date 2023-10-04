@@ -9,6 +9,7 @@ import gemini.engine.Collider
 import gemini.engine.SceneScope
 import gemini.engine.Stage
 import gemini.foundation.MovingThing
+import gemini.foundation.particles
 import gemini.geometry.*
 import gemini.random
 import gemini.rotate
@@ -17,6 +18,7 @@ import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 
 class Asteroid(
@@ -70,30 +72,8 @@ class Asteroid(
         Stage.instance?.run {
             remove(this@Asteroid)
             if (baseSize <= 1) return
-            add(
-                Asteroid(
-                    position = Position(position.location + Offset(position.size.width, position.size.height).random, position.size / 2f),
-                    velocity = velocity * 1.5f + Offset(20f, 20f).random,
-                    spin = spin * 2 + 10.degrees.random - 5.degrees,
-                    baseSize = baseSize / 2,
-                )
-            )
-            add(
-                Asteroid(
-                    position = Position(position.location + Offset(position.size.width, position.size.height).random, position.size / 2f),
-                    velocity = velocity * 1.5f + Offset(20f, 20f).random,
-                    spin = spin * 2 + 10.degrees.random - 5.degrees,
-                    baseSize = baseSize / 2,
-                )
-            )
-            add(
-                Asteroid(
-                    position = Position(position.location + Offset(position.size.width, position.size.height).random, position.size / 2f),
-                    velocity = velocity * 1.5f + Offset(20f, 20f).random,
-                    spin = spin * 2 + 10.degrees.random - 5.degrees,
-                    baseSize = baseSize / 2,
-                )
-            )
+            asteroids(3, position.location, position.size, velocity, spin, baseSize)
+            particles(20, position.location, velocity, 40f, 2.seconds, Color.White)
         }
     }
 }
@@ -108,5 +88,18 @@ fun SceneScope.asteroid(screenSize: Size, size: Int = 4): Asteroid {
     val spin = 30.degrees.random - 15.degrees
     return Asteroid(Position(location, Size(diameter, diameter)), velocity, spin).also {
         add(it)
+    }
+}
+
+private fun SceneScope.asteroids(number: Int, location: Location, size: Size, velocity: Velocity, spin: Angle, baseSize: Int) {
+    repeat(number) {
+        add(
+            Asteroid(
+                position = Position(location + Offset(size.width, size.height).random - Offset(size.width / 2, size.height / 2), size / 2f),
+                velocity = velocity * 1.5f + Offset(20f, 20f).random - Offset(10f, 10f),
+                spin = spin * 2 + 10.degrees.random - 5.degrees,
+                baseSize = baseSize / 2,
+            )
+        )
     }
 }
