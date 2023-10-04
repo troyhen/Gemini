@@ -10,7 +10,7 @@ import gemini.geometry.Location
 import gemini.geometry.Position
 import gemini.geometry.Velocity
 import gemini.geometry.plus
-import gemini.random
+import gemini.randomPlus
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
@@ -31,11 +31,9 @@ class Particle(position: Position, speed: Velocity, private val lifeSpan: Durati
 }
 
 fun SceneScope.particles(number: Int, location: Location, speed: Velocity, randomness: Float = 0f, lifeSpan: Duration, color: Color): List<Particle> {
-    val r2 = randomness / 2
-    val center = Offset(-r2, -r2)
     return (1..number).map {
-        val offset = Offset(randomness, randomness).random + center
-        Particle(Position(location + offset), speed + offset, lifeSpan.random, color).also { thing ->
+        val offset = Offset(randomness, randomness).randomPlus()
+        Particle(Position(location + offset), speed + offset, lifeSpan.randomPlus(), color).also { thing ->
             add(thing)
         }
     }

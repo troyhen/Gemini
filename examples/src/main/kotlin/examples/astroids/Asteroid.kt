@@ -12,6 +12,7 @@ import gemini.foundation.MovingThing
 import gemini.foundation.particles
 import gemini.geometry.*
 import gemini.random
+import gemini.randomPlus
 import gemini.rotate
 import gemini.toOffset
 import kotlin.math.cos
@@ -34,7 +35,7 @@ class Asteroid(
         Path().apply {
             val step = 360f / 12
             repeat(12) {
-                val distance = s2.random + s2
+                val distance = s2.randomPlus(s2)
                 val angle = (it * step).degrees
                 val offset = center + Offset(distance, 0f).rotate(angle)
                 if (it == 0) {
@@ -85,7 +86,7 @@ fun SceneScope.asteroid(screenSize: Size, size: Int = 4): Asteroid {
     val location = Location(screenSize.width.random, screenSize.height.random)
     val direction = PI2.random
     val velocity = Velocity(speed * cos(direction), speed * sin(direction))
-    val spin = 30.degrees.random - 15.degrees
+    val spin = 30.degrees.randomPlus()
     return Asteroid(Position(location, Size(diameter, diameter)), velocity, spin).also {
         add(it)
     }
@@ -95,9 +96,9 @@ private fun SceneScope.asteroids(number: Int, location: Location, size: Size, ve
     repeat(number) {
         add(
             Asteroid(
-                position = Position(location + Offset(size.width, size.height).random - Offset(size.width / 2, size.height / 2), size / 2f),
-                velocity = velocity * 1.5f + Offset(20f, 20f).random - Offset(10f, 10f),
-                spin = spin * 2 + 10.degrees.random - 5.degrees,
+                position = Position(location + Offset(size.width, size.height).randomPlus(), size / 2f),
+                velocity = velocity * 1.5f + Offset(20f, 20f).randomPlus(),
+                spin = spin * 2 + 10.degrees.randomPlus(),
                 baseSize = baseSize / 2,
             )
         )
