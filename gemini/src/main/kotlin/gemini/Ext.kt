@@ -72,3 +72,18 @@ operator fun Size.plus(plus: Size): Size = Size(width + plus.width, height + plu
 operator fun Size.times(scale: Scale): Size = Size(width * scale.x, height * scale.y)
 operator fun Size.times(scale: Int): Size = Size(width * scale, height * scale)
 fun Size.toOffset(): Offset = Offset(width, height)
+
+/**
+ * Map the value from one range to another
+ */
+fun Float.remap(start1: Float, stop1: Float, start2: Float, stop2: Float, coerceIn: Boolean = false): Float {
+    val result = (this - start1) / (stop1 - start1) * (stop2 - start2) + start2
+    return if (coerceIn) result.coerceIn(start2, stop2) else result
+}
+
+/**
+ * Map the [Offset] from one range to a rectangle bounded by 0, 0 to [Size]
+ */
+fun Offset.remap(size: Size, start: Float = -1f, stop: Float = 1f, coerceIn: Boolean = false): Offset {
+    return Offset(x.remap(start, stop, 0f, size.width, coerceIn), y.remap(start, stop, 0f, size.height, coerceIn))
+}
