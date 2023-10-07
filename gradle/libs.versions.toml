@@ -1,11 +1,18 @@
 [versions]
+activity = "1.8.0"
+agp = "7.4.2" # https://developer.android.com/reference/tools/gradle-api
 compose = "1.5.2"
 kamel = "0.7.3"
 kotlin = "1.9.10"
 ktor = "2.3.4"
 
 [plugins]
-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-native = { id = "org.jetbrains.kotlin.native", version.ref = "kotlin" }
 
 [libraries]
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel" }

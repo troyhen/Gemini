@@ -1,9 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    alias(libs.plugins.compose)
-//    kotlin("jvm") version libs.versions.kotlin
-    kotlin("jvm") version libs.versions.kotlin
+    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.kotlin.jvm)
 }
 
 dependencies {
