@@ -34,6 +34,7 @@ kotlin {
             dependencies {
                 implementation(compose.foundation)
                 implementation(compose.ui)
+                implementation(libs.coroutines.core)
                 implementation(libs.kamel.image)
                 implementation(libs.ktor.client)
                 implementation(libs.ktor.client.okhttp)

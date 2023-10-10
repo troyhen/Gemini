@@ -10,30 +10,45 @@ import gemini.fastForEach
 import gemini.fastForEachIndexed
 import gemini.foundation.Thing
 import gemini.geometry.Rectangle
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import kotlin.concurrent.thread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 import kotlin.time.TimeSource
 
-class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
-    private var frame by mutableStateOf(0)
+class Stage(
+    private val scope: CoroutineScope,
+    val textMeasurer: TextMeasurer,
+    private val coroutineContext: CoroutineContext = Dispatchers.Default,
+    startImmediately: Boolean = true,
+) : SceneScope() {
+
     var screenSize: Size = Size.Zero
         private set
     private var toAct: List<Thing>? = null
     private var toDraw: List<Thing>? = null
-    private var thread: Thread? by mutableStateOf(null)
 
     private val collisionArea1 = Rectangle()
     private val collisionArea2 = Rectangle()
+
+    private var frame by mutableStateOf(0)
+    private val frameFlow = MutableStateFlow(0)
     private var timeMark = time.markNow()
 
-    val isRunning get() = thread != null
+    var isRunning by mutableStateOf(startImmediately)
+        private set
+    private var job: Job? = null
 
     init {
         instance = this
+        loop()
     }
 
-    private suspend fun act() {
+    private suspend fun act() = withContext(coroutineContext) {
         val now = time.markNow()
         val elapsed = now - timeMark
         val actors = actors()
@@ -89,9 +104,8 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
                 orientAndDraw()
             }
         }
-        if (isRunning) {
-            frame++ // triggers recompose
-        }
+        if (isRunning) frame++ // triggers recompose
+        frameFlow.value = frame // trigger actions if the frame changed
     }
 
     private fun drawables(): List<Thing> {
@@ -111,12 +125,10 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
 
     private fun loop() {
         timeMark = time.markNow()
-        runBlocking {
-            while (isRunning) {
-                delay(15)
-                act()
-            }
-        }
+        job?.cancel() // ensure only one job is running at a time
+        job = frameFlow.onEach {
+            act()
+        }.launchIn(scope)
     }
 
     override fun remove(thing: Thing) {
@@ -135,26 +147,17 @@ class Stage(val textMeasurer: TextMeasurer) : SceneScope() {
         this.camera = camera
     }
 
-    @Synchronized
     fun start() {
-        if (isRunning) return
-        thread = thread(isDaemon = true, name = "Gemini update") {
-            loop()
-        }
+        isRunning = true
     }
 
-    @Synchronized
     fun step() {
         if (isRunning) return
-        runBlocking {
-            act()
-        }
-        frame++ // recompose
+        ++frame // Trigger recompose. Actions will be triggered after draw.
     }
 
-    @Synchronized
     fun stop() {
-        thread = null
+        isRunning = false
     }
 
     companion object {

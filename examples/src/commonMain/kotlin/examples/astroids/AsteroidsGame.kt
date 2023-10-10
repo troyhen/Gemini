@@ -31,7 +31,7 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
     var gameState by remember { mutableStateOf(true) }
     val keys = remember { mutableSetOf<Key>() }
     val pressed = remember { mutableSetOf<Int>() }
-    BoxWithConstraints(modifier.fillMaxSize()) {
+    BoxWithConstraints {
         val screenSize = Size(maxWidth.value, maxHeight.value)
         val game = rememberScene(iteration) {
             background(Color.Black)
@@ -44,7 +44,8 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
             }
         }
         val requester = remember { FocusRequester() }
-        Gemini(Modifier.fillMaxSize()
+        Gemini(
+            modifier.fillMaxSize()
             .focusRequester(requester)
             .focusable()
             .onKeyEvent {
