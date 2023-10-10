@@ -6,15 +6,19 @@ plugins {
     alias(libs.plugins.jetbrains.compose) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
 }
-
-repositories {
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    google()
-}
+//
+//buildscript {
+//
+//}
+//repositories {
+//    mavenCentral()
+//    google()
+//    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+//}
 
 subprojects {
     repositories {
         mavenCentral()
+        google()
     }
 }

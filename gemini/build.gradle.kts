@@ -1,14 +1,22 @@
 plugins {
-//    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlin.multiplatform)
+}
+
+android {
+    namespace = "gemini"
+    compileSdk = 34
+    defaultConfig {
+        minSdk = 23
+    }
 }
 
 kotlin {
 
 //    explicitApi = ExplicitApiMode.Warning
 
-//    androidTarget()
+    androidTarget()
 //    androidTarget {
 //        publishAllLibraryVariants()
 //    }
@@ -24,7 +32,8 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                implementation(compose.desktop.common)
+                implementation(compose.foundation)
+                implementation(compose.ui)
                 implementation(libs.kamel.image)
                 implementation(libs.ktor.client)
                 implementation(libs.ktor.client.okhttp)
@@ -45,6 +54,10 @@ kotlin {
 //                implementation(libs.ktor.client.mock)
 //                implementation(libs.kotlinx.coroutines.test)
             }
+        }
+
+        val androidMain by getting {
+            dependsOn(commonMain)
         }
     }
 }

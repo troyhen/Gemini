@@ -11,7 +11,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.key.*
-import androidx.compose.ui.window.singleWindowApplication
 import gemini.*
 import gemini.engine.Gemini
 import gemini.engine.SceneScope

@@ -1,8 +1,11 @@
 package examples.asteroids
 
-inport android.Activity
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import examples.astroids.AsteroidsGame
 
-class MainActivity : Activity() {
+class AsteroidsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

@@ -11,9 +11,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isPrimaryPressed
-import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.input.pointer.pointerInput
 import gemini.engine.Gemini
 import gemini.engine.rememberScene
 import gemini.foundation.background
@@ -54,12 +55,16 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
                 }
 //                println(keys)
                 true
-            }.onPointerEvent(PointerEventType.Press) {
-                if (it.buttons.isPrimaryPressed) pressed.add(0)
-//                println(pressed)
-            }.onPointerEvent(PointerEventType.Release) {
-                if (!it.buttons.isPrimaryPressed) pressed.remove(0)
-//                println(pressed)
+            }.pointerInput(PointerEventPass.Main) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        when (event.type) {
+                            PointerEventType.Press -> if (event.buttons.isPrimaryPressed) pressed.add(0)
+                            PointerEventType.Release -> if (!event.buttons.isPrimaryPressed) pressed.remove(0)
+                        }
+                    }
+                }
             }) {
             scene = game
         }
