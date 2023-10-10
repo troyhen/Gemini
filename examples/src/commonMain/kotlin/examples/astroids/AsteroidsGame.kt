@@ -14,7 +14,6 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isPrimaryPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.window.singleWindowApplication
 import gemini.engine.Gemini
 import gemini.engine.rememberScene
 import gemini.foundation.background
@@ -68,8 +67,4 @@ fun AsteroidsGame(modifier: Modifier = Modifier) {
             requester.requestFocus()
         }
     }
-}
-
-fun main() = singleWindowApplication(title = "Gemini Asteroids") {
-    AsteroidsGame()
 }

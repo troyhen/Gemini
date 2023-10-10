@@ -1,27 +1,52 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-group = "gemini"
-version = "1.0-SNAPSHOT"
 
 plugins {
+    alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.compose)
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
 }
 
-dependencies {
-    implementation(project(":gemini"))
-    implementation(compose.desktop.currentOs)
-    implementation(libs.kamel.image)
-    implementation(libs.ktor.client)
-    implementation(libs.ktor.client.okhttp)
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+android {
+
 }
+
+kotlin {
+    android()
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                api(project(":gemini"))
+                implementation(compose.desktop.currentOs)
+//                implementation(libs.kamel.image)
+//                implementation(libs.ktor.client)
+//                implementation(libs.ktor.client.okhttp)
+            }
+        }
+//        val androidMain by getting {
+//            dependsOn(commonMain)
+//            implementation(compose.foundation)
+//            implementation(libs.activity.compose)
+//        }
+        val desktopMain by getting {
+            dependsOn(commonMain)
+        }
+    }
+}
+
+//dependencies {
+//    implementation(project(":gemini"))
+//    implementation(compose.desktop.currentOs)
+//    implementation(libs.kamel.image)
+//    implementation(libs.ktor.client)
+//    implementation(libs.ktor.client.okhttp)
+//    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+//    testImplementation("org.junit.jupiter:junit-jupiter")
+//}
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "examples.asteroids.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
@@ -31,14 +56,14 @@ compose.desktop {
     }
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "17"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "17"
-}
+//tasks.test {
+//    useJUnitPlatform()
+//}
+//val compileKotlin: KotlinCompile by tasks
+//compileKotlin.kotlinOptions {
+//    jvmTarget = "17"
+//}
+//val compileTestKotlin: KotlinCompile by tasks
+//compileTestKotlin.kotlinOptions {
+//    jvmTarget = "17"
+//}

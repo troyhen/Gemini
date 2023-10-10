@@ -101,7 +101,3 @@ private fun detectKeys(keys: Set<Key>) {
     if (Key.DirectionRight in keys) cameraVelocity.xs = 1f
 //    println("$keys $cameraVelocity")
 }
-
-fun main() = singleWindowApplication(title = "Gemini Star Field") {
-    StarField()
-}
