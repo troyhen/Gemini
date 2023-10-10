@@ -4,7 +4,6 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -20,7 +19,6 @@ import gemini.engine.rememberScene
 import gemini.foundation.background
 import gemini.foundation.frameRate
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AsteroidsGame(modifier: Modifier = Modifier) {
     var iteration by remember { mutableStateOf(1) }

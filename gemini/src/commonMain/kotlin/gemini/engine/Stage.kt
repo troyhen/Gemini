@@ -23,8 +23,8 @@ import kotlin.time.TimeSource
 class Stage(
     private val scope: CoroutineScope,
     val textMeasurer: TextMeasurer,
-    private val coroutineContext: CoroutineContext = Dispatchers.Default,
     startImmediately: Boolean = true,
+    private val coroutineContext: CoroutineContext = Dispatchers.Default,
 ) : SceneScope() {
 
     var screenSize: Size = Size.Zero

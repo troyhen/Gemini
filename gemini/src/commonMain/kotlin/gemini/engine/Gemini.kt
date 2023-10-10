@@ -1,15 +1,18 @@
 package gemini.engine
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.rememberTextMeasurer
 
 @Composable
-fun Gemini(modifier: Modifier = Modifier, builder: suspend SceneScope.() -> Unit) {
+fun Gemini(modifier: Modifier = Modifier, startImmediately: Boolean = true, builder: suspend SceneScope.() -> Unit) {
     val textMeasurer = rememberTextMeasurer()
     val scope = rememberCoroutineScope()
-    val stage = remember { Stage(scope, textMeasurer) }
+    val stage = remember { Stage(scope, textMeasurer, startImmediately) }
     Canvas(modifier) {
         stage.run {
             draw()
@@ -21,11 +24,5 @@ fun Gemini(modifier: Modifier = Modifier, builder: suspend SceneScope.() -> Unit
             build()
         }
         stage.load(scene)
-    }
-    DisposableEffect(stage) {
-        stage.start()
-        onDispose {
-            stage.stop()
-        }
     }
 }
