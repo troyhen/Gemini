@@ -1,7 +1,7 @@
 [versions]
 activity = "1.8.0"
 agp = "7.4.2" # https://developer.android.com/reference/tools/gradle-api
-compose = "1.5.2"
+compose = "1.5.3"
 kamel = "0.7.3"
 kotlin = "1.9.10"
 ktor = "2.3.4"

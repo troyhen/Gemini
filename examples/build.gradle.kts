@@ -1,24 +1,27 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    alias(libs.plugins.android.application)
+//    alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlin.multiplatform)
 }
 
-android {
-
-}
+//android {
+//    defaultConfig {
+//
+//    }
+//}
 
 kotlin {
-    android()
+//    android()
+    jvm("desktop")
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 api(project(":gemini"))
                 implementation(compose.desktop.currentOs)
-//                implementation(libs.kamel.image)
+                implementation(libs.kamel.image)
 //                implementation(libs.ktor.client)
 //                implementation(libs.ktor.client.okhttp)
             }

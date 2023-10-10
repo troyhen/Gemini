@@ -9,4 +9,4 @@ pluginManagement {
 
 rootProject.name = "Gemini"
 
-include(/*"examples", */"gemini")
+include("examples", "gemini")

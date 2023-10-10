@@ -1,4 +1,5 @@
 plugins {
+//    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlin.multiplatform)
 }
@@ -7,10 +8,11 @@ kotlin {
 
 //    explicitApi = ExplicitApiMode.Warning
 
+//    androidTarget()
 //    androidTarget {
 //        publishAllLibraryVariants()
 //    }
-    jvm("desktop")
+    jvm()
 //    js(IR) {
 //        browser()
 //    }
