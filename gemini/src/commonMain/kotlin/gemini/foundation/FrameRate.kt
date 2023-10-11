@@ -21,7 +21,7 @@ class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.South
     override fun DrawScope.orientAndDraw() {
         if (Stage.instance?.isRunning != true) return
         val layout = measureFrameRate() ?: return
-        val textSize = layout.size.toSize() / density
+        val textSize = layout.size.toSize()
         val center = Offset((size.width - textSize.width) / 2, (size.height - textSize.height) / 2)
         val offset = when (pivot) {
             Pivot.NorthEast -> Offset(size.width - textSize.width, 0f)
