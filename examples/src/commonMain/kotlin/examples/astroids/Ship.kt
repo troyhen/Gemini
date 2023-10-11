@@ -17,7 +17,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
-class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingThing(position), Collider {
+class Ship(position: Position, private val onEnd: () -> Unit, private val onUpdate: Ship.() -> Unit) : MovingThing(position), Collider {
 
     private var lastFire: TimeSource.Monotonic.ValueTimeMark? = null
 
@@ -48,6 +48,7 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
             is Asteroid -> {
                 collider.explode()
                 Stage.instance?.stop()
+                onEnd()
                 true
             }
             else -> false
@@ -69,22 +70,22 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
         }
     }
 
-    fun input(forward: Boolean, left: Boolean, right: Boolean, backward: Boolean, fire: Boolean) {
-        if (forward) {
+    fun control(state: State) {
+        if (Control.GoForward in state.controls) {
             velocity.xs += FORWARD_THRUST * cos(position.rotation.r.radians)
             velocity.ys += FORWARD_THRUST * sin(position.rotation.r.radians)
         }
-        if (backward) {
+        if (Control.GoBackward in state.controls) {
             velocity.xs -= BACKWARD_THRUST * cos(position.rotation.r.radians)
             velocity.ys -= BACKWARD_THRUST * sin(position.rotation.r.radians)
         }
-        if (left) {
+        if (Control.TurnLeft in state.controls) {
             spin -= SPIN_INCREMENT
         }
-        if (right) {
+        if (Control.TurnRight in state.controls) {
             spin += SPIN_INCREMENT
         }
-        if (fire) {
+        if (Control.Fire in state.controls) {
             val timeSinceLastFire = lastFire?.elapsedNow() ?: COOL_DOWN_TIME
             if (timeSinceLastFire >= COOL_DOWN_TIME) {
                 fireBullet()
@@ -102,11 +103,11 @@ class Ship(position: Position, private val onUpdate: Ship.() -> Unit) : MovingTh
     }
 }
 
-fun SceneScope.ship(spaceSize: Size, onUpdate: Ship.() -> Unit): Ship {
+fun SceneScope.ship(spaceSize: Size, onEnd: () -> Unit, onUpdate: Ship.() -> Unit): Ship {
     val location = Location(spaceSize.width / 2, spaceSize.height / 2)
     val length = min(spaceSize.width, spaceSize.height) / 20
     val width = length / 2
-    return Ship(Position(location, Size(length, width)), onUpdate).also { thing ->
+    return Ship(Position(location, Size(length, width)), onEnd, onUpdate).also { thing ->
         add(thing)
     }
 }
