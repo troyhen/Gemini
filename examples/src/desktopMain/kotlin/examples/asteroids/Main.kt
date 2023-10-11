@@ -27,6 +27,7 @@ fun main() = singleWindowApplication(title = "Gemini Asteroids") {
                         Key.DirectionLeft -> state.add(Control.TurnLeft)
                         Key.DirectionRight -> state.add(Control.TurnRight)
                         Key.Spacebar -> state.add(Control.Fire)
+                        Key.Escape -> state.add(Control.Exit)
                     }
 
                     KeyEventType.KeyUp -> when (it.key) {
@@ -35,6 +36,7 @@ fun main() = singleWindowApplication(title = "Gemini Asteroids") {
                         Key.DirectionLeft -> state.remove(Control.TurnLeft)
                         Key.DirectionRight -> state.remove(Control.TurnRight)
                         Key.Spacebar -> state.remove(Control.Fire)
+                        Key.Escape -> state.remove(Control.Exit)
                     }
                 }
                 true

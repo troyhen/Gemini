@@ -2,10 +2,10 @@ package examples.astroids
 
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +16,7 @@ import gemini.engine.Stage
 import gemini.engine.rememberScene
 import gemini.foundation.background
 import gemini.foundation.frameRate
+import gemini.geometry.Pivot
 
 @Composable
 fun Game(state: State, modifier: Modifier = Modifier) = state.run {
@@ -36,7 +37,7 @@ fun Game(state: State, modifier: Modifier = Modifier) = state.run {
         val screenSize = Size(maxWidth.value, maxHeight.value)
         val game = rememberScene(iteration) {
             background(Color.Black)
-            frameRate(Color.White)
+            frameRate(Color.White, Pivot.NorthEast)
             ship(screenSize, ::onEnd) {
                 control(state)
             }
@@ -51,9 +52,9 @@ fun Game(state: State, modifier: Modifier = Modifier) = state.run {
             TextButton(
                 onClick = ::onRestart,
                 modifier = Modifier.align(Alignment.Center),
-                colors = ButtonDefaults.textButtonColors(backgroundColor = Color.LightGray.copy(alpha = .5f)),
+                colors = ButtonDefaults.textButtonColors(containerColor = Color.LightGray.copy(alpha = .5f)),
             ) {
-                Text("Restart", style = MaterialTheme.typography.h5)
+                Text("Restart", style = MaterialTheme.typography.titleMedium)
             }
         }
     }

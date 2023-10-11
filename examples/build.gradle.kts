@@ -35,21 +35,25 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":gemini"))
-                implementation(compose.desktop.currentOs)
-                implementation(libs.kamel.image)
+                api(compose.foundation)
+                implementation(compose.materialIconsExtended)
+                api(compose.material3)
+                api(compose.ui)
+                api(libs.kamel.image)
             }
         }
         val androidMain by getting {
             dependsOn(commonMain)
             dependencies {
-                implementation(compose.runtime)
-                implementation(compose.ui)
                 implementation(libs.activity)
                 implementation(libs.activity.compose)
             }
         }
         val desktopMain by getting {
             dependsOn(commonMain)
+            dependencies {
+                implementation(compose.desktop.currentOs)
+            }
         }
     }
 }
