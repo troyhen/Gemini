@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
@@ -23,7 +22,6 @@ import kotlin.time.TimeSource
 class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.SouthEast) : Thing() {
     private var lastMark: TimeSource.Monotonic.ValueTimeMark? = null
     private var frameRate by mutableStateOf(0f)
-    private val matrix = Matrix()
 
     override suspend fun act(elapsed: Duration) {
         val end = Stage.time.markNow()
