@@ -10,7 +10,7 @@ open class Thing(val position: Position = Position()) {
     open fun DrawScope.draw() = Unit
 
     protected fun DrawScope.drawRelative(draw: DrawScope.() -> Unit) {
-        withTransform({ transform(position.orient()) }) {
+        withTransform({ transform(position.transform()) }) {
             draw()
         }
     }

@@ -11,7 +11,7 @@ import kotlin.time.Duration
 class Circle(
     position: Position,
     var color: Color,
-    val actor: (suspend Circle.(Duration) -> Unit)? = null,
+    private val actor: (suspend Circle.(Duration) -> Unit)? = null,
 ) : Thing(position) {
 
     override suspend fun act(elapsed: Duration) {

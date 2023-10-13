@@ -13,14 +13,14 @@ import kotlin.time.Duration
 class MovingRectangle(
     position: Position,
     private val color: Color,
-    val actor: (suspend MovingRectangle.(Duration) -> Unit)? = null,
+    private val actor: (suspend MovingRectangle.(Duration) -> Unit)? = null,
 ) : Thing(position) {
 
     override suspend fun act(elapsed: Duration) {
         actor?.invoke(this, elapsed)
     }
 
-    override fun DrawScope.draw() {
+    override fun DrawScope.draw() = drawRelative {
         drawRect(color, Offset.Zero, position.space.size)
     }
 }

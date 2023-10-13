@@ -3,16 +3,13 @@ package gemini.foundation
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.toSize
 import gemini.engine.SceneScope
 import gemini.engine.Stage
-import gemini.engine.Stage.Companion.world
 import gemini.geometry.Pivot
-import gemini.max
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
@@ -38,11 +35,11 @@ class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.South
     }
 
     override fun DrawScope.draw() {
-        if (Stage.instance?.isRunning != true) return
+        val stage = Stage.instance
+        if (stage?.isRunning != true) return
         val layout = measureFrameRate() ?: return
         withTransform({
-            scale(world.size.max / size.max, Offset.Zero)
-            translate(-center.x, -center.y)
+            stage.camera.run { reverse() }
         }) {
             val textSize = layout.size.toSize()
             val center = Offset((size.width - textSize.width) / 2, (size.height - textSize.height) / 2)

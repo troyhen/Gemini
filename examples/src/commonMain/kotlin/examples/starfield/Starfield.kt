@@ -11,14 +11,13 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.key.*
-import gemini.*
 import gemini.engine.Gemini
 import gemini.engine.SceneScope
 import gemini.engine.rememberScene
 import gemini.foundation.MovingThing
 import gemini.foundation.background
 import gemini.foundation.frameRate
-import gemini.geometry.Velocity
+import gemini.geometry.*
 import kotlin.time.Duration
 
 val cameraVelocity = Velocity(0f, 0f, -1f)
@@ -26,7 +25,7 @@ val cameraVelocity = Velocity(0f, 0f, -1f)
 private class Star : MovingThing() {
     override suspend fun act(elapsed: Duration) {
         super.act(elapsed)
-        val seconds = elapsed.inSeconds
+        val seconds = elapsed.seconds
         position.location.move(cameraVelocity.xs * seconds, cameraVelocity.ys * seconds, cameraVelocity.zs * seconds)
     }
 

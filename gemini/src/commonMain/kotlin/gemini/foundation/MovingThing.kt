@@ -2,7 +2,6 @@ package gemini.foundation
 
 import gemini.engine.Stage
 import gemini.geometry.*
-import gemini.inSeconds
 import kotlin.time.Duration
 
 open class MovingThing(
@@ -12,7 +11,7 @@ open class MovingThing(
 ) : Thing(position) {
 
     override suspend fun act(elapsed: Duration) {
-        val seconds = elapsed.inSeconds
+        val seconds = elapsed.seconds
         position.location.x += velocity.xs * seconds
         position.location.y += velocity.ys * seconds
         position.rotation.r += spin * seconds

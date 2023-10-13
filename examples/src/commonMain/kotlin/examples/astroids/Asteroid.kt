@@ -10,12 +10,6 @@ import gemini.engine.Stage
 import gemini.foundation.MovingThing
 import gemini.foundation.particles
 import gemini.geometry.*
-import gemini.random
-import gemini.randomPlus
-import gemini.rotate
-import gemini.toOffset
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -34,7 +28,7 @@ class Asteroid(
             repeat(12) {
                 val distance = s2.randomPlus(s2)
                 val angle = (it * step).degrees
-                val offset = center + Offset(distance, 0f).rotate(angle)
+                val offset = center + Offset(distance, 0f) rotate angle
                 if (it == 0) {
                     moveTo(offset.x, offset.y)
                 } else {
@@ -79,10 +73,8 @@ class Asteroid(
 fun SceneScope.asteroid(size: Int = 4): Asteroid {
     val ratio = 1f / 30
     val diameter = ratio * size
-    val speed = ratio
     val location = Location(2f.randomPlus(), 2f.randomPlus())
-    val direction = PI2.random
-    val velocity = Velocity(speed * cos(direction), speed * sin(direction))
+    val velocity = Velocity(Offset(ratio, 0f) rotate 360.degrees.random)
     val spin = 30.degrees.randomPlus()
     return Asteroid(Position(location, Space(diameter, diameter)), velocity, spin).also {
         add(it)

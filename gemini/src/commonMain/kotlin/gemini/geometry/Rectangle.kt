@@ -47,4 +47,10 @@ value class Rectangle private constructor(private val data: FloatArray) {
         this.right = offset.x + size.width
         this.bottom = offset.y + size.height
     }
+
+    fun setFrom(rectangle: Rectangle) {
+        repeat(4) { index ->
+            data[index] = rectangle.data[index]
+        }
+    }
 }

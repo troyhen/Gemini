@@ -22,7 +22,7 @@ value class Location private constructor(private val data: FloatArray) {
 
     val offset: Offset get() = Offset(x, y)
 
-    constructor(offset: Offset) : this(offset.x, offset.y, 0f)
+    constructor(offset: Offset, z: Float = 0f) : this(offset.x, offset.y, z)
     constructor(x: Float = 0f, y: Float = 0f, z: Float = 0f) : this(floatArrayOf(x, y, z))
 
     fun move(xs: Float, ys: Float, zs: Float = 0f) {
@@ -31,16 +31,16 @@ value class Location private constructor(private val data: FloatArray) {
         this.z += zs
     }
 
-    fun set(location: Location) {
-        this.x = location.x
-        this.y = location.y
-        this.z = location.z
-    }
-
     fun set(x: Float, y: Float, z: Float = 0f) {
         this.x = x
         this.y = y
         this.z = z
+    }
+
+    fun setFrom(location: Location) {
+        repeat(3) { index ->
+            data[index] = location.data[index]
+        }
     }
 
     companion object {

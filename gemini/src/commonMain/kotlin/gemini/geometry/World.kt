@@ -54,12 +54,9 @@ value class World private constructor(private val data: FloatArray) {
         this.far = far
     }
 
-    fun set(world: World) {
-        left = world.left
-        right = world.right
-        top = world.top
-        bottom = world.bottom
-        near = world.near
-        far = world.far
+    fun setFrom(world: World) {
+        repeat(6) { index ->
+            data[index] = world.data[index]
+        }
     }
 }

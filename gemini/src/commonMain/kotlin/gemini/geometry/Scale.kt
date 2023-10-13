@@ -32,6 +32,12 @@ value class Scale private constructor(private val data: FloatArray) {
         this.z = z
     }
 
+    fun setFrom(scale: Scale) {
+        repeat(3) { index ->
+            data[index] = scale.data[index]
+        }
+    }
+
     companion object {
         val ONE = Scale(1f, 1f, 1f)
     }

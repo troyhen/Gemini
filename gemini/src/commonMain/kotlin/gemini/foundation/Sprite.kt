@@ -14,8 +14,7 @@ import kotlin.time.Duration
 
 class Sprite(
     position: Position,
-    val painter: Painter? = null,
-    val resource: Resource<Painter>? = null,
+    val painter: () -> Painter?,
     val actor: (suspend Sprite.(Duration) -> Unit)? = null,
 ) : Thing(position) {
 
@@ -24,8 +23,10 @@ class Sprite(
     }
 
     override fun DrawScope.draw() {
-        (painter ?: resource?.getOrNull())?.run {
-            draw(position.space.size.takeUnless { it == Size.Zero } ?: intrinsicSize)
+        painter()?.run {
+            drawRelative {
+                draw(position.space.size.takeUnless { it == Size.Zero } ?: intrinsicSize)
+            }
         }
     }
 }
@@ -39,7 +40,7 @@ fun SceneScope.sprite(
     pivot: Pivot = Pivot.Center,
     act: (suspend Sprite.(Duration) -> Unit)? = null
 ): Sprite {
-    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), painter = painter, actor = act).also {
+    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), { painter }, actor = act).also {
         add(it)
     }
 }
@@ -53,7 +54,7 @@ fun SceneScope.sprite(
     pivot: Pivot = Pivot.Center,
     act: (suspend Sprite.(Duration) -> Unit)? = null
 ): Sprite {
-    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), resource = resource, actor = act).also {
+    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), { resource.getOrNull() }, actor = act).also {
         add(it)
     }
 }

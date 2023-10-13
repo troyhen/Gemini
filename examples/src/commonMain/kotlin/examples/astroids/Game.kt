@@ -16,7 +16,6 @@ import gemini.engine.rememberScene
 import gemini.foundation.background
 import gemini.foundation.frameRate
 import gemini.geometry.Pivot
-import gemini.orthographic
 
 @Composable
 fun Game(state: State, modifier: Modifier = Modifier) = state.run {
@@ -35,7 +34,7 @@ fun Game(state: State, modifier: Modifier = Modifier) = state.run {
 
     Box {
         val game = rememberScene(iteration) {
-            camera.matrix.orthographic()
+            camera.orthographic()
             background(Color.Black)
             frameRate(Color.White, Pivot.NorthEast)
             ship(::onEnd) {

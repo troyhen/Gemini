@@ -23,5 +23,23 @@ value class Space private constructor(private val data: FloatArray) {
             data[2] = value
         }
 
+    fun scale(xs: Float = 1f, ys: Float = 1f, zs: Float = 1f) {
+        width *= xs
+        height *= ys
+        depth *= zs
+    }
+
+    fun set(width: Float = 1f, height: Float = 1f, depth: Float = 1f) {
+        this.width = width
+        this.height = height
+        this.depth = depth
+    }
+
+    fun setFrom(space: Space) {
+        repeat(3) { index ->
+            data[index] = space.data[index]
+        }
+    }
+
     val size: Size get() = Size(width, height)
 }

@@ -8,6 +8,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.window.singleWindowApplication
 import gemini.engine.Gemini
 import gemini.engine.rememberScene
@@ -15,7 +16,6 @@ import gemini.foundation.background
 import gemini.foundation.frameRate
 import gemini.foundation.sprite
 import gemini.geometry.degrees
-import gemini.orthographic
 import io.kamel.core.config.KamelConfig
 import io.kamel.core.config.takeFrom
 import io.kamel.image.asyncPainterResource
@@ -33,16 +33,15 @@ fun main() = singleWindowApplication(title = "Gemini Sandbox") {
         // An alternative svg decoder
 //        batikSvgDecoder()
     }
-    val density = 2 // todo why not this? LocalDensity.current.density
+    val density = LocalDensity.current.density
     CompositionLocalProvider(LocalKamelConfig provides desktopConfig) {
         val symbol = asyncPainterResource("https://sarahscoop.com/wp-content/uploads/2023/03/gemini-ascendant-man-1.jpg").also {
-            println("2 $it, density $density")
+            println("2 $it")
         }
         var mouse by remember { mutableStateOf(Offset(0f, 0f)) }
         var pressed by remember { mutableStateOf(false) }
         val basicDemo = rememberScene {
-            camera.matrix.orthographic(0f, 400f, 0f, 400f)
-            world.set(0f, 400f, 0f, 400f)
+            camera.default()
             background(Color.Black)
             sprite(symbol, 100f, 100f, 100f, 130f) { time ->
                 val rotation = -time.inWholeMilliseconds / 100f

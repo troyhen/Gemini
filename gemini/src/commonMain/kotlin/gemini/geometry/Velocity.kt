@@ -21,6 +21,7 @@ value class Velocity private constructor(private val data: FloatArray) {
         }
 
     constructor(xs: Float = 0f, ys: Float = 0f, zs: Float = 0f) : this(floatArrayOf(xs, ys, zs))
+    constructor(speed: Offset, zs: Float = 0f) : this(floatArrayOf(speed.x, speed.y, zs))
 
     fun add(xs: Float, ys: Float, zs: Float = 0f) {
         this.xs += xs
@@ -28,10 +29,28 @@ value class Velocity private constructor(private val data: FloatArray) {
         this.zs += zs
     }
 
+    fun add(delta: Offset, zs: Float = 0f) {
+        this.xs += delta.x
+        this.ys += delta.y
+        this.zs += zs
+    }
+
     fun set(xs: Float, ys: Float, zz: Float = 0f) {
         this.xs = xs
         this.ys = ys
         this.zs = zz
+    }
+
+    fun set(speed: Offset, zz: Float = 0f) {
+        this.xs = speed.x
+        this.ys = speed.y
+        this.zs = zz
+    }
+
+    fun setFrom(velocity: Velocity) {
+        repeat(3) { index ->
+            data[index] = velocity.data[index]
+        }
     }
 }
 
