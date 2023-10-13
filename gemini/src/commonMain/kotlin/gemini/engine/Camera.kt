@@ -12,11 +12,11 @@ class Camera {
         val fmn = far - near
         matrix.reset()
         matrix[0, 0] = n2 / rml
-        matrix[0, 3] = -(right + left) / rml
+        matrix[0, 3] = -near * (right + left) / rml
         matrix[1, 1] = n2 / bmt
-        matrix[1, 3] = -(bottom + top) / bmt
-        matrix[2, 2] = far / fmn
-        matrix[2, 3] = -far * near / fmn
+        matrix[1, 3] = -near * (bottom + top) / bmt
+        matrix[2, 2] = (far + near) / fmn
+        matrix[2, 3] = -far * n2 / fmn
         matrix[3, 2] = 1f
         matrix[3, 3] = 0f
     }
