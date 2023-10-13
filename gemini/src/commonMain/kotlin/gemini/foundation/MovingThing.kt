@@ -39,6 +39,8 @@ open class MovingThing(
 
     fun wrap(world: World = Stage.visible) {
         if (position.location.x > world.right || position.location.x < world.left) position.location.x = (position.location.x - world.left) % world.width + world.left
+        if (position.location.x < world.left) position.location.x += world.width
         if (position.location.y > world.bottom || position.location.y < world.top) position.location.y = (position.location.y - world.top) % world.height + world.top
+        if (position.location.y < world.top) position.location.y += world.height
     }
 }
