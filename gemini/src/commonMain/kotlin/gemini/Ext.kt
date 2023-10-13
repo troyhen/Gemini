@@ -105,3 +105,44 @@ fun Matrix.map(from: Location, to: Location = Location()): Location {
     to.y = pZ * (this[0, 1] * x + this[1, 1] * y + z * this[2, 1] + this[3, 1])
     return to
 }
+
+fun Matrix.perspective(left: Float = -1f, right: Float = 1f, top: Float = -1f, bottom: Float = 1f, near: Float = -1f, far: Float = 1f) {
+    val n2 = 2 * near
+    val rml = right - left
+    val bmt = bottom - top
+    val fmn = far - near
+    reset()
+    set(0, 0, n2 / rml)
+    set(0, 3, -near * (right + left) / rml)
+    set(1, 1, n2 / bmt)
+    set(1, 3, -near * (bottom + top) / bmt)
+    set(2, 2, (far + near) / fmn)
+    set(2, 3, -far * n2 / fmn)
+    set(3, 2, 1f)
+    set(3, 3, 0f)
+}
+
+fun perspectiveMatrix(left: Float = -1f, right: Float = 1f, top: Float = -1f, bottom: Float = 1f, near: Float = -1f, far: Float = 1f): Matrix {
+    return Matrix().apply {
+        perspective(left, right, top, bottom, near, far)
+    }
+}
+
+fun Matrix.orthographic(left: Float = -1f, right: Float = 1f, top: Float = -1f, bottom: Float = 1f, near: Float = -1f, far: Float = 1f) {
+    val rml = right - left
+    val bmt = bottom - top
+    val fmn = far - near
+    reset()
+    set(0, 0, 2 / rml)
+    set(0, 3, -(right + left) / rml)
+    set(1, 1, 2 / bmt)
+    set(1, 3, -(bottom + top) / bmt)
+    set(2, 2, 2 / fmn)
+    set(2, 3, -(far + near) / fmn)
+}
+
+fun orthographicMatrix(left: Float = -1f, right: Float = 1f, top: Float = -1f, bottom: Float = 1f, near: Float = -1f, far: Float = 1f): Matrix {
+    return Matrix().apply {
+        orthographic(left, right, top, bottom, near, far)
+    }
+}
