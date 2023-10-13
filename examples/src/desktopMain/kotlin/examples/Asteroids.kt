@@ -1,4 +1,4 @@
-package examples.asteroids
+package examples
 
 import androidx.compose.foundation.focusable
 import androidx.compose.runtime.LaunchedEffect
