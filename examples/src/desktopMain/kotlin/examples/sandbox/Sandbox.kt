@@ -15,6 +15,7 @@ import gemini.foundation.background
 import gemini.foundation.frameRate
 import gemini.foundation.sprite
 import gemini.geometry.degrees
+import gemini.orthographic
 import io.kamel.core.config.KamelConfig
 import io.kamel.core.config.takeFrom
 import io.kamel.image.asyncPainterResource
@@ -40,6 +41,8 @@ fun main() = singleWindowApplication(title = "Gemini Sandbox") {
         var mouse by remember { mutableStateOf(Offset(0f, 0f)) }
         var pressed by remember { mutableStateOf(false) }
         val basicDemo = rememberScene {
+            camera.matrix.orthographic(0f, 400f, 0f, 400f)
+            world.set(0f, 400f, 0f, 400f)
             background(Color.Black)
             sprite(symbol, 100f, 100f, 100f, 130f) { time ->
                 val rotation = -time.inWholeMilliseconds / 100f

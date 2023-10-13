@@ -1,8 +1,5 @@
 package gemini.foundation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -19,14 +16,18 @@ import gemini.max
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
-class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.SouthEast) : Thing() {
+class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.SouthEast, private val maxSamples: Int = 100) : Thing() {
     private var lastMark: TimeSource.Monotonic.ValueTimeMark? = null
-    private var frameRate by mutableStateOf(0f)
+    private var frameRate = 0f
+    private var samples = 0
 
     override suspend fun act(elapsed: Duration) {
         val end = Stage.time.markNow()
         lastMark?.let { start ->
-            frameRate = (frameRate * 59 + 1e6f / (end - start).inWholeMicroseconds) / 60 // trigger recompose
+            if (samples < maxSamples) {
+                samples++
+            }
+            frameRate = (frameRate * (samples - 1) + 1e6f / (end - start).inWholeMicroseconds) / samples // trigger recompose
         }
         lastMark = end
     }
