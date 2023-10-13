@@ -30,7 +30,7 @@ class Camera {
         matrix[0, 3] = -(right + left) / rml
         matrix[1, 1] = 2 / bmt
         matrix[1, 3] = -(bottom + top) / bmt
-        matrix[2, 2] = 1 / fmn
-        matrix[2, 3] = -near / fmn
+        matrix[2, 2] = 2 / fmn
+        matrix[2, 3] = -(far + near) / fmn
     }
 }
