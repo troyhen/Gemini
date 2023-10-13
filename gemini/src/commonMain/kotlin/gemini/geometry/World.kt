@@ -38,6 +38,7 @@ value class World private constructor(private val data: FloatArray) {
             data[5] = value
         }
 
+    val center: Offset get() = Offset((left + right) / 2, (top + bottom) / 2)
     val depth: Float get() = far - near
     val height: Float get() = bottom - top
     val offset: Offset get() = Offset(left, top)
