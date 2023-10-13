@@ -1,15 +1,11 @@
 package gemini.foundation
 
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import gemini.engine.SceneScope
 import gemini.engine.Stage
-import gemini.geometry.Location
-import gemini.geometry.Position
-import gemini.geometry.Velocity
-import gemini.geometry.plus
+import gemini.geometry.*
 import gemini.randomPlus
 import kotlin.time.Duration
 import kotlin.time.TimeSource
@@ -25,15 +21,18 @@ class Particle(position: Position, speed: Velocity, private val lifeSpan: Durati
     }
 
     override fun DrawScope.draw() {
-//        drawPoints(listOf(Offset.Zero), PointMode.Points, color)
-        drawRect(color, Offset.Zero, Size(1f, 1f))
+        drawRect(color, position.location.offset, position.space.size)
+    }
+
+    companion object {
+        const val SIZE = .002f
     }
 }
 
 fun SceneScope.particles(number: Int, location: Location, speed: Velocity, randomness: Float = 0f, lifeSpan: Duration, color: Color): List<Particle> {
     return (1..number).map {
         val offset = Offset(randomness, randomness).randomPlus()
-        Particle(Position(location + offset), speed + offset, lifeSpan.randomPlus(), color).also { thing ->
+        Particle(Position(location + offset, Space(Particle.SIZE, Particle.SIZE)), speed + offset, lifeSpan.randomPlus(), color).also { thing ->
             add(thing)
         }
     }

@@ -18,8 +18,7 @@ value class Scale private constructor(private val data: FloatArray) {
             data[2] = value
         }
 
-    constructor() : this(floatArrayOf(1f, 1f, 1f))
-    constructor(x: Float, y: Float, z: Float = ONE.z) : this(floatArrayOf(x, y, z))
+    constructor(x: Float = ONE.x, y: Float = ONE.y, z: Float = ONE.z) : this(floatArrayOf(x, y, z))
 
     fun scale(x: Float, y: Float, z: Float = ONE.z) {
         this.x *= x

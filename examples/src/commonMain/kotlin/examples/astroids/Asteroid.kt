@@ -1,7 +1,6 @@
 package examples.astroids
 
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -16,21 +15,19 @@ import gemini.randomPlus
 import gemini.rotate
 import gemini.toOffset
 import kotlin.math.cos
-import kotlin.math.min
 import kotlin.math.sin
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-
 
 class Asteroid(
     position: Position,
     velocity: Velocity,
     spin: Angle,
-    private val baseSize: Int = 4,
+    val baseSize: Int = 4,
 ) : MovingThing(position, velocity, spin), Collider {
 
     private val path: Path by lazy {
-        val center = (position.size / 2f).toOffset()
+        val center = (position.space.size / 2f).toOffset()
         val s2 = center.x / 2
         Path().apply {
             val step = 360f / 12
@@ -65,42 +62,43 @@ class Asteroid(
         return false
     }
 
-    override fun DrawScope.draw() {
+    override fun DrawScope.draw() = drawRelative {
         drawPath(path, Color.Gray)
     }
 
     fun explode() {
         Stage.instance?.run {
             remove(this@Asteroid)
+            particles(20 * baseSize, position.location, velocity, .1f, 2.seconds, Color.White)
             if (baseSize <= 1) return
-            asteroids(3, position.location, position.size, velocity, spin, baseSize)
-            particles(20, position.location, velocity, 40f, 2.seconds, Color.White)
+            asteroids(3, this@Asteroid)
         }
     }
 }
 
-fun SceneScope.asteroid(screenSize: Size, size: Int = 4): Asteroid {
-    val ratio = min(screenSize.width, screenSize.height) / 30
+fun SceneScope.asteroid(size: Int = 4): Asteroid {
+    val ratio = 1f / 30
     val diameter = ratio * size
     val speed = ratio
-    val location = Location(screenSize.width.random, screenSize.height.random)
+    val location = Location(2f.randomPlus(), 2f.randomPlus())
     val direction = PI2.random
     val velocity = Velocity(speed * cos(direction), speed * sin(direction))
     val spin = 30.degrees.randomPlus()
-    return Asteroid(Position(location, Size(diameter, diameter)), velocity, spin).also {
+    return Asteroid(Position(location, Space(diameter, diameter)), velocity, spin).also {
         add(it)
     }
 }
 
-private fun SceneScope.asteroids(number: Int, location: Location, size: Size, velocity: Velocity, spin: Angle, baseSize: Int) {
+private fun SceneScope.asteroids(number: Int, parent: Asteroid) {
+    val size = parent.position.space.size
     repeat(number) {
-        add(
-            Asteroid(
-                position = Position(location + Offset(size.width, size.height).randomPlus(), size / 2f),
-                velocity = velocity * 1.5f + Offset(20f, 20f).randomPlus(),
-                spin = spin * 2 + 10.degrees.randomPlus(),
-                baseSize = baseSize / 2,
-            )
-        )
+        Asteroid(
+            position = Position(parent.position.location + Offset(size.width, size.height).randomPlus(), Space(size / 2f)),
+            velocity = parent.velocity * 1.5f + Offset(.05f, .05f).randomPlus(),
+            spin = parent.spin * 2 + 10.degrees.randomPlus(),
+            baseSize = parent.baseSize / 2,
+        ).also {
+            add(it)
+        }
     }
 }

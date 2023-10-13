@@ -1,6 +1,6 @@
 package examples.astroids
 
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -9,7 +9,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import gemini.engine.Gemini
 import gemini.engine.Stage
@@ -33,16 +32,16 @@ fun Game(state: State, modifier: Modifier = Modifier) = state.run {
         Stage.instance?.start()
     }
 
-    BoxWithConstraints {
-        val screenSize = Size(maxWidth.value, maxHeight.value)
+    Box {
         val game = rememberScene(iteration) {
+            camera.orthographic()
             background(Color.Black)
             frameRate(Color.White, Pivot.NorthEast)
-            ship(screenSize, ::onEnd) {
+            ship(::onEnd) {
                 control(state)
             }
             repeat(4) {
-                asteroid(screenSize)
+                asteroid()
             }
         }
         Gemini(modifier.fillMaxSize()) {

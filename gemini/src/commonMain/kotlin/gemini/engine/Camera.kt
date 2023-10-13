@@ -1,16 +1,36 @@
 package gemini.engine
 
 import androidx.compose.ui.graphics.Matrix
-import gemini.geometry.Angle
 
 class Camera {
     val matrix: Matrix = Matrix()
 
-    fun lookAt(toX: Float, toY: Float, toZ: Float, angle: Angle = Angle()) {
-
+    fun perspective(left: Float = -1f, right: Float = -1f, top: Float = 1f, bottom: Float = 1f, near: Float = -1f, far: Float = 1f) {
+        val n2 = 2 * near
+        val rml = right - left
+        val bmt = bottom - top
+        val fmn = far - near
+        matrix.reset()
+        matrix[0, 0] = n2 / rml
+        matrix[0, 3] = -(right + left) / rml
+        matrix[1, 1] = n2 / bmt
+        matrix[1, 3] = -(bottom + top) / bmt
+        matrix[2, 2] = far / fmn
+        matrix[2, 3] = -far * near / fmn
+        matrix[3, 2] = 1f
+        matrix[3, 3] = 0f
     }
 
-    fun orient(fromX: Float, fromY: Float, fromZ: Float, toX: Float, toY: Float, toZ: Float, angle: Angle = Angle()) {
-
+    fun orthographic(left: Float = -1f, right: Float = 1f, top: Float = -1f, bottom: Float = 1f, near: Float = -1f, far: Float = 1f) {
+        val rml = right - left
+        val bmt = bottom - top
+        val fmn = far - near
+        matrix.reset()
+        matrix[0, 0] = 2 / rml
+        matrix[0, 3] = -(right + left) / rml
+        matrix[1, 1] = 2 / bmt
+        matrix[1, 3] = -(bottom + top) / bmt
+        matrix[2, 2] = 1 / fmn
+        matrix[2, 3] = -near / fmn
     }
 }

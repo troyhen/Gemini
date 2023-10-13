@@ -1,7 +1,5 @@
 package examples.astroids
 
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import gemini.engine.Collider
@@ -10,6 +8,7 @@ import gemini.engine.Stage
 import gemini.foundation.MovingThing
 import gemini.geometry.Location
 import gemini.geometry.Position
+import gemini.geometry.Space
 import gemini.geometry.Velocity
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -32,21 +31,23 @@ class Bullet(position: Position, speed: Velocity) : MovingThing(position, speed)
                 collider.explode()
                 true
             }
+
             else -> false
         }
     }
 
     override fun DrawScope.draw() {
-        drawOval(Color.Red, Offset.Zero, position.size)
+        drawRect(Color.Red, position.location.offset, position.space.size)
     }
 
     companion object {
         private val LIFE_SPAN = 6.seconds
+        const val SIZE = .005f
     }
 }
 
-fun SceneScope.bullet(location: Location, speed: Velocity, size: Size = Size(3f, 3f)): Bullet {
-    return Bullet(Position(location, size), speed).also { thing ->
+fun SceneScope.bullet(location: Location, speed: Velocity, size: Float = Bullet.SIZE): Bullet {
+    return Bullet(Position(location, Space(size, size)), speed).also { thing ->
         add(thing)
     }
 }

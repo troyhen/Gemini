@@ -1,6 +1,5 @@
 package gemini.foundation
 
-import androidx.compose.ui.geometry.Size
 import gemini.engine.Stage
 import gemini.geometry.*
 import gemini.inSeconds
@@ -19,31 +18,27 @@ open class MovingThing(
         position.rotation.r += spin * seconds
     }
 
-    fun bounce(spaceSize: Size = Stage.screenSize) {
-        if (position.location.x < 0) {
+    fun bounce(world: World = Stage.visible) {
+        if (position.location.x < world.left) {
             position.location.x = -position.location.x
             velocity.xs = -velocity.xs
         }
-        if (position.location.y < 0) {
+        if (position.location.y < world.top) {
             position.location.y -= position.location.y
             velocity.ys = -velocity.ys
         }
-        if (position.location.x > spaceSize.width) {
-            position.location.x = spaceSize.width * 2 - position.location.x
+        if (position.location.x > world.right) {
+            position.location.x = world.right * 2 - position.location.x
             velocity.xs = -velocity.xs
         }
-        if (position.location.y > spaceSize.height) {
-            position.location.y = spaceSize.height * 2 - position.location.y
+        if (position.location.y > world.bottom) {
+            position.location.y = world.bottom * 2 - position.location.y
             velocity.ys = -velocity.ys
         }
     }
 
-    fun wrap(spaceSize: Size = Stage.screenSize) {
-        if (position.location.x > spaceSize.width * 2 || position.location.x < -spaceSize.width) position.location.x %= spaceSize.width
-        if (position.location.y > spaceSize.height * 2 || position.location.y < -spaceSize.height) position.location.y %= spaceSize.height
-        if (position.location.x < 0) position.location.x += spaceSize.width
-        else if (position.location.x >= spaceSize.width) position.location.x -= spaceSize.width
-        if (position.location.y < 0) position.location.y += spaceSize.height
-        else if (position.location.y >= spaceSize.height) position.location.y -= spaceSize.height
+    fun wrap(world: World = Stage.visible) {
+        if (position.location.x > world.right || position.location.x < world.left) position.location.x = (position.location.x - world.left) % world.width + world.left
+        if (position.location.y > world.bottom || position.location.y < world.top) position.location.y = (position.location.y - world.top) % world.height + world.top
     }
 }

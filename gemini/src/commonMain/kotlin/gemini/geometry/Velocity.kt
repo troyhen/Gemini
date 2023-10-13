@@ -20,8 +20,7 @@ value class Velocity private constructor(private val data: FloatArray) {
             data[2] = value
         }
 
-    constructor() : this(FloatArray(3))
-    constructor(xs: Float, ys: Float, zs: Float = 0f) : this(floatArrayOf(xs, ys, zs))
+    constructor(xs: Float = 0f, ys: Float = 0f, zs: Float = 0f) : this(floatArrayOf(xs, ys, zs))
 
     fun add(xs: Float, ys: Float, zs: Float = 0f) {
         this.xs += xs
@@ -33,10 +32,6 @@ value class Velocity private constructor(private val data: FloatArray) {
         this.xs = xs
         this.ys = ys
         this.zs = zz
-    }
-
-    companion object {
-        val Zero = Velocity()
     }
 }
 

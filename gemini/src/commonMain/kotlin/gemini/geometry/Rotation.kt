@@ -18,8 +18,7 @@ value class Rotation private constructor(private val data: FloatArray) {
             data[2] = value.degrees
         }
 
-    constructor() : this(FloatArray(3))
-    constructor(r: Float, p: Float = ZERO.degrees, y: Float = ZERO.degrees) : this(floatArrayOf(r, p, y))
+    constructor(r: Float = ZERO.degrees, p: Float = ZERO.degrees, y: Float = ZERO.degrees) : this(floatArrayOf(r, p, y))
 
     fun rotate(r: Angle, y: Angle = ZERO, p: Angle = ZERO) {
         this.r += r

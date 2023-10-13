@@ -2,6 +2,7 @@ package gemini
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Matrix
 import gemini.geometry.*
 import kotlin.math.cos
 import kotlin.math.max
@@ -63,6 +64,8 @@ fun Offset.rotate(angle: Angle): Offset {
 val Float.seconds: Duration get() = this.toDouble().seconds
 operator fun Offset.div(scale: Int): Offset = Offset(x / scale, y / scale)
 operator fun Offset.times(scale: Int): Offset = Offset(x * scale, y * scale)
+val Offset.max get() = max(x, y)
+val Offset.min get() = min(x, y)
 operator fun Size.div(scale: Scale): Size = Size(width / scale.x, height / scale.y)
 operator fun Size.div(scale: Int): Size = Size(width / scale, height / scale)
 val Size.max get() = max(width, height)
@@ -86,4 +89,19 @@ fun Float.remap(start1: Float, stop1: Float, start2: Float, stop2: Float, coerce
  */
 fun Offset.remap(size: Size, start: Float = -1f, stop: Float = 1f, coerceIn: Boolean = false): Offset {
     return Offset(x.remap(start, stop, 0f, size.width, coerceIn), y.remap(start, stop, 0f, size.height, coerceIn))
+}
+
+/**
+ * Does the 3D transform on [from] and returns the result in [to]
+ */
+fun Matrix.map(from: Location, to: Location = Location()): Location {
+    val x = from.x
+    val y = from.y
+    val z = from.z
+    to.z = this[0, 3] * x + this[1, 3] * y + z * this[2, 3] + this[3, 3]
+    val inverseZ = 1 / to.z
+    val pZ = if (inverseZ.isFinite()) inverseZ else 0f
+    to.x = pZ * (this[0, 0] * x + this[1, 0] * y + z * this[2, 0] + this[3, 0])
+    to.y = pZ * (this[0, 1] * x + this[1, 1] * y + z * this[2, 1] + this[3, 1])
+    return to
 }

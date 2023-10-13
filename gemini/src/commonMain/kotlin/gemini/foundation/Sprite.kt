@@ -7,6 +7,7 @@ import gemini.engine.SceneScope
 import gemini.geometry.Location
 import gemini.geometry.Pivot
 import gemini.geometry.Position
+import gemini.geometry.Space
 import io.kamel.core.Resource
 import io.kamel.core.getOrNull
 import kotlin.time.Duration
@@ -24,7 +25,7 @@ class Sprite(
 
     override fun DrawScope.draw() {
         (painter ?: resource?.getOrNull())?.run {
-            draw(position.size.takeUnless { it == Size.Zero } ?: intrinsicSize)
+            draw(position.space.size.takeUnless { it == Size.Zero } ?: intrinsicSize)
         }
     }
 }
@@ -38,7 +39,7 @@ fun SceneScope.sprite(
     pivot: Pivot = Pivot.Center,
     act: (suspend Sprite.(Duration) -> Unit)? = null
 ): Sprite {
-    return Sprite(Position(Location(x, y), Size(width, height), pivot = pivot), painter = painter, actor = act).also {
+    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), painter = painter, actor = act).also {
         add(it)
     }
 }
@@ -52,7 +53,7 @@ fun SceneScope.sprite(
     pivot: Pivot = Pivot.Center,
     act: (suspend Sprite.(Duration) -> Unit)? = null
 ): Sprite {
-    return Sprite(Position(Location(x, y), Size(width, height), pivot = pivot), resource = resource, actor = act).also {
+    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), resource = resource, actor = act).also {
         add(it)
     }
 }

@@ -30,7 +30,7 @@ private class Star : MovingThing() {
         position.location.move(cameraVelocity.xs * seconds, cameraVelocity.ys * seconds, cameraVelocity.zs * seconds)
     }
 
-    override fun DrawScope.orientAndDraw() {
+    override fun DrawScope.draw() {
         val z = position.location.z.coerceAtLeast(MIN_Z)
         val offset = (position.location.offset / z).remap(size)
         val r0 = size.min / (z * 100)

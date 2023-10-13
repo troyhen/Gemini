@@ -3,6 +3,7 @@ package gemini.engine
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextMeasurer
@@ -10,6 +11,8 @@ import gemini.fastForEach
 import gemini.fastForEachIndexed
 import gemini.foundation.Thing
 import gemini.geometry.Rectangle
+import gemini.geometry.World
+import gemini.max
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,7 +29,6 @@ class Stage(
     startImmediately: Boolean = true,
     private val coroutineContext: CoroutineContext = Dispatchers.Default,
 ) : SceneScope() {
-
     var screenSize: Size = Size.Zero
         private set
     private var toAct: List<Thing>? = null
@@ -98,10 +100,28 @@ class Stage(
 
     fun DrawScope.draw() {
         screenSize = size
+        val center = center
+        val scale = center.max
+        if (size.width == size.height) {
+            visible.set(world)
+        } else if (size.width > size.height) {
+            val y = .5f * (world.bottom + world.top)
+            val s2 = .5f * size.height / size.width
+            val h2 = s2 * (world.bottom - world.top)
+            visible.set(world.left, world.right, y - h2, y + h2, world.near, world.far)
+        } else {
+            val x = .5f * (world.right + world.left)
+            val s2 = .5f * size.width / size.height
+            val w2 = s2 * (world.right - world.left)
+            visible.set(x - w2, x + w2, world.top, world.bottom, world.near, world.far)
+        }
+
+        drawContext.transform.translate(center.x, center.y)
+        drawContext.transform.scale(scale, scale, Offset.Zero)
         drawContext.transform.transform(camera.matrix)
         drawables().fastForEach { thing ->
             thing.run {
-                orientAndDraw()
+                draw()
             }
         }
         if (isRunning) frame++ // triggers recompose
@@ -120,6 +140,7 @@ class Stage(
         replaceAll(scene)
         if (scene is SceneScope) {
             set(scene.camera)
+            set(scene.world)
         }
     }
 
@@ -147,6 +168,10 @@ class Stage(
         this.camera = camera
     }
 
+    fun set(world: World) {
+        this.world = world
+    }
+
     fun start() {
         isRunning = true
     }
@@ -163,7 +188,9 @@ class Stage(
     companion object {
         var instance: Stage? = null
             private set
-        val screenSize: Size get() = instance?.screenSize ?: Size.Zero
+        val screenSize: Size get() = instance?.screenSize ?: Size(1f, 1f)
         val time = TimeSource.Monotonic
+        val visible get() = instance?.visible ?: World()
+        val world get() = instance?.world ?: World()
     }
 }

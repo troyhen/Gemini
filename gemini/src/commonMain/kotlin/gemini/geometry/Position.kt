@@ -1,7 +1,6 @@
 package gemini.geometry
 
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Matrix
 import gemini.times
 
@@ -13,15 +12,15 @@ enum class Pivot(val offset: Offset) {
 
 class Position(
     val location: Location = Location(),
-    val size: Size = Size(1f, 1f),
+    val space: Space = Space(),
+    val pivot: Pivot = Pivot.Center,
     val rotation: Rotation = Rotation(),
     val scale: Scale = Scale(),
-    val pivot: Pivot = Pivot.Center,
 ) {
     private val matrix: Matrix = Matrix()
 
     fun rectangle(rectangle: Rectangle) {
-        val size = size * scale
+        val size = space.size * scale
         when (pivot) {
             Pivot.NorthWest -> rectangle.set(location.offset, size)
             Pivot.North -> rectangle.set(location.offset - Offset(size.width / 2, 0f), size)
@@ -42,6 +41,6 @@ class Position(
         if (rotation.y.degrees != 0f) rotateY(rotation.y.degrees)
         if (rotation.r.degrees != 0f) rotateZ(rotation.r.degrees)
         if (scale != Scale.ONE) scale(scale.x, scale.y, scale.z)
-        if (pivot != Pivot.NorthWest) translate(-pivot.offset.x * size.width, -pivot.offset.y * size.height)
+        if (pivot != Pivot.NorthWest) translate(-pivot.offset.x * space.width, -pivot.offset.y * space.height)
     }
 }
