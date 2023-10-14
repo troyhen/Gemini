@@ -1,4 +1,4 @@
-package examples.asteroids
+package examples
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

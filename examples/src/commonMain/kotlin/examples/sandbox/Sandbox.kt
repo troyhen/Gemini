@@ -6,8 +6,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import gemini.engine.Gemini
 import gemini.engine.rememberScene
@@ -44,12 +45,17 @@ fun Sandbox() {
         }
         frameRate(Color.White)
     }
-    Gemini(Modifier.fillMaxSize().onPointerEvent(PointerEventType.Move) {
-        mouse = it.changes.last().position
-    }.onPointerEvent(PointerEventType.Press) {
-        pressed = true
-    }.onPointerEvent(PointerEventType.Release) {
-        pressed = false
+    Gemini(Modifier.fillMaxSize().pointerInput(PointerEventPass.Main) {
+        awaitPointerEventScope {
+            while (true) {
+                val event = awaitPointerEvent()
+                when (event.type) {
+                    PointerEventType.Move -> mouse = event.changes.last().position
+                    PointerEventType.Press -> pressed = true
+                    PointerEventType.Release -> pressed = false
+                }
+            }
+        }
     }) {
         scene = basicDemo
     }

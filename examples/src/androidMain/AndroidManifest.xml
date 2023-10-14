@@ -12,7 +12,7 @@
         tools:targetApi="s"
     >
         <activity
-            android:name="examples.asteroids.AsteroidsActivity"
+            android:name="examples.AsteroidsActivity"
             android:label="@string/app_label"
             android:exported="true"
             android:screenOrientation="landscape"
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="examples.starfield.StarFieldActivity"
+            android:name="examples.StarFieldActivity"
             android:label="@string/app_label"
             android:exported="true"
             android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
