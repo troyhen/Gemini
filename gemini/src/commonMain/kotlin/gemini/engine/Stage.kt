@@ -112,9 +112,6 @@ class Stage(
 
     fun load(scene: Scene) {
         replaceAll(scene)
-        if (scene is SceneScope) {
-            set(scene.camera)
-        }
     }
 
     private fun loop() {
@@ -135,10 +132,6 @@ class Stage(
         toAct = null
         toDraw = null
         super.replaceAll(scene)
-    }
-
-    fun set(camera: Camera) {
-        this.camera.setFrom(camera)
     }
 
     fun start() {

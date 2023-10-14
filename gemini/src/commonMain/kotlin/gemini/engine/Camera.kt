@@ -53,19 +53,19 @@ class Camera {
             return
         }
         val size = size
-        val world = Stage.world
+        val world = world
         if (size.width == size.height) {
-            Stage.visible.setFrom(world)
+            visible.setFrom(world)
         } else if (size.width > size.height) {
             val y = .5f * (world.bottom + world.top)
             val s2 = .5f * size.height / size.width
             val h2 = s2 * (world.bottom - world.top)
-            Stage.visible.set(world.left, world.right, y - h2, y + h2, world.near, world.far)
+            visible.set(world.left, world.right, y - h2, y + h2, world.near, world.far)
         } else {
             val x = .5f * (world.right + world.left)
             val s2 = .5f * size.width / size.height
             val w2 = s2 * (world.right - world.left)
-            Stage.visible.set(x - w2, x + w2, world.top, world.bottom, world.near, world.far)
+            visible.set(x - w2, x + w2, world.top, world.bottom, world.near, world.far)
         }
         val center = center
         drawContext.transform.translate(center.x, center.y)

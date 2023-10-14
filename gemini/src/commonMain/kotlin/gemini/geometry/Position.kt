@@ -9,7 +9,7 @@ enum class Pivot(val offset: Offset) {
     SouthWest(Offset(0f, 1f)), South(Offset(.5f, 1f)), SouthEast(Offset(1f, 1f)),
 }
 
-class Position(
+data class Position(
     val location: Location = Location(),
     val space: Space = Space(),
     val pivot: Pivot = Pivot.Center,

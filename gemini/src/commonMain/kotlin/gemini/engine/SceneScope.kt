@@ -10,4 +10,11 @@ open class SceneScope : Scene() {
         }
         return this
     }
+
+    override fun replaceAll(scene: Scene) {
+        super.replaceAll(scene)
+        if (scene is SceneScope) {
+            camera.setFrom(scene.camera)
+        }
+    }
 }
