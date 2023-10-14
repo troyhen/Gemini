@@ -1,7 +1,6 @@
 package examples.astroids
 
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -62,7 +61,7 @@ class Ship(position: Position, private val onEnd: () -> Unit, private val onUpda
             val end = position.space.size.width / 2
             val offset = Offset(1f, 0f) rotate position.rotation.r
             val tip = Location(offset * end)
-            val speed = Velocity(offset * BULLET_SPEED)
+            val speed = Velocity(offset * Bullet.SPEED)
             bullet(position.location + tip, velocity + speed)
         }
     }
@@ -93,7 +92,6 @@ class Ship(position: Position, private val onEnd: () -> Unit, private val onUpda
         private val COOL_DOWN_TIME = 1.seconds
         private val FORWARD_THRUST = Offset(.002f, 0f)
         private val BACKWARD_THRUST = FORWARD_THRUST / -2f
-        private val BULLET_SPEED = Size(.3f, 0f)
         private const val SPIN_INCREMENT = .5f
     }
 }

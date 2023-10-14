@@ -41,8 +41,9 @@ class Bullet(position: Position, speed: Velocity) : MovingThing(position, speed)
     }
 
     companion object {
-        private val LIFE_SPAN = 6.seconds
-        const val SIZE = .005f
+        private val LIFE_SPAN = 4.seconds
+        const val SIZE = .004f
+        const val SPEED = .35f
     }
 }
 

@@ -28,7 +28,7 @@ class Asteroid(
             repeat(12) {
                 val distance = s2.randomPlus(s2)
                 val angle = (it * step).degrees
-                val offset = center + Offset(distance, 0f) rotate angle
+                val offset = center + Offset(distance, 0f).rotate(angle)
                 if (it == 0) {
                     moveTo(offset.x, offset.y)
                 } else {
