@@ -36,6 +36,7 @@ kotlin {
                 implementation(compose.ui)
                 implementation(libs.coroutines.core)
                 implementation(libs.kamel.image)
+                api(libs.korge.audio)
                 implementation(libs.ktor.client)
                 implementation(libs.ktor.client.okhttp)
 //                api(project(":kamel-core"))

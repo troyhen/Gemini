@@ -4,6 +4,7 @@ agp = "7.4.2" # https://developer.android.com/reference/tools/gradle-api
 compose = "1.5.3"
 coroutines = "1.7.3"
 kamel = "0.7.3"
+korge = "4.0.10"
 kotlin = "1.9.10"
 ktor = "2.3.4"
 
@@ -23,5 +24,6 @@ coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-androi
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel" }
+korge-audio = { module = "com.soywiz.korlibs.korau:korau", version.ref = "korge" }
 ktor-client = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }

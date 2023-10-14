@@ -17,6 +17,13 @@ import gemini.foundation.frameRate
 import gemini.foundation.sprite
 import gemini.geometry.degrees
 import io.kamel.image.asyncPainterResource
+import korlibs.audio.format.AudioFormats
+import korlibs.audio.format.defaultAudioFormats
+import korlibs.audio.sound.PlaybackTimes
+import korlibs.audio.sound.Sound
+import korlibs.audio.sound.readSound
+import korlibs.io.file.std.resourcesVfs
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -25,6 +32,13 @@ fun Sandbox(modifier: Modifier = Modifier) {
     val symbol = asyncPainterResource("https://sarahscoop.com/wp-content/uploads/2023/03/gemini-ascendant-man-1.jpg").also {
         println("2 $it")
     }
+    var click by remember { mutableStateOf<Sound?>(null) }
+    LaunchedEffect(Unit) {
+        AudioFormats(defaultAudioFormats)
+        click = resourcesVfs["/sandbox/click.wav"].readSound()
+        println(click)
+    }
+    val scope = rememberCoroutineScope()
     var mouse by remember { mutableStateOf(Offset(0f, 0f)) }
     var pressed by remember { mutableStateOf(false) }
     val basicDemo = rememberScene {
@@ -51,7 +65,14 @@ fun Sandbox(modifier: Modifier = Modifier) {
                 val event = awaitPointerEvent()
                 when (event.type) {
                     PointerEventType.Move -> mouse = event.changes.last().position
-                    PointerEventType.Press -> pressed = true
+                    PointerEventType.Press -> {
+                        pressed = true
+                        scope.launch {
+                            click?.play(PlaybackTimes.ONE)?.let {
+                                println(it)
+                            }
+                        }
+                    }
                     PointerEventType.Release -> pressed = false
                 }
             }
