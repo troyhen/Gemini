@@ -67,20 +67,20 @@ class Ship(position: Position, private val onEnd: () -> Unit, private val onUpda
         }
     }
 
-    fun control(state: State) {
-        if (Control.GoForward in state.controls) {
+    fun control(shipState: ShipState) {
+        if (Control.GoForward in shipState.controls) {
             velocity.add(FORWARD_THRUST rotate position.rotation.r)
         }
-        if (Control.GoBackward in state.controls) {
+        if (Control.GoBackward in shipState.controls) {
             velocity.add(BACKWARD_THRUST rotate position.rotation.r)
         }
-        if (Control.TurnLeft in state.controls) {
+        if (Control.TurnLeft in shipState.controls) {
             spin -= SPIN_INCREMENT
         }
-        if (Control.TurnRight in state.controls) {
+        if (Control.TurnRight in shipState.controls) {
             spin += SPIN_INCREMENT
         }
-        if (Control.Fire in state.controls) {
+        if (Control.Fire in shipState.controls) {
             val timeSinceLastFire = lastFire?.elapsedNow() ?: COOL_DOWN_TIME
             if (timeSinceLastFire >= COOL_DOWN_TIME) {
                 fireBullet()

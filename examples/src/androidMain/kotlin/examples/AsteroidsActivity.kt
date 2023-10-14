@@ -22,25 +22,25 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import examples.astroids.Control
 import examples.astroids.Game
-import examples.astroids.State
+import examples.astroids.ShipState
 import gemini.engine.Stage
 
 class AsteroidsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val state = State()
+        val shipState = ShipState()
         setContent {
             MaterialTheme {
                 Scaffold { padding ->
                     Box(Modifier.padding(padding)) {
-                        Game(state)
-                        Control(state, Control.Exit, Modifier.align(Alignment.TopStart))
-                        Control(state, Control.Fire, Modifier.align(Alignment.BottomStart))
-                        SteeringControls(state, Modifier.align(Alignment.BottomEnd))
+                        Game(shipState)
+                        Control(shipState, Control.Exit, Modifier.align(Alignment.TopStart))
+                        Control(shipState, Control.Fire, Modifier.align(Alignment.BottomStart))
+                        SteeringControls(shipState, Modifier.align(Alignment.BottomEnd))
                     }
                 }
             }
-            ExitHandler(state)
+            ExitHandler(shipState)
         }
     }
 
@@ -55,9 +55,9 @@ class AsteroidsActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun ExitHandler(state: State) {
+    private fun ExitHandler(shipState: ShipState) {
         val exit = remember {
-            derivedStateOf { Control.Exit in state.controls }
+            derivedStateOf { Control.Exit in shipState.controls }
         }.value
         LaunchedEffect(exit) {
             if (exit) {
@@ -67,30 +67,30 @@ class AsteroidsActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun SteeringControls(state: State, modifier: Modifier = Modifier) {
+    private fun SteeringControls(shipState: ShipState, modifier: Modifier = Modifier) {
         Box(modifier) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Control(state, Control.GoForward)
+                Control(shipState, Control.GoForward)
                 Row {
-                    Control(state, Control.TurnLeft)
+                    Control(shipState, Control.TurnLeft)
                     Spacer(Modifier.width(10.dp))
-                    Control(state, Control.TurnRight)
+                    Control(shipState, Control.TurnRight)
                 }
-                Control(state, Control.GoBackward)
+                Control(shipState, Control.GoBackward)
             }
         }
     }
 
     @Composable
-    private fun Control(state: State, control: Control, modifier: Modifier = Modifier) {
-        val color = if (control in state.controls) Color.Gray else Color.DarkGray
-        val modifier2 = modifier.pointerInput(state) {
+    private fun Control(shipState: ShipState, control: Control, modifier: Modifier = Modifier) {
+        val color = if (control in shipState.controls) Color.Gray else Color.DarkGray
+        val modifier2 = modifier.pointerInput(shipState) {
             awaitPointerEventScope {
                 while (true) {
                     val event = awaitPointerEvent()
                     when (event.type) {
-                        PointerEventType.Press -> /*if (event.buttons.isPrimaryPressed)*/ state.controls.add(control)
-                        PointerEventType.Release -> /*if (!event.buttons.isPrimaryPressed)*/ state.controls.remove(control)
+                        PointerEventType.Press -> /*if (event.buttons.isPrimaryPressed)*/ shipState.controls.add(control)
+                        PointerEventType.Release -> /*if (!event.buttons.isPrimaryPressed)*/ shipState.controls.remove(control)
                     }
                 }
             }

@@ -18,7 +18,7 @@ import gemini.foundation.frameRate
 import gemini.geometry.Pivot
 
 @Composable
-fun Game(state: State, modifier: Modifier = Modifier) = state.run {
+fun Game(shipState: ShipState, modifier: Modifier = Modifier) = shipState.run {
     var iteration by remember { mutableStateOf(0) }
     var showRestart by remember { mutableStateOf(false) }
 
@@ -38,7 +38,7 @@ fun Game(state: State, modifier: Modifier = Modifier) = state.run {
             background(Color.Black)
             frameRate(Color.White, Pivot.NorthEast)
             ship(::onEnd) {
-                control(state)
+                control(shipState)
             }
             repeat(4) {
                 asteroid()
