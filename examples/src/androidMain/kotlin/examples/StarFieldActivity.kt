@@ -15,8 +15,8 @@ class StarFieldActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                Scaffold {
-                    StarField(Modifier.padding(it))
+                Scaffold { padding ->
+                    StarField(Modifier.padding(padding))
                 }
             }
         }

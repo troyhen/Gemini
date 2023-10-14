@@ -15,8 +15,8 @@ class SandboxActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                Scaffold {
-                    Sandbox(Modifier.padding(it))
+                Scaffold { padding ->
+                    Sandbox(Modifier.padding(padding))
                 }
             }
         }
