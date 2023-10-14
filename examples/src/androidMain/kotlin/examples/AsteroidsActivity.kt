@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import examples.astroids.Control
 import examples.astroids.Game
 import examples.astroids.State
+import gemini.engine.Stage
 
 class AsteroidsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +42,16 @@ class AsteroidsActivity : ComponentActivity() {
             }
             ExitHandler(state)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Stage.instance?.stop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Stage.instance?.start()
     }
 
     @Composable

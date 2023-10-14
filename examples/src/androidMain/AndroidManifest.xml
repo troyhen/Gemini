@@ -14,7 +14,7 @@
     >
         <activity
             android:name="examples.AsteroidsActivity"
-            android:label="@string/app_label"
+            android:label="@string/asteroids_title"
             android:exported="true"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
@@ -26,7 +26,7 @@
         </activity>
         <activity
             android:name="examples.SandboxActivity"
-            android:label="@string/app_label"
+            android:label="@string/sandbox_title"
             android:exported="true"
             android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
         >
@@ -37,7 +37,7 @@
         </activity>
         <activity
             android:name="examples.StarFieldActivity"
-            android:label="@string/app_label"
+            android:label="@string/star_field_title"
             android:exported="true"
             android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
         >

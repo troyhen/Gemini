@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import examples.starfield.StarField
+import gemini.engine.Stage
 
 class StarFieldActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,5 +20,15 @@ class StarFieldActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Stage.instance?.stop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Stage.instance?.start()
     }
 }
