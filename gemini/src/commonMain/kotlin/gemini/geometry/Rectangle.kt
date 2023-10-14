@@ -54,3 +54,7 @@ value class Rectangle private constructor(private val data: FloatArray) {
         }
     }
 }
+
+val Rectangle.center get() = Offset((right + left) * .5f, (bottom + top) * .5f)
+val Rectangle.size get() = Size(right - left, bottom - top)
+val Rectangle.topLeft get() = Offset(left, top)
