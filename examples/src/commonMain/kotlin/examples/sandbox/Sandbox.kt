@@ -20,7 +20,7 @@ import io.kamel.image.asyncPainterResource
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Sandbox() {
+fun Sandbox(modifier: Modifier = Modifier) {
     val density = LocalDensity.current.density
     val symbol = asyncPainterResource("https://sarahscoop.com/wp-content/uploads/2023/03/gemini-ascendant-man-1.jpg").also {
         println("2 $it")
@@ -45,7 +45,7 @@ fun Sandbox() {
         }
         frameRate(Color.White)
     }
-    Gemini(Modifier.fillMaxSize().pointerInput(PointerEventPass.Main) {
+    Gemini(modifier.fillMaxSize().pointerInput(PointerEventPass.Main) {
         awaitPointerEventScope {
             while (true) {
                 val event = awaitPointerEvent()
