@@ -61,6 +61,10 @@ class Image : Asset() {
         }
     }
 
+    override fun release() {
+        resource = null
+    }
+
     companion object {
         var kamelConfig: KamelConfig? = null
         var resourceConfig: ResourceConfig? = null

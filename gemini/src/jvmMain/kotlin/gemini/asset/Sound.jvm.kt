@@ -34,7 +34,7 @@ actual class Sound : Asset() {
         clip.loop(times)
     }
 
-    actual fun release() {
+    actual override fun release() {
         clip.stop()
     }
 
