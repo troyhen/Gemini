@@ -8,15 +8,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import examples.sandbox.Sandbox
+import gemini.asset.Sound
+import gemini.asset.SourceAsset
 import gemini.engine.Stage
 
 class SandboxActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Sound.context = this
         setContent {
             MaterialTheme {
                 Scaffold { padding ->
-                    Sandbox(Modifier.padding(padding))
+                    Sandbox(SourceAsset("sandbox/click.wav"), Modifier.padding(padding))
                 }
             }
         }

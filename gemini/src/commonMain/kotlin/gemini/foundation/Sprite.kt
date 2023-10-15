@@ -3,31 +3,48 @@ package gemini.foundation
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
+import gemini.asset.Image
 import gemini.engine.SceneScope
-import gemini.geometry.Location
-import gemini.geometry.Pivot
-import gemini.geometry.Position
-import gemini.geometry.Space
+import gemini.geometry.*
 import io.kamel.core.Resource
 import io.kamel.core.getOrNull
 import kotlin.time.Duration
 
 class Sprite(
     position: Position,
-    val painter: () -> Painter?,
+    val onDraw: DrawScope.(Sprite) -> Unit,
     val actor: (suspend Sprite.(Duration) -> Unit)? = null,
 ) : Thing(position) {
+
+    val rectangle = Rectangle()
 
     override suspend fun act(elapsed: Duration) {
         actor?.invoke(this, elapsed)
     }
 
     override fun DrawScope.draw() {
-        painter()?.run {
-            drawRelative {
-                draw(position.space.size.takeUnless { it == Size.Zero } ?: intrinsicSize)
-            }
+        drawRelative {
+            onDraw(this@Sprite)
         }
+    }
+}
+
+fun SceneScope.sprite(
+    image: Image,
+    x: Float,
+    y: Float,
+    width: Float,
+    height: Float,
+    pivot: Pivot = Pivot.Center,
+    act: (suspend Sprite.(Duration) -> Unit)? = null
+): Sprite {
+    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), {
+        image.run {
+            it.position.rectangle(it.rectangle)
+            draw(it.rectangle)
+        }
+    }, actor = act).also {
+        add(it)
     }
 }
 
@@ -40,7 +57,11 @@ fun SceneScope.sprite(
     pivot: Pivot = Pivot.Center,
     act: (suspend Sprite.(Duration) -> Unit)? = null
 ): Sprite {
-    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), { painter }, actor = act).also {
+    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), {
+        painter.run {
+            draw(Size(width, height))
+        }
+    }, actor = act).also {
         add(it)
     }
 }
@@ -54,7 +75,11 @@ fun SceneScope.sprite(
     pivot: Pivot = Pivot.Center,
     act: (suspend Sprite.(Duration) -> Unit)? = null
 ): Sprite {
-    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), { resource.getOrNull() }, actor = act).also {
+    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), {
+        resource.getOrNull()?.run {
+            draw(Size(width, height))
+        }
+    }, actor = act).also {
         add(it)
     }
 }

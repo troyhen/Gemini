@@ -36,14 +36,8 @@ kotlin {
                 implementation(compose.ui)
                 implementation(libs.coroutines.core)
                 implementation(libs.kamel.image)
-                api(libs.korge.audio)
                 implementation(libs.ktor.client)
                 implementation(libs.ktor.client.okhttp)
-//                api(project(":kamel-core"))
-//                implementation(compose.ui)
-//                implementation(compose.foundation)
-//                implementation(compose.runtime)
-//                implementation(libs.ktor.client.core)
             }
         }
 
@@ -59,6 +53,10 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
+        }
+
+        val jvmMain by getting {
             dependsOn(commonMain)
         }
     }

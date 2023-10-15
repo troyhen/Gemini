@@ -2,6 +2,7 @@ package examples
 
 import androidx.compose.ui.window.singleWindowApplication
 import examples.sandbox.Sandbox
+import gemini.asset.SourceUrl
 
 fun main() = singleWindowApplication(title = "Gemini Sandbox") {
 //    val desktopConfig = KamelConfig {
@@ -13,6 +14,6 @@ fun main() = singleWindowApplication(title = "Gemini Sandbox") {
 ////        batikSvgDecoder()
 //    }
 //    CompositionLocalProvider(LocalKamelConfig provides desktopConfig) {
-    Sandbox()
+    Sandbox(SourceUrl(javaClass.classLoader.getResource("sandbox/click.wav")!!))
 //    }
 }

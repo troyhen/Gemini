@@ -7,17 +7,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.rememberTextMeasurer
+import gemini.asset.SetupImages
 
 @Composable
 fun Gemini(modifier: Modifier = Modifier, startImmediately: Boolean = true, builder: suspend SceneScope.() -> Unit) {
     val textMeasurer = rememberTextMeasurer()
     val scope = rememberCoroutineScope()
     val stage = remember { Stage(scope, textMeasurer, startImmediately) }
+    SetupImages()
+
     Canvas(modifier) {
         stage.run {
             draw()
         }
     }
+
     LaunchedEffect(builder) {
         val scene = SceneScope().run {
             builder()

@@ -110,8 +110,11 @@ class Stage(
         }
     }
 
-    fun load(scene: Scene) {
+    suspend fun load(scene: Scene) {
         replaceAll(scene)
+        assets.forEach { (source, asset) ->
+            asset.load(source)
+        }
     }
 
     private fun loop() {
