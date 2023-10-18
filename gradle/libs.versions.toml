@@ -1,6 +1,6 @@
 [versions]
 activity = "1.8.0"
-agp = "7.4.2" # https://developer.android.com/reference/tools/gradle-api
+agp = "8.1.0" # https://developer.android.com/reference/tools/gradle-api
 compose = "1.5.3"
 coroutines = "1.7.3"
 kamel = "0.7.3"

@@ -32,7 +32,7 @@ actual class Sound : Asset() {
         soundPool.play(soundId, 1f, 1f, 1, times - 1, 1f)
     }
 
-    actual fun release() {
+    actual override fun release() {
     }
 
     actual fun stop() {
