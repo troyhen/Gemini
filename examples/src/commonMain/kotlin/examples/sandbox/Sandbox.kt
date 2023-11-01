@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
@@ -11,7 +12,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import gemini.asset.Sound
 import gemini.asset.Source
-import gemini.asset.SourceUrl
+import gemini.asset.asSource
 import gemini.engine.Gemini
 import gemini.engine.rememberScene
 import gemini.foundation.background
@@ -19,7 +20,6 @@ import gemini.foundation.frameRate
 import gemini.foundation.sprite
 import gemini.geometry.degrees
 import kotlinx.coroutines.launch
-import java.net.URL
 
 @Composable
 fun Sandbox(clickSource: Source, modifier: Modifier = Modifier) {
@@ -32,8 +32,8 @@ fun Sandbox(clickSource: Source, modifier: Modifier = Modifier) {
         clickSound = sound(clickSource)
         camera.default()
         background(Color.Black)
-        val geminiImage = image(SourceUrl(URL("https://sarahscoop.com/wp-content/uploads/2023/03/gemini-ascendant-man-1.jpg")))
-        sprite(geminiImage, 100f, 100f, 100f, 130f) { time ->
+        val geminiImage = image("https://sarahscoop.com/wp-content/uploads/2023/03/gemini-ascendant-man-1.jpg".asSource)
+        sprite(geminiImage, Offset(200f, 100f), Size(100f, 130f)) { time ->
             val rotation = -time.inWholeMilliseconds / 100f
             position.rotation.rotate(rotation.degrees)
         }

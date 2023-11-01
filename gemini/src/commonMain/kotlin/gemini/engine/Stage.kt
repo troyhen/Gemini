@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextMeasurer
+import gemini.foundation.Draw
 import gemini.foundation.Thing
 import gemini.geometry.Rectangle
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +23,7 @@ class Stage(
     val textMeasurer: TextMeasurer,
     startImmediately: Boolean = true,
     private val coroutineContext: CoroutineContext = Dispatchers.Default,
-) : SceneScope() {
+) : SceneScope(), Draw {
 
     private var toAct: List<Thing>? = null
     private var toDraw: List<Thing>? = null
@@ -91,12 +92,10 @@ class Stage(
         }
     }
 
-    fun DrawScope.draw() {
+    override fun DrawScope.draw() {
         camera.run { transform() }
         drawables().fastForEach { thing ->
-            thing.run {
-                draw()
-            }
+            thing.run { draw() }
         }
         if (isRunning) frame++ // triggers recompose
         frameFlow.value = frame // trigger actions if the frame changed

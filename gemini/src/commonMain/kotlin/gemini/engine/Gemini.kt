@@ -17,9 +17,7 @@ fun Gemini(modifier: Modifier = Modifier, startImmediately: Boolean = true, buil
     SetupImages()
 
     Canvas(modifier) {
-        stage.run {
-            draw()
-        }
+        stage.run { draw() }
     }
 
     LaunchedEffect(builder) {

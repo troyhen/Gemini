@@ -8,9 +8,10 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.platform.LocalDensity
-import gemini.geometry.Rectangle
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import gemini.foundation.Draw
 import gemini.geometry.max
-import gemini.geometry.size
 import io.kamel.core.*
 import io.kamel.core.config.KamelConfig
 import io.kamel.core.config.ResourceConfig
@@ -19,14 +20,29 @@ import io.kamel.image.config.LocalKamelConfig
 import io.kamel.image.getDataSourceEnding
 import kotlin.math.max
 
-class Image : Asset() {
+class Image : Asset(), Draw {
     private var resource: Resource<*>? = null
     override val isLoaded: Boolean = resource != null && resource?.isSuccess == true
 
-    fun DrawScope.draw(rectangle: Rectangle) {
+    val size: IntSize get() {
+        return when (val value = resource?.getOrNull()) {
+            is ImageBitmap -> IntSize(value.width, value.height)
+            else -> IntSize.Zero
+        }
+    }
+
+    override fun DrawScope.draw() {
         when (val value = resource?.getOrNull()) {
-            is ImageBitmap -> scale(rectangle.size.max / max(value.width.toFloat(), value.height.toFloat()), Offset.Zero) {
+            is ImageBitmap -> scale(1f / max(value.width, value.height).coerceAtLeast(1), Offset.Zero) {
                 drawImage(value)
+            }
+        }
+    }
+
+    fun DrawScope.drawPart(fromOffset: IntOffset, fromSize: IntSize, toOffset: IntOffset = IntOffset.Zero, toSize: IntSize = fromSize) {
+        scale(1f / toSize.max, Offset.Zero) {
+            when (val value = resource?.getOrNull()) {
+                is ImageBitmap -> drawImage(value, fromOffset, fromSize, toOffset, toSize)
             }
         }
     }
@@ -39,9 +55,12 @@ class Image : Asset() {
             is SourceData -> source.data
             is SourceFile -> source.file
             is SourcePath -> source.path
-            is SourceResource -> source.id
+            is SourceRes -> source.id
+            is SourceURI -> source.uri
             is SourceUrl -> source.url
+            is SourceURL -> source.url
         }
+        println("data $data")
         val ending = getDataSourceEnding(data)
 
         resource = when (ending) {
@@ -57,6 +76,7 @@ class Image : Asset() {
                 else -> kamelConfig.loadImageBitmapResource(data, resourceConfig)
             }.collect {
                 resource = it
+                println("resource $resource")
             }
         }
     }

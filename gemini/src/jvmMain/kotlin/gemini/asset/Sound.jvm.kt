@@ -1,5 +1,6 @@
 package gemini.asset
 
+import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.sound.sampled.AudioInputStream
@@ -16,8 +17,8 @@ actual class Sound : Asset() {
             Sound().apply {
                 val audioInputStream = when (source) {
                     is SourceFile -> AudioSystem.getAudioInputStream(source.file)
-                    is SourcePath -> AudioSystem.getAudioInputStream(javaClass.classLoader.getResource(source.path))
-                    is SourceUrl -> AudioSystem.getAudioInputStream(source.url)
+                    is SourceUrl -> AudioSystem.getAudioInputStream(javaClass.classLoader.getResource(source.url.path))
+                    is SourceURL -> AudioSystem.getAudioInputStream(source.url)
                     else -> error("Not supported: $source")
                 }
                 open(audioInputStream)
@@ -42,3 +43,5 @@ actual class Sound : Asset() {
         clip.stop()
     }
 }
+
+val Url.path: String get() = encodedPath.removePrefix("/")

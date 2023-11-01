@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import examples.sandbox.Sandbox
 import gemini.asset.Sound
-import gemini.asset.SourceAsset
+import gemini.asset.asSource
 import gemini.engine.Stage
 
 class SandboxActivity : ComponentActivity() {
@@ -19,7 +19,7 @@ class SandboxActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Scaffold { padding ->
-                    Sandbox(SourceAsset("sandbox/click.wav"), Modifier.padding(padding))
+                    Sandbox("asset:sandbox/click.wav".asSource, Modifier.padding(padding))
                 }
             }
         }
