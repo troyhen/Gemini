@@ -32,7 +32,7 @@ fun Game(shipState: ShipState, modifier: Modifier = Modifier) = shipState.run {
         Stage.instance?.start()
     }
 
-    Box {
+    Box(modifier) {
         val game = rememberScene(iteration) {
             camera.orthographic()
             background(Color.Black)
@@ -44,14 +44,14 @@ fun Game(shipState: ShipState, modifier: Modifier = Modifier) = shipState.run {
                 asteroid()
             }
         }
-        Gemini(modifier.fillMaxSize()) {
+        Gemini(Modifier.fillMaxSize()) {
             scene = game
         }
         if (showRestart) {
             TextButton(
                 onClick = ::onRestart,
                 modifier = Modifier.align(Alignment.Center),
-                colors = ButtonDefaults.textButtonColors(containerColor = Color.LightGray.copy(alpha = .5f)),
+                colors = ButtonDefaults.textButtonColors(containerColor = Color.DarkGray.copy(alpha = .5f)),
             ) {
                 Text("Restart", style = MaterialTheme.typography.titleMedium)
             }
