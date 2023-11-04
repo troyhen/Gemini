@@ -18,7 +18,7 @@ import gemini.foundation.frameRate
 import gemini.geometry.Pivot
 
 @Composable
-fun Game(shipState: ShipState, modifier: Modifier = Modifier) = shipState.run {
+fun Game(shipState: ShipState, modifier: Modifier = Modifier) {
     var iteration by remember { mutableStateOf(0) }
     var showRestart by remember { mutableStateOf(false) }
 
