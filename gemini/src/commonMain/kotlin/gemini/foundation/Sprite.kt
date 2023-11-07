@@ -1,9 +1,10 @@
 package gemini.foundation
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.painter.Painter
-import gemini.asset.Image
 import gemini.engine.SceneScope
 import gemini.geometry.*
 import io.kamel.core.Resource
@@ -23,6 +24,7 @@ class Sprite(
     }
 
     override fun DrawScope.draw() {
+        position.rectangle(rectangle)
         drawRelative {
             onDraw(this@Sprite)
         }
@@ -30,56 +32,65 @@ class Sprite(
 }
 
 fun SceneScope.sprite(
-    image: Image,
-    x: Float,
-    y: Float,
-    width: Float,
-    height: Float,
+    getDraw: () -> Draw,
+    offset: Offset,
+    size: Size,
     pivot: Pivot = Pivot.Center,
     act: (suspend Sprite.(Duration) -> Unit)? = null
 ): Sprite {
-    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), {
-        image.run {
-            it.position.rectangle(it.rectangle)
-            draw(it.rectangle)
-        }
-    }, actor = act).also {
+    return Sprite(
+        position = Position(Location(offset), Space(size), pivot = pivot),
+        onDraw = { sprite ->
+            scale(sprite.rectangle.size.max, Offset.Zero) {
+                getDraw().run { draw() }
+            }
+        },
+        actor = act
+    ).also {
         add(it)
     }
 }
 
 fun SceneScope.sprite(
     painter: Painter,
-    x: Float,
-    y: Float,
-    width: Float,
-    height: Float,
+    offset: Offset,
+    size: Size,
     pivot: Pivot = Pivot.Center,
     act: (suspend Sprite.(Duration) -> Unit)? = null
 ): Sprite {
-    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), {
-        painter.run {
-            draw(Size(width, height))
-        }
-    }, actor = act).also {
+    return Sprite(
+        position = Position(Location(offset), Space(size), pivot = pivot),
+        onDraw = { sprite ->
+            painter.run {
+                scale(sprite.rectangle.size.max / intrinsicSize.max, Offset.Zero) {
+                    draw(sprite.rectangle.size)
+                }
+            }
+        },
+        actor = act
+    ).also {
         add(it)
     }
 }
 
 fun SceneScope.sprite(
     resource: Resource<Painter>,
-    x: Float,
-    y: Float,
-    width: Float,
-    height: Float,
+    offset: Offset,
+    size: Size,
     pivot: Pivot = Pivot.Center,
     act: (suspend Sprite.(Duration) -> Unit)? = null
 ): Sprite {
-    return Sprite(Position(Location(x, y), Space(width, height), pivot = pivot), {
-        resource.getOrNull()?.run {
-            draw(Size(width, height))
-        }
-    }, actor = act).also {
+    return Sprite(
+        position = Position(Location(offset), Space(size), pivot = pivot),
+        onDraw = { sprite ->
+            resource.getOrNull()?.run {
+                scale(sprite.rectangle.size.max / intrinsicSize.max, Offset.Zero) {
+                    draw(sprite.rectangle.size)
+                }
+            }
+        },
+        actor = act
+    ).also {
         add(it)
     }
 }

@@ -2,7 +2,6 @@ package gemini.engine
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Matrix
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.DrawTransform
 import androidx.compose.ui.graphics.drawscope.scale
 import gemini.geometry.World
@@ -33,13 +32,6 @@ class Camera {
         world.set(left, right, top, bottom, near, far)
     }
 
-    fun DrawTransform.reverse() {
-        if (noTransform) return
-        val center = center
-        scale(1 / center.max, Offset.Zero)
-        translate(-center.x, -center.y)
-    }
-
     fun setFrom(camera: Camera) {
         noTransform = camera.noTransform
         matrix.setFrom(camera.matrix)
@@ -47,7 +39,7 @@ class Camera {
         world.setFrom(camera.world)
     }
 
-    fun DrawScope.transform() {
+    fun DrawTransform.transform() {
         if (noTransform) {
             visible.set(0f, size.width, 0f, size.height)
             return
@@ -68,8 +60,11 @@ class Camera {
             visible.set(x - w2, x + w2, world.top, world.bottom, world.near, world.far)
         }
         val center = center
-        drawContext.transform.translate(center.x, center.y)
-        drawContext.transform.scale(center.max, Offset.Zero)
-        drawContext.transform.transform(matrix)
+        translate(center.x, center.y)
+        scale(center.max, Offset.Zero)
+        transform(matrix)
     }
 }
+
+interface BeforeCamera
+interface AfterCamera

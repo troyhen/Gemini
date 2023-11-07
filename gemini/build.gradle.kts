@@ -35,9 +35,9 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.ui)
                 implementation(libs.coroutines.core)
-                implementation(libs.kamel.image)
-                implementation(libs.ktor.client)
-                implementation(libs.ktor.client.okhttp)
+                api(libs.kamel.image)
+                api(libs.ktor.client.core)
+                api(libs.ktor.client.logging)
             }
         }
 
@@ -54,10 +54,16 @@ kotlin {
 
         val androidMain by getting {
             dependsOn(commonMain)
+            dependencies {
+                api(libs.ktor.client.okhttp)
+            }
         }
 
         val jvmMain by getting {
             dependsOn(commonMain)
+            dependencies {
+                api(libs.ktor.client.java)
+            }
         }
     }
 }

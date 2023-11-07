@@ -3,11 +3,17 @@ package gemini.engine
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import gemini.asset.Asset
 import gemini.asset.Image
 import gemini.asset.Sound
 import gemini.asset.Source
+import gemini.foundation.Atlas
 import gemini.foundation.Thing
+import gemini.foundation.imageMap
+import gemini.foundation.tileMap
+import gemini.geometry.IntRectangle
 
 open class Scene {
     private val _assets = mutableMapOf<Source, Asset>()
@@ -25,6 +31,8 @@ open class Scene {
             _assets[source] = it
         }
     }
+
+    open fun <K: Any> imageMap(source: Source, find: (key: K, rectangle: IntRectangle) -> Unit): Atlas<K> = imageMap(image(source), find)
 
     fun release() {
         assets.values.forEach {
@@ -52,6 +60,8 @@ open class Scene {
             _assets[source] = it
         }
     }
+
+    open fun tileMap(source: Source, tileSize: IntSize, inset: IntOffset = IntOffset.Zero): Atlas<IntOffset> = tileMap(image(source), tileSize, inset)
 }
 
 @Composable

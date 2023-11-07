@@ -3,10 +3,10 @@ package gemini.geometry
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Matrix
-import kotlin.math.cos
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.sin
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.window.WindowPosition.PlatformDefault.y
+import kotlin.math.*
 import kotlin.random.Random
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -42,10 +42,14 @@ infix fun Offset.rotate(angle: Angle): Offset {
 operator fun Offset.div(scale: Int): Offset = Offset(x / scale, y / scale)
 operator fun Offset.times(scale: Int): Offset = Offset(x * scale, y * scale)
 operator fun Offset.times(size: Size): Offset = Offset(x * size.width, y * size.height)
+val IntOffset.max get() = max(x, y)
+val IntOffset.min get() = min(x, y)
 val Offset.max get() = max(x, y)
 val Offset.min get() = min(x, y)
 operator fun Size.div(scale: Scale): Size = Size(width / scale.x, height / scale.y)
 operator fun Size.div(scale: Int): Size = Size(width / scale, height / scale)
+val IntSize.max get() = max(width, height)
+val IntSize.min get() = min(width, height)
 val Size.max get() = max(width, height)
 val Size.min get() = min(width, height)
 operator fun Size.minus(plus: Size): Size = Size(width - plus.width, height - plus.height)
@@ -126,3 +130,6 @@ fun orthographicMatrix(left: Float = -1f, right: Float = 1f, top: Float = -1f, b
         orthographic(left, right, top, bottom, near, far)
     }
 }
+
+operator fun IntOffset.times(size: IntSize): IntOffset = IntOffset(x * size.width, y * size.height)
+inline fun Size.round(): IntSize = IntSize(width.roundToInt(), height.roundToInt())

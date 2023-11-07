@@ -1,6 +1,7 @@
 package gemini.engine
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -16,10 +17,8 @@ fun Gemini(modifier: Modifier = Modifier, startImmediately: Boolean = true, buil
     val stage = remember { Stage(scope, textMeasurer, startImmediately) }
     SetupImages()
 
-    Canvas(modifier) {
-        stage.run {
-            draw()
-        }
+    Canvas(modifier.fillMaxSize()) {
+        stage.run { draw() }
     }
 
     LaunchedEffect(builder) {

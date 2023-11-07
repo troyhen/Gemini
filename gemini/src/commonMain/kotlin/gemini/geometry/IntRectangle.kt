@@ -4,42 +4,44 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.round
 import androidx.compose.ui.unit.toOffset
 
 @JvmInline
-value class Rectangle private constructor(private val data: FloatArray) {
-    var left: Float
+value class IntRectangle private constructor(private val data: IntArray) {
+    var left: Int
         get() = data[0]
         set(value) {
             data[0] = value
         }
-    var top: Float
+    var top: Int
         get() = data[1]
         set(value) {
             data[1] = value
         }
-    var right: Float
+    var right: Int
         get() = data[2]
         set(value) {
             data[2] = value
         }
-    var bottom: Float
+    var bottom: Int
         get() = data[3]
         set(value) {
             data[3] = value
         }
 
     val isEmpty get() = left >= right || top >= bottom
+    val isNotEmpty get() = !isEmpty
 
-    constructor(left: Float = 0f, top: Float = 0f, right: Float = 0f, bottom: Float = 0f) : this(floatArrayOf(left, top, right, bottom))
+    constructor(left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0) : this(intArrayOf(left, top, right, bottom))
 
-    fun overlaps(other: Rectangle): Boolean {
+    fun overlaps(other: IntRectangle): Boolean {
         if (right <= other.left || other.right <= left) return false
         if (bottom <= other.top || other.bottom <= top) return false
         return true
     }
 
-    fun set(left: Float, top: Float, right: Float, bottom: Float) {
+    fun set(left: Int, top: Int, right: Int, bottom: Int) {
         this.left = left
         this.top = top
         this.right = right
@@ -47,31 +49,32 @@ value class Rectangle private constructor(private val data: FloatArray) {
     }
 
     fun set(offset: IntOffset, size: IntSize) {
-        val float = offset.toOffset()
-        this.left = float.x
-        this.top = float.y
-        this.right = float.x + size.width
-        this.bottom = float.y + size.height
-    }
-
-    fun set(offset: Offset, size: Size) {
         this.left = offset.x
         this.top = offset.y
         this.right = offset.x + size.width
         this.bottom = offset.y + size.height
     }
 
-    fun setFrom(rectangle: Rectangle) {
+    fun set(offset: Offset, size: Size) {
+        val intOffset = offset.round()
+        val intSize = size.round()
+        this.left = intOffset.x
+        this.top = intOffset.y
+        this.right = intOffset.x + intSize.width
+        this.bottom = intOffset.y + intSize.height
+    }
+
+    fun setFrom(rectangle: IntRectangle) {
         repeat(4) { index ->
             data[index] = rectangle.data[index]
         }
     }
 
     companion object {
-        val Zero = Rectangle()
+        val Zero = IntRectangle()
     }
 }
 
-val Rectangle.center get() = Offset((right + left) * .5f, (bottom + top) * .5f)
-val Rectangle.size get() = Size(right - left, bottom - top)
-val Rectangle.topLeft get() = Offset(left, top)
+val IntRectangle.center get() = IntOffset((right + left) / 2, (bottom + top) / 2)
+val IntRectangle.size get() = IntSize(right - left, bottom - top)
+val IntRectangle.topLeft get() = IntOffset(left, top)

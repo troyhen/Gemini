@@ -19,7 +19,7 @@ actual class Sound : Asset() {
             }
 
             is SourcePath -> soundPool.load(source.path, 1)
-            is SourceResource -> {
+            is SourceRes -> {
                 val context = context ?: error("Must set Sound.context in order to load resources")
                 soundPool.load(context, source.id, 1)
             }

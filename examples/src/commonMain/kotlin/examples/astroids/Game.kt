@@ -1,7 +1,6 @@
 package examples.astroids
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,7 +17,7 @@ import gemini.foundation.frameRate
 import gemini.geometry.Pivot
 
 @Composable
-fun Game(shipState: ShipState, modifier: Modifier = Modifier) = shipState.run {
+fun Game(shipState: ShipState, modifier: Modifier = Modifier) {
     var iteration by remember { mutableStateOf(0) }
     var showRestart by remember { mutableStateOf(false) }
 
@@ -32,7 +31,7 @@ fun Game(shipState: ShipState, modifier: Modifier = Modifier) = shipState.run {
         Stage.instance?.start()
     }
 
-    Box {
+    Box(modifier) {
         val game = rememberScene(iteration) {
             camera.orthographic()
             background(Color.Black)
@@ -44,14 +43,14 @@ fun Game(shipState: ShipState, modifier: Modifier = Modifier) = shipState.run {
                 asteroid()
             }
         }
-        Gemini(modifier.fillMaxSize()) {
+        Gemini {
             scene = game
         }
         if (showRestart) {
             TextButton(
                 onClick = ::onRestart,
                 modifier = Modifier.align(Alignment.Center),
-                colors = ButtonDefaults.textButtonColors(containerColor = Color.LightGray.copy(alpha = .5f)),
+                colors = ButtonDefaults.textButtonColors(containerColor = Color.DarkGray.copy(alpha = .5f)),
             ) {
                 Text("Restart", style = MaterialTheme.typography.titleMedium)
             }
