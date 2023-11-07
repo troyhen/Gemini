@@ -1,7 +1,6 @@
 package examples.starfield
 
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -67,7 +66,8 @@ fun StarField(modifier: Modifier = Modifier) {
         frameRate(Color.White)
     }
     val requester = remember { FocusRequester() }
-    Gemini(modifier.fillMaxSize()
+    Gemini(
+        modifier
         .focusRequester(requester)
         .focusable()
         .onKeyEvent {

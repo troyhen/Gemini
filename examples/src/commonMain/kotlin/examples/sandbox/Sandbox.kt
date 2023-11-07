@@ -1,6 +1,5 @@
 package examples.sandbox
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -48,7 +47,7 @@ fun Sandbox(clickSource: Source, modifier: Modifier = Modifier) {
         }
         frameRate(Color.White)
     }
-    Gemini(modifier.fillMaxSize().pointerInput(PointerEventPass.Main) {
+    Gemini(modifier.pointerInput(PointerEventPass.Main) {
         awaitPointerEventScope {
             while (true) {
                 val event = awaitPointerEvent()

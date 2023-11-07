@@ -1,7 +1,6 @@
 package examples.astroids
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,7 +43,7 @@ fun Game(shipState: ShipState, modifier: Modifier = Modifier) {
                 asteroid()
             }
         }
-        Gemini(Modifier.fillMaxSize()) {
+        Gemini {
             scene = game
         }
         if (showRestart) {
