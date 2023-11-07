@@ -4,16 +4,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.scale
-import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.window.WindowPosition.PlatformDefault.x
-import androidx.compose.ui.window.WindowPosition.PlatformDefault.y
-import gemini.asset.Image
 import gemini.engine.SceneScope
 import gemini.geometry.*
 import io.kamel.core.Resource
 import io.kamel.core.getOrNull
-import kotlin.math.max
 import kotlin.time.Duration
 
 class Sprite(
@@ -37,7 +32,7 @@ class Sprite(
 }
 
 fun SceneScope.sprite(
-    draw: Draw,
+    getDraw: () -> Draw,
     offset: Offset,
     size: Size,
     pivot: Pivot = Pivot.Center,
@@ -47,7 +42,7 @@ fun SceneScope.sprite(
         position = Position(Location(offset), Space(size), pivot = pivot),
         onDraw = { sprite ->
             scale(sprite.rectangle.size.max, Offset.Zero) {
-                draw.run { draw() }
+                getDraw().run { draw() }
             }
         },
         actor = act

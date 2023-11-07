@@ -32,7 +32,7 @@ fun Sandbox(clickSource: Source, modifier: Modifier = Modifier) {
         camera.default()
         background(Color.Black)
         val geminiImage = image("https://sarahscoop.com/wp-content/uploads/2023/03/gemini-ascendant-man-1.jpg".asSource)
-        sprite(geminiImage, Offset(200f, 100f), Size(100f, 130f)) { time ->
+        sprite({ geminiImage }, Offset(200f, 100f), Size(100f, 130f)) { time ->
             val rotation = -time.inWholeMilliseconds / 100f
             position.rotation.rotate(rotation.degrees)
         }
