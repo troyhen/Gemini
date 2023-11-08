@@ -6,19 +6,16 @@ plugins {
     alias(libs.plugins.jetbrains.compose) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
 }
-//
-//buildscript {
-//
-//}
-//repositories {
-//    mavenCentral()
-//    google()
-//    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-//}
 
 subprojects {
     repositories {
         mavenCentral()
         google()
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }

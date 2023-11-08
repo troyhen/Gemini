@@ -30,10 +30,10 @@
             android:exported="true"
             android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
         >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN"/>-->
+            <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--            </intent-filter>-->
         </activity>
         <activity
             android:name="examples.StarFieldActivity"
@@ -45,6 +45,17 @@
             <!--                <action android:name="android.intent.action.MAIN"/>-->
             <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
             <!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name="examples.TownActivity"
+            android:label="@string/town_title"
+            android:exported="true"
+            android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
     </application>
 </manifest>

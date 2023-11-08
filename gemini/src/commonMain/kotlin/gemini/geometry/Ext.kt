@@ -5,7 +5,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.window.WindowPosition.PlatformDefault.y
 import kotlin.math.*
 import kotlin.random.Random
 import kotlin.time.Duration
