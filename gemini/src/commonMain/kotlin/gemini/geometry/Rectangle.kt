@@ -33,6 +33,8 @@ value class Rectangle private constructor(private val data: FloatArray) {
 
     constructor(left: Float = 0f, top: Float = 0f, right: Float = 0f, bottom: Float = 0f) : this(floatArrayOf(left, top, right, bottom))
 
+    fun contains(offset: Offset): Boolean = offset.x >= left && offset.x < right && offset.y >= top && offset.y < bottom
+
     fun overlaps(other: Rectangle): Boolean {
         if (right <= other.left || other.right <= left) return false
         if (bottom <= other.top || other.bottom <= top) return false

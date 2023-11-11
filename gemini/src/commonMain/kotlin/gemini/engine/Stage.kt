@@ -73,6 +73,7 @@ class Stage(
         toAct = null
         toDraw = null
         super.add(thing)
+        step()
     }
 
     private fun collider(actors: List<Thing>) {
@@ -130,6 +131,7 @@ class Stage(
         assets.forEach { (source, asset) ->
             asset.load(source)
         }
+        step()
     }
 
     private fun loop() {
@@ -144,12 +146,14 @@ class Stage(
         toAct = null
         toDraw = null
         super.remove(thing)
+        step()
     }
 
     override fun replaceAll(scene: Scene) {
         toAct = null
         toDraw = null
         super.replaceAll(scene)
+        step()
     }
 
     fun start() {
@@ -158,7 +162,7 @@ class Stage(
 
     fun step() {
         if (isRunning) return
-        ++frame // Trigger recompose. Actions will be triggered after draw.
+        ++frame // Trigger recompose. Actions will also be triggered once after draw.
     }
 
     fun stop() {
