@@ -53,6 +53,7 @@ class CheckerBoard : Thing(), BeforeCamera {
         val boardPosition = Offset(offset.x / grid - 1, offset.y / grid - 1).round()
         val move = moves.find { it.newPosition == boardPosition }
         val newPosition = move?.newPosition ?: checker.boardPosition
+        if ((checker.side == Side.Top && newPosition.y == 7) || (checker.side == Side.Bottom && newPosition.y == 0)) checker.king()
         checker.drop(newPosition)
         move?.let { find(it.jumpPosition) }?.let {
             checkers.remove(it)
