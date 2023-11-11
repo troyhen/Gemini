@@ -54,6 +54,7 @@ class CheckerBoard : Thing(), BeforeCamera {
         val move = moves.find { it.newPosition == boardPosition }
         val newPosition = move?.newPosition ?: checker.boardPosition
         checker.drop(newPosition)
+        move?.let { find(it.jumpPosition) }?.let { Stage.instance?.remove(it) }
         dragging = null
         moves = emptyList()
         Stage.instance?.step()
