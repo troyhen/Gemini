@@ -5,6 +5,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.IntOffset
+import examples.checkers.Side.Black
+import examples.checkers.Side.White
 import gemini.engine.SceneScope
 import gemini.engine.Stage
 import gemini.foundation.Thing
@@ -14,8 +16,8 @@ class Checker(
     val side: Side,
     boardPosition: IntOffset,
 ) : Thing() {
-    private var boardPosition: IntOffset = boardPosition
-        set(value) {
+    var boardPosition: IntOffset = boardPosition
+        private set(value) {
             field = value
             position.location.set((value.x + 1) * 10f, (value.y + 1) * 10f)
         }
@@ -32,7 +34,6 @@ class Checker(
 
     fun drag(offset: Offset) {
         dragging = offset
-        println("$offset")
         Stage.instance?.step()
     }
 
@@ -64,6 +65,24 @@ class Checker(
     fun king() {
         isKing = true
         Stage.instance?.step()
+    }
+
+    fun moves(): List<Move> {
+        val nw = Move(this, IntOffset(boardPosition.x - 1, boardPosition.y - 1))
+        val nwj = Move(this, IntOffset(boardPosition.x - 2, boardPosition.y - 2), IntOffset(boardPosition.x - 1, boardPosition.y - 1))
+        val ne = Move(this, IntOffset(boardPosition.x + 1, boardPosition.y - 1))
+        val nej = Move(this, IntOffset(boardPosition.x + 2, boardPosition.y - 2), IntOffset(boardPosition.x + 1, boardPosition.y - 1))
+        val sw = Move(this, IntOffset(boardPosition.x - 1, boardPosition.y + 1))
+        val swj = Move(this, IntOffset(boardPosition.x - 2, boardPosition.y + 2), IntOffset(boardPosition.x - 1, boardPosition.y + 1))
+        val se = Move(this, IntOffset(boardPosition.x + 1, boardPosition.y + 1))
+        val sej = Move(this, IntOffset(boardPosition.x + 2, boardPosition.y + 2), IntOffset(boardPosition.x + 1, boardPosition.y + 1))
+        val all = if (isKing) {
+            listOf(nw, ne, sw, se, nwj, nej, swj, nej)
+        } else when (side) {
+            White -> listOf(sw, se, swj, sej)
+            Black -> listOf(nw, ne, nwj, nej)
+        }
+        return all.filter { it.newPosition.x in 0..7 && it.newPosition.y in 0..7 }
     }
 }
 

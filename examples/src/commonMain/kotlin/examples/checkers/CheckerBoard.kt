@@ -15,6 +15,7 @@ class CheckerBoard : Thing(), BeforeCamera {
 
     private val checkers = mutableListOf<Checker>()
     private var dragging: Checker? = null
+    private var moves: List<Move> = emptyList()
     private var grid: Float = 0f
     private var inset: Float = 0f
 
@@ -29,6 +30,7 @@ class CheckerBoard : Thing(), BeforeCamera {
     fun drag(offset: Offset) {
         if (dragging == null) {
             dragging = checkers.find { it.isHit(offset) }
+            moves = moves()
         }
         dragging?.drag(offset)
     }
@@ -47,10 +49,28 @@ class CheckerBoard : Thing(), BeforeCamera {
     }
 
     fun drop(offset: Offset) {
+        val checker = dragging ?: return
         val boardPosition = Offset(offset.x / grid - 1, offset.y / grid - 1).round()
-        dragging?.drop(boardPosition)
+        val move = moves.find { it.newPosition == boardPosition }
+        val newPosition = move?.newPosition ?: checker.boardPosition
+        checker.drop(newPosition)
         dragging = null
+        moves = emptyList()
         Stage.instance?.step()
+    }
+
+    private fun find(boardPosition: IntOffset): Checker? = checkers.find { it.boardPosition == boardPosition }
+
+    private fun moves(): List<Move> {
+        val dragging = dragging ?: return emptyList()
+        val moves1 = dragging.moves()
+        return moves1.filter { move ->
+            checkers.none { move.newPosition == it.boardPosition }
+        }.filter { move ->
+            checkers.all { move.jumpPosition.x < 0 || move.jumpPosition != it.boardPosition || (find(move.jumpPosition)?.side ?: dragging.side) != dragging.side }
+        }.also {
+            println(moves)
+        }
     }
 
     fun start() {
