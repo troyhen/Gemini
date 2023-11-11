@@ -11,7 +11,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import gemini.asset.SetupImages
 
 @Composable
-fun Gemini(modifier: Modifier = Modifier, startImmediately: Boolean = true, builder: suspend SceneScope.() -> Unit) {
+fun Gemini(modifier: Modifier = Modifier, startImmediately: Boolean = true, onStart: suspend Stage.() -> Unit = {}, builder: suspend SceneScope.() -> Unit) {
     val textMeasurer = rememberTextMeasurer()
     val scope = rememberCoroutineScope()
     val stage = remember { Stage(scope, textMeasurer, startImmediately) }
@@ -27,5 +27,6 @@ fun Gemini(modifier: Modifier = Modifier, startImmediately: Boolean = true, buil
             build()
         }
         stage.load(scene)
+        onStart(stage)
     }
 }
