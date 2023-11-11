@@ -5,8 +5,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.IntOffset
-import examples.checkers.Side.Black
-import examples.checkers.Side.White
+import examples.checkers.Side.Bottom
+import examples.checkers.Side.Top
 import gemini.engine.SceneScope
 import gemini.engine.Stage
 import gemini.foundation.Thing
@@ -69,18 +69,18 @@ class Checker(
 
     fun moves(): List<Move> {
         val nw = Move(this, IntOffset(boardPosition.x - 1, boardPosition.y - 1))
-        val nwj = Move(this, IntOffset(boardPosition.x - 2, boardPosition.y - 2), IntOffset(boardPosition.x - 1, boardPosition.y - 1))
         val ne = Move(this, IntOffset(boardPosition.x + 1, boardPosition.y - 1))
-        val nej = Move(this, IntOffset(boardPosition.x + 2, boardPosition.y - 2), IntOffset(boardPosition.x + 1, boardPosition.y - 1))
         val sw = Move(this, IntOffset(boardPosition.x - 1, boardPosition.y + 1))
-        val swj = Move(this, IntOffset(boardPosition.x - 2, boardPosition.y + 2), IntOffset(boardPosition.x - 1, boardPosition.y + 1))
         val se = Move(this, IntOffset(boardPosition.x + 1, boardPosition.y + 1))
+        val nwj = Move(this, IntOffset(boardPosition.x - 2, boardPosition.y - 2), IntOffset(boardPosition.x - 1, boardPosition.y - 1))
+        val nej = Move(this, IntOffset(boardPosition.x + 2, boardPosition.y - 2), IntOffset(boardPosition.x + 1, boardPosition.y - 1))
+        val swj = Move(this, IntOffset(boardPosition.x - 2, boardPosition.y + 2), IntOffset(boardPosition.x - 1, boardPosition.y + 1))
         val sej = Move(this, IntOffset(boardPosition.x + 2, boardPosition.y + 2), IntOffset(boardPosition.x + 1, boardPosition.y + 1))
         val all = if (isKing) {
             listOf(nw, ne, sw, se, nwj, nej, swj, nej)
         } else when (side) {
-            White -> listOf(sw, se, swj, sej)
-            Black -> listOf(nw, ne, nwj, nej)
+            Top -> listOf(sw, se, swj, sej)
+            Bottom -> listOf(nw, ne, nwj, nej)
         }
         return all.filter { it.newPosition.x in 0..7 && it.newPosition.y in 0..7 }
     }
@@ -92,7 +92,12 @@ fun SceneScope.piece(side: Side, boardPosition: IntOffset): Checker {
     }
 }
 
+data class Move(val checker: Checker, val newPosition: IntOffset, val jumpPosition: IntOffset = IntOffset(-1, -1)) {
+    val isNotJump: Boolean get() = jumpPosition.x < 0
+    val isJump: Boolean get() = !isNotJump
+}
+
 enum class Side(val color: Color) {
-    White(Color.White),
-    Black(Color.Black)
+    Top(Color.White),
+    Bottom(Color.Black)
 }

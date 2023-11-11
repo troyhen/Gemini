@@ -63,13 +63,13 @@ class CheckerBoard : Thing(), BeforeCamera {
 
     private fun moves(): List<Move> {
         val dragging = dragging ?: return emptyList()
-        val moves1 = dragging.moves()
-        return moves1.filter { move ->
-            checkers.none { move.newPosition == it.boardPosition }
-        }.filter { move ->
-            checkers.all { move.jumpPosition.x < 0 || move.jumpPosition != it.boardPosition || (find(move.jumpPosition)?.side ?: dragging.side) != dragging.side }
+        return dragging.moves().filter { move ->
+            val jumpSide = find(move.jumpPosition)?.side ?: dragging.side
+            find(move.newPosition) == null && // positions ia open
+                (move.isNotJump || // not a jump
+                    jumpSide != dragging.side) // jump is over a different color
         }.also {
-            println(moves)
+            println(it)
         }
     }
 
@@ -78,7 +78,7 @@ class CheckerBoard : Thing(), BeforeCamera {
         Stage.instance?.run {
             for (side in Side.entries) {
                 repeat(12) { piece ->
-                    val row = piece / 4 + if (side == Side.Black) 5 else 0
+                    val row = piece / 4 + if (side == Side.Bottom) 5 else 0
                     val column = 2 * (piece % 4) + row % 2
                     checkers.add(piece(side, IntOffset(column, row)))
                 }
