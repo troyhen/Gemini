@@ -68,14 +68,14 @@ class Checker(
     }
 
     fun moves(): List<Move> {
-        val nw = Move(this, IntOffset(boardPosition.x - 1, boardPosition.y - 1))
-        val ne = Move(this, IntOffset(boardPosition.x + 1, boardPosition.y - 1))
-        val sw = Move(this, IntOffset(boardPosition.x - 1, boardPosition.y + 1))
-        val se = Move(this, IntOffset(boardPosition.x + 1, boardPosition.y + 1))
-        val nwj = Move(this, IntOffset(boardPosition.x - 2, boardPosition.y - 2), IntOffset(boardPosition.x - 1, boardPosition.y - 1))
-        val nej = Move(this, IntOffset(boardPosition.x + 2, boardPosition.y - 2), IntOffset(boardPosition.x + 1, boardPosition.y - 1))
-        val swj = Move(this, IntOffset(boardPosition.x - 2, boardPosition.y + 2), IntOffset(boardPosition.x - 1, boardPosition.y + 1))
-        val sej = Move(this, IntOffset(boardPosition.x + 2, boardPosition.y + 2), IntOffset(boardPosition.x + 1, boardPosition.y + 1))
+        val nw = Move(IntOffset(boardPosition.x - 1, boardPosition.y - 1))
+        val ne = Move(IntOffset(boardPosition.x + 1, boardPosition.y - 1))
+        val sw = Move(IntOffset(boardPosition.x - 1, boardPosition.y + 1))
+        val se = Move(IntOffset(boardPosition.x + 1, boardPosition.y + 1))
+        val nwj = Move(IntOffset(boardPosition.x - 2, boardPosition.y - 2), IntOffset(boardPosition.x - 1, boardPosition.y - 1))
+        val nej = Move(IntOffset(boardPosition.x + 2, boardPosition.y - 2), IntOffset(boardPosition.x + 1, boardPosition.y - 1))
+        val swj = Move(IntOffset(boardPosition.x - 2, boardPosition.y + 2), IntOffset(boardPosition.x - 1, boardPosition.y + 1))
+        val sej = Move(IntOffset(boardPosition.x + 2, boardPosition.y + 2), IntOffset(boardPosition.x + 1, boardPosition.y + 1))
         val all = if (isKing) {
             listOf(nw, ne, sw, se, nwj, nej, swj, nej)
         } else when (side) {
@@ -92,9 +92,14 @@ fun SceneScope.piece(side: Side, boardPosition: IntOffset): Checker {
     }
 }
 
-data class Move(val checker: Checker, val newPosition: IntOffset, val jumpPosition: IntOffset = IntOffset(-1, -1)) {
+class Move(val newPosition: IntOffset, val jumpPosition: IntOffset = IntOffset(-1, -1)) {
     val isNotJump: Boolean get() = jumpPosition.x < 0
     val isJump: Boolean get() = !isNotJump
+
+    override fun toString(): String {
+        val name = if (isJump) "Jump" else "Move"
+        return "$name to $newPosition"
+    }
 }
 
 enum class Side(val color: Color) {

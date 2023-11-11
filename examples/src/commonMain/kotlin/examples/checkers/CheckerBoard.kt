@@ -54,7 +54,10 @@ class CheckerBoard : Thing(), BeforeCamera {
         val move = moves.find { it.newPosition == boardPosition }
         val newPosition = move?.newPosition ?: checker.boardPosition
         checker.drop(newPosition)
-        move?.let { find(it.jumpPosition) }?.let { Stage.instance?.remove(it) }
+        move?.let { find(it.jumpPosition) }?.let {
+            checkers.remove(it)
+            Stage.instance?.remove(it)
+        }
         dragging = null
         moves = emptyList()
         Stage.instance?.step()
@@ -69,8 +72,6 @@ class CheckerBoard : Thing(), BeforeCamera {
             find(move.newPosition) == null && // positions ia open
                 (move.isNotJump || // not a jump
                     jumpSide != dragging.side) // jump is over a different color
-        }.also {
-            println(it)
         }
     }
 
