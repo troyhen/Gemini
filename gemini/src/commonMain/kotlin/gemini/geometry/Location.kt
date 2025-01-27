@@ -116,6 +116,14 @@ fun Location.change(velocity: Velocity, time: Duration) {
     z += velocity.zs * seconds
 }
 
+fun distance(location1: Location, location2: Location): Float = sqrt(distanceSquared(location1, location2))
+fun distanceSquared(location1: Location, location2: Location): Float {
+    val dx = location1.x - location2.x
+    val dy = location1.y - location2.y
+    val dz = location1.z - location2.z
+    return dx * dx + dy * dy + dz * dz
+}
+
 fun Location.normalize(): Location {
     if (x != 0f || y != 0f || z != 0f) {
         this /= sqrt(x * x + y * y + z * z)

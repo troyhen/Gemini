@@ -64,7 +64,6 @@ operator fun Velocity.plus(velocity: Velocity) = Velocity(xs + velocity.xs, ys +
 operator fun Velocity.plus(offset: Offset) = Velocity(xs + offset.x, ys + offset.y, zs)
 operator fun Velocity.times(scale: Float) = Velocity(xs * scale, ys * scale, zs * scale)
 operator fun Velocity.times(scale: Int) = Velocity(xs * scale, ys * scale, zs * scale)
-
 operator fun Velocity.divAssign(scale: Float) {
     xs /= scale
     ys /= scale
@@ -120,3 +119,11 @@ fun Velocity.change(velocity: Velocity, time: Duration) {
     ys += velocity.ys * seconds
     zs += velocity.zs * seconds
 }
+
+fun Velocity.negate() {
+    xs = -xs
+    ys = -ys
+    zs = -zs
+}
+
+operator fun Velocity.unaryMinus(): Velocity = Velocity(-xs, -ys, -zs)
