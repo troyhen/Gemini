@@ -1,6 +1,8 @@
 package gemini.geometry
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import kotlin.time.Duration
 
 @JvmInline
 value class Velocity private constructor(private val data: FloatArray) {
@@ -62,3 +64,59 @@ operator fun Velocity.plus(velocity: Velocity) = Velocity(xs + velocity.xs, ys +
 operator fun Velocity.plus(offset: Offset) = Velocity(xs + offset.x, ys + offset.y, zs)
 operator fun Velocity.times(scale: Float) = Velocity(xs * scale, ys * scale, zs * scale)
 operator fun Velocity.times(scale: Int) = Velocity(xs * scale, ys * scale, zs * scale)
+
+operator fun Velocity.divAssign(scale: Float) {
+    xs /= scale
+    ys /= scale
+    zs /= scale
+}
+
+operator fun Velocity.divAssign(scale: Int) = divAssign(scale.toFloat())
+operator fun Velocity.minusAssign(velocity: Velocity) {
+    xs -= velocity.xs
+    ys -= velocity.ys
+    zs -= velocity.zs
+}
+
+operator fun Velocity.minusAssign(offset: Offset) {
+    xs -= offset.x
+    ys -= offset.y
+}
+
+operator fun Velocity.plusAssign(velocity: Velocity) {
+    xs += velocity.xs
+    ys += velocity.ys
+    zs += velocity.zs
+}
+
+operator fun Velocity.plusAssign(offset: Offset) {
+    xs += offset.x
+    ys += offset.y
+}
+
+operator fun Velocity.timesAssign(scale: Float) {
+    xs *= scale
+    ys *= scale
+    zs *= scale
+}
+
+operator fun Velocity.timesAssign(scale: Int) = timesAssign(scale.toFloat())
+
+fun Velocity.change(offset: Offset, time: Duration) {
+    val seconds = time.seconds
+    xs += offset.x * seconds
+    ys += offset.y * seconds
+}
+
+fun Velocity.change(size: Size, time: Duration) {
+    val seconds = time.seconds
+    xs += size.width * seconds
+    ys += size.height * seconds
+}
+
+fun Velocity.change(velocity: Velocity, time: Duration) {
+    val seconds = time.seconds
+    xs += velocity.xs * seconds
+    ys += velocity.ys * seconds
+    zs += velocity.zs * seconds
+}

@@ -24,8 +24,7 @@ val cameraVelocity = Velocity(0f, 0f, -1f)
 private class Star : MovingThing() {
     override suspend fun act(elapsed: Duration) {
         super.act(elapsed)
-        val seconds = elapsed.seconds
-        position.location.move(cameraVelocity.xs * seconds, cameraVelocity.ys * seconds, cameraVelocity.zs * seconds)
+        position.location.change(cameraVelocity, elapsed)
     }
 
     override fun DrawScope.draw() {

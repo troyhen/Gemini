@@ -69,10 +69,10 @@ class Ship(position: Position, private val onEnd: () -> Unit, private val onUpda
     fun control(shipState: ShipState, elapsed: Duration) {
         val seconds = elapsed.seconds
         if (Control.GoForward in shipState.controls) {
-            velocity.add(FORWARD_THRUST * seconds rotate position.rotation.r)
+            velocity.change(FORWARD_THRUST rotate position.rotation.r, elapsed)
         }
         if (Control.GoBackward in shipState.controls) {
-            velocity.add(BACKWARD_THRUST * seconds rotate position.rotation.r)
+            velocity.change(BACKWARD_THRUST rotate position.rotation.r, elapsed)
         }
         if (Control.TurnLeft in shipState.controls) {
             spin -= SPIN_INCREMENT * seconds
@@ -93,7 +93,7 @@ class Ship(position: Position, private val onEnd: () -> Unit, private val onUpda
         private val COOL_DOWN_TIME = 1.seconds
         private val FORWARD_THRUST = Offset(.2f, 0f)
         private val BACKWARD_THRUST = FORWARD_THRUST / -2f
-        private const val SPIN_INCREMENT = 50f
+        private const val SPIN_INCREMENT = 60f
     }
 }
 

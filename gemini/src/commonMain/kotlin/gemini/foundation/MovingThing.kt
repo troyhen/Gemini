@@ -11,10 +11,8 @@ open class MovingThing(
 ) : Thing(position) {
 
     override suspend fun act(elapsed: Duration) {
-        val seconds = elapsed.seconds
-        position.location.x += velocity.xs * seconds
-        position.location.y += velocity.ys * seconds
-        position.rotation.r += spin * seconds
+        position.location.change(velocity, elapsed)
+        position.rotation.r += spin * elapsed.seconds
     }
 
     fun bounce(world: World = Stage.visible) {
