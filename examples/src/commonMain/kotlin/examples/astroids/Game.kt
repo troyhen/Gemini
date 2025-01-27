@@ -36,8 +36,8 @@ fun Game(shipState: ShipState, modifier: Modifier = Modifier) {
             camera.orthographic()
             background(Color.Black)
             frameRate(Color.White, Pivot.NorthEast)
-            ship(::onEnd) {
-                control(shipState)
+            ship(::onEnd) { duration ->
+                control(shipState, duration)
             }
             repeat(4) {
                 asteroid()

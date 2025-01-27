@@ -13,7 +13,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
-class Ship(position: Position, private val onEnd: () -> Unit, private val onUpdate: Ship.() -> Unit) : MovingThing(position), Collider {
+class Ship(position: Position, private val onEnd: () -> Unit, private val onUpdate: Ship.(Duration) -> Unit) : MovingThing(position), Collider {
 
     private var lastFire: TimeSource.Monotonic.ValueTimeMark? = null
 
@@ -36,7 +36,7 @@ class Ship(position: Position, private val onEnd: () -> Unit, private val onUpda
         velocity.xs += velocity.xs * friction
         velocity.ys += velocity.ys * friction
         spin += spin * friction
-        onUpdate()
+        onUpdate(elapsed)
     }
 
     override fun collideWith(collider: Collider): Boolean {
@@ -66,18 +66,19 @@ class Ship(position: Position, private val onEnd: () -> Unit, private val onUpda
         }
     }
 
-    fun control(shipState: ShipState) {
+    fun control(shipState: ShipState, elapsed: Duration) {
+        val seconds = elapsed.seconds
         if (Control.GoForward in shipState.controls) {
-            velocity.add(FORWARD_THRUST rotate position.rotation.r)
+            velocity.add(FORWARD_THRUST * seconds rotate position.rotation.r)
         }
         if (Control.GoBackward in shipState.controls) {
-            velocity.add(BACKWARD_THRUST rotate position.rotation.r)
+            velocity.add(BACKWARD_THRUST * seconds rotate position.rotation.r)
         }
         if (Control.TurnLeft in shipState.controls) {
-            spin -= SPIN_INCREMENT
+            spin -= SPIN_INCREMENT * seconds
         }
         if (Control.TurnRight in shipState.controls) {
-            spin += SPIN_INCREMENT
+            spin += SPIN_INCREMENT * seconds
         }
         if (Control.Fire in shipState.controls) {
             val timeSinceLastFire = lastFire?.elapsedNow() ?: COOL_DOWN_TIME
@@ -90,13 +91,13 @@ class Ship(position: Position, private val onEnd: () -> Unit, private val onUpda
 
     companion object {
         private val COOL_DOWN_TIME = 1.seconds
-        private val FORWARD_THRUST = Offset(.002f, 0f)
+        private val FORWARD_THRUST = Offset(.2f, 0f)
         private val BACKWARD_THRUST = FORWARD_THRUST / -2f
-        private const val SPIN_INCREMENT = .5f
+        private const val SPIN_INCREMENT = 50f
     }
 }
 
-fun SceneScope.ship(onEnd: () -> Unit, onUpdate: Ship.() -> Unit): Ship {
+fun SceneScope.ship(onEnd: () -> Unit, onUpdate: Ship.(Duration) -> Unit): Ship {
     val length = .05f
     val width = length / 2
     return Ship(Position(space = Space(length, width)), onEnd, onUpdate).also { thing ->
