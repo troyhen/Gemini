@@ -38,7 +38,7 @@ class Bead(position: Position, private val color: Color) : MovingThing(position)
         return true
     }
 
-    override fun DrawScope.draw() {
+    override fun DrawScope.draw() = drawRelative {
         drawCircle(color, position.space.width / 2)
     }
 
