@@ -1,6 +1,7 @@
 package gemini.engine
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -32,7 +33,7 @@ class Stage(
     private val collisionArea1 = Rectangle()
     private val collisionArea2 = Rectangle()
 
-    private var frame by mutableStateOf(0)
+    private var frame by mutableIntStateOf(0)
     private val frameFlow = MutableStateFlow(0)
     private var timeMark = time.markNow()
 

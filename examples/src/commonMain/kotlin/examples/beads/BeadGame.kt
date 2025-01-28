@@ -34,13 +34,14 @@ fun BeadGame(modifier: Modifier = Modifier) {
 
     Box(modifier) {
         val game = rememberScene(iteration) {
-            camera.orthographic(-16f, 16f, -16f, 16f, -16f, 16f)
+            camera.default()
             background(Color.Black)
             frameRate(Color.White, Pivot.NorthEast)
-            val main = bowl(Location(), 10f, Color.DarkGray)
+            val main = bowl(Location(), 200f, Color.DarkGray)
+            val step = 360.degrees / BOWLS
             repeat(BOWLS) {
-                val angle = Angle(it * 360f / BOWLS)
-                bowl(Location(8f * angle.cos(), 8f * angle.sin()), 4f, Color.Red)
+                val angle = step * it
+                bowl(Location(300f * angle.cos(), 300f * angle.sin()), 80f, Color.Gray)
             }
             repeat(BEADS) {
                 val x = main.position.space.width.randomPlus()

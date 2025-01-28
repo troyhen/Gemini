@@ -47,8 +47,8 @@ class Bead(position: Position, private val color: Color) : MovingThing(position)
     }
 }
 
-fun SceneScope.bead(color: Color, location: Location, diameter: Float = 1f): Bead {
-    return Bead(Position(location = location, space = Space(diameter, diameter, diameter)), color).also { thing ->
+fun SceneScope.bead(color: Color, location: Location, diameter: Float = 50f): Bead {
+    return Bead(Position(location = location, space = Space(diameter, diameter)), color).also { thing ->
         add(thing)
     }
 }
