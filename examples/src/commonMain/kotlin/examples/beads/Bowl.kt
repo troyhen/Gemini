@@ -20,8 +20,8 @@ class Bowl(position: Position, private val color: Color) : Thing(position), Coll
         }
     }
 
-    override fun DrawScope.draw() = drawRelative {
-        drawCircle(color, radius)
+    override fun DrawScope.draw() {
+        drawCircle(color, radius, position.location.offset)
     }
 }
 

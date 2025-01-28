@@ -38,11 +38,11 @@ fun BeadGame(modifier: Modifier = Modifier) {
             camera.default()
             background(Color.Black)
             frameRate(Color.White, Pivot.NorthEast)
-            val main = bowl(Location(0f, 0f), 250f, Color.DarkGray)
+            val main = bowl(Location(450f, 450f), 250f, Color.DarkGray)
             val step = 360.degrees / BOWLS
             repeat(BOWLS) {
                 val angle = step * it
-                bowl(Location(300f * angle.cos(), 300f * angle.sin()), 100f, Color.Gray)
+                bowl(Location(main.position.location.x + 350f * angle.cos(), main.position.location.y + 350f * angle.sin()), 100f, Color.Gray)
             }
             colors.forEach { color ->
                 repeat(BEADS) {
