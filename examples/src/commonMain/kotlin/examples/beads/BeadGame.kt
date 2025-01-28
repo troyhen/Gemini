@@ -42,7 +42,7 @@ fun BeadGame(modifier: Modifier = Modifier) {
             val step = 360.degrees / BOWLS
             repeat(BOWLS) {
                 val angle = step * it
-                bowl(Location(main.position.location.x + 350f * angle.cos(), main.position.location.y + 350f * angle.sin()), 100f, Color.Gray)
+                bowl(main.position.location + Offset(350f * angle.cos(), 350f * angle.sin()), 100f, Color.Gray)
             }
             colors.forEach { color ->
                 repeat(BEADS) {
