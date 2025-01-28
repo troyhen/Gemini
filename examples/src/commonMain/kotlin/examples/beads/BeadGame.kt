@@ -37,16 +37,18 @@ fun BeadGame(modifier: Modifier = Modifier) {
             camera.default()
             background(Color.Black)
             frameRate(Color.White, Pivot.NorthEast)
-            val main = bowl(Location(), 200f, Color.DarkGray)
+            val main = bowl(Location(100f, 100f), 200f, Color.DarkGray)
             val step = 360.degrees / BOWLS
             repeat(BOWLS) {
                 val angle = step * it
-                bowl(Location(300f * angle.cos(), 300f * angle.sin()), 80f, Color.Gray)
+                bowl(Location(300f * angle.cos(), 300f * angle.sin()), 100f, Color.Gray)
             }
-            repeat(BEADS) {
-                val x = main.position.space.width.randomPlus()
-                val y = main.position.space.width.randomPlus()
-                bead(Color.Blue, main.position.location + Offset(x, y))
+            colors.forEach { color ->
+                repeat(BEADS) {
+                    val x = main.position.space.width.randomPlus()
+                    val y = main.position.space.width.randomPlus()
+                    bead(color, main.position.location + Offset(x, y))
+                }
             }
         }
         Gemini {
@@ -65,4 +67,5 @@ fun BeadGame(modifier: Modifier = Modifier) {
 }
 
 private const val BOWLS = 6
-private const val BEADS = 20
+private const val BEADS = 15
+private val colors = listOf(Color.Red, Color.Blue, Color.Yellow, Color.Cyan, Color.Green, Color.Magenta)
