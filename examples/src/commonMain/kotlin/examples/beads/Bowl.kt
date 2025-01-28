@@ -10,23 +10,18 @@ import gemini.geometry.Position
 import gemini.geometry.Space
 
 class Bowl(position: Position, private val color: Color) : Thing(position), Collider {
+
+    val radius = position.space.width / 2
+
     override fun collideWith(collider: Collider): Boolean {
         return when (collider) {
-            is Bowl -> {
-//                val delta = (collider.position.location - position.location).normalize()
-//                position.location.x -= delta.x
-//                position.location.y -= delta.y
-//                collider.position.location.x += delta.x
-//                collider.position.location.y += delta.y
-                true
-            }
-
-            else -> true
+            is Bowl -> true
+            else -> false
         }
     }
 
     override fun DrawScope.draw() = drawRelative {
-        drawCircle(color, position.space.width / 2)
+        drawCircle(color, radius)
     }
 }
 

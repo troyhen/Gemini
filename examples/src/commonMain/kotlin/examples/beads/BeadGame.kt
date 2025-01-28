@@ -16,6 +16,7 @@ import gemini.engine.rememberScene
 import gemini.foundation.background
 import gemini.foundation.frameRate
 import gemini.geometry.*
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun BeadGame(modifier: Modifier = Modifier) {
@@ -37,7 +38,7 @@ fun BeadGame(modifier: Modifier = Modifier) {
             camera.default()
             background(Color.Black)
             frameRate(Color.White, Pivot.NorthEast)
-            val main = bowl(Location(100f, 100f), 200f, Color.DarkGray)
+            val main = bowl(Location(0f, 0f), 250f, Color.DarkGray)
             val step = 360.degrees / BOWLS
             repeat(BOWLS) {
                 val angle = step * it
@@ -45,9 +46,9 @@ fun BeadGame(modifier: Modifier = Modifier) {
             }
             colors.forEach { color ->
                 repeat(BEADS) {
-                    val x = main.position.space.width.randomPlus()
-                    val y = main.position.space.width.randomPlus()
-                    bead(color, main.position.location + Offset(x, y))
+                    val x = main.radius.randomPlus()
+                    val y = main.radius.randomPlus()
+                    bead(main.position.location + Offset(x, y), color)
                 }
             }
         }
@@ -63,6 +64,21 @@ fun BeadGame(modifier: Modifier = Modifier) {
                 Text("Restart", style = MaterialTheme.typography.titleMedium)
             }
         }
+    }
+}
+
+
+@Composable
+private fun HandlePointer(pointerFlow: StateFlow<Offset?>, drop: (Offset) -> Unit, drag: (Offset?) -> Unit) {
+    var lastPointer by remember { mutableStateOf<Offset?>(null) }
+    val pointer = pointerFlow.collectAsState().value
+    LaunchedEffect(pointer) {
+        if (pointer == null) {
+            lastPointer?.let { drop(it) }
+        } else {
+            drag(pointer)
+        }
+        lastPointer = pointer
     }
 }
 
