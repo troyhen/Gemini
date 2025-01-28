@@ -46,9 +46,7 @@ fun BeadGame(modifier: Modifier = Modifier) {
             }
             colors.forEach { color ->
                 repeat(BEADS) {
-                    val x = main.radius.randomPlus()
-                    val y = main.radius.randomPlus()
-                    bead(main.position.location + Offset(x, y), color)
+                    bead(main.position.location + Offset(main.radius, main.radius).randomPlus(), color)
                 }
             }
         }
