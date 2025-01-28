@@ -41,9 +41,9 @@ value class Location private constructor(private val data: FloatArray) {
     }
 
     fun setFrom(location: Location) {
-        repeat(3) { index ->
-            data[index] = location.data[index]
-        }
+        data[0] = location.data[0]
+        data[1] = location.data[1]
+        data[2] = location.data[2]
     }
 
     companion object {

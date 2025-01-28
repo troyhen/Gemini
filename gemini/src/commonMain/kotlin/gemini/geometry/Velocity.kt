@@ -50,9 +50,9 @@ value class Velocity private constructor(private val data: FloatArray) {
     }
 
     fun setFrom(velocity: Velocity) {
-        repeat(3) { index ->
-            data[index] = velocity.data[index]
-        }
+        data[0] = velocity.data[0]
+        data[1] = velocity.data[1]
+        data[2] = velocity.data[2]
     }
 }
 

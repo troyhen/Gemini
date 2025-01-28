@@ -64,9 +64,10 @@ value class Rectangle private constructor(private val data: FloatArray) {
     }
 
     fun setFrom(rectangle: Rectangle) {
-        repeat(4) { index ->
-            data[index] = rectangle.data[index]
-        }
+        data[0] = rectangle.data[0]
+        data[1] = rectangle.data[1]
+        data[2] = rectangle.data[2]
+        data[3] = rectangle.data[3]
     }
 
     companion object {

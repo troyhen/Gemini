@@ -5,7 +5,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.round
-import androidx.compose.ui.unit.toOffset
 
 @JvmInline
 value class IntRectangle private constructor(private val data: IntArray) {
@@ -65,9 +64,10 @@ value class IntRectangle private constructor(private val data: IntArray) {
     }
 
     fun setFrom(rectangle: IntRectangle) {
-        repeat(4) { index ->
-            data[index] = rectangle.data[index]
-        }
+        data[0] = rectangle.data[0]
+        data[1] = rectangle.data[1]
+        data[2] = rectangle.data[2]
+        data[3] = rectangle.data[3]
     }
 
     companion object {

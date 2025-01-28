@@ -33,9 +33,9 @@ value class Scale private constructor(private val data: FloatArray) {
     }
 
     fun setFrom(scale: Scale) {
-        repeat(3) { index ->
-            data[index] = scale.data[index]
-        }
+        data[0] = scale.data[0]
+        data[1] = scale.data[1]
+        data[2] = scale.data[2]
     }
 
     companion object {

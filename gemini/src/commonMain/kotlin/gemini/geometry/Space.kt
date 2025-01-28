@@ -36,9 +36,9 @@ value class Space private constructor(private val data: FloatArray) {
     }
 
     fun setFrom(space: Space) {
-        repeat(3) { index ->
-            data[index] = space.data[index]
-        }
+        data[0] = space.data[0]
+        data[1] = space.data[1]
+        data[2] = space.data[2]
     }
 
     val size: Size get() = Size(width, height)
