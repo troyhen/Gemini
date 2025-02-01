@@ -56,7 +56,7 @@ class Asteroid(
         return false
     }
 
-    override fun DrawScope.draw() = drawRelative {
+    override fun DrawScope.drawRelative() {
         drawPath(path, Color.Gray)
     }
 

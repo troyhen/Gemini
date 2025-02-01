@@ -52,7 +52,7 @@ class Ship(position: Position, private val onEnd: () -> Unit, private val onUpda
         }
     }
 
-    override fun DrawScope.draw() = drawRelative {
+    override fun DrawScope.drawRelative() {
         drawPath(path, Color.Cyan)
     }
 

@@ -4,6 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.painter.Painter
 import gemini.engine.SceneScope
 import gemini.geometry.*
@@ -25,7 +26,7 @@ class Sprite(
 
     override fun DrawScope.draw() {
         position.rectangle(rectangle)
-        drawRelative {
+        withTransform({ transform(position.transform()) }) {
             onDraw(this@Sprite)
         }
     }

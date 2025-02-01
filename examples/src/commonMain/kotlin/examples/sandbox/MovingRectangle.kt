@@ -20,7 +20,7 @@ class MovingRectangle(
         actor?.invoke(this, elapsed)
     }
 
-    override fun DrawScope.draw() = drawRelative {
+    override fun DrawScope.drawRelative() {
         drawRect(color, Offset.Zero, position.space.size)
     }
 }
