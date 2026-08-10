@@ -10,7 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import examples.checkers.Checker
+import examples.checkers.CheckerBoard
 import gemini.engine.Gemini
+import gemini.engine.SceneScope
 import gemini.engine.Stage
 import gemini.engine.rememberScene
 import gemini.foundation.background
@@ -19,9 +22,13 @@ import gemini.geometry.*
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun BeadGame(modifier: Modifier = Modifier) {
+fun BeadGame(pointerFlow: StateFlow<Offset?>, modifier: Modifier = Modifier) {
+
     var iteration by remember { mutableStateOf(0) }
     var showRestart by remember { mutableStateOf(false) }
+    var dragging: Bead? = null
+    val beads = mutableListOf<Bead>()
+    val rectangle = Rectangle()
 
     fun onEnd() {
         showRestart = true
@@ -46,7 +53,7 @@ fun BeadGame(modifier: Modifier = Modifier) {
             }
             colors.forEach { color ->
                 repeat(BEADS) {
-                    bead(main.position.location + Offset(main.radius, main.radius).randomPlus(), color)
+                    beads.add(bead(main.position.location + Offset(main.radius, main.radius).randomPlus(), color))
                 }
             }
         }
@@ -63,8 +70,25 @@ fun BeadGame(modifier: Modifier = Modifier) {
             }
         }
     }
+//    fun Bead.isHit(offset: Offset): Boolean {
+//        return rectangle.contains(offset).also {
+//            if (it) {
+//                dragging = offset
+//            }
+//        }
+//    }
+//    HandlePointer(pointerFlow, { offset ->
+//        dragging?.position?.location?.setFrom(Location(offset))
+//    }, { offset ->
+//        offset ?: return@HandlePointer
+//        if (dragging == null) {
+//            dragging = beads.find {
+//                it.position.rectangle(rectangle)
+//            }
+//        }
+//        dragging?.position?.location?.set(offset.x, offset.y)
+//    })
 }
-
 
 @Composable
 private fun HandlePointer(pointerFlow: StateFlow<Offset?>, drop: (Offset) -> Unit, drag: (Offset?) -> Unit) {
@@ -77,6 +101,12 @@ private fun HandlePointer(pointerFlow: StateFlow<Offset?>, drop: (Offset) -> Uni
             drag(pointer)
         }
         lastPointer = pointer
+    }
+}
+
+fun SceneScope.checkerBoard(): CheckerBoard {
+    return CheckerBoard().also {
+        add(it)
     }
 }
 
