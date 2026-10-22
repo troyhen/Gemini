@@ -22,7 +22,7 @@ android {
 
 compose.desktop {
     application {
-        mainClass = "examples.asteroids.MainKt"
+        mainClass = System.getProperty("mainClass") ?: "examples.AsteroidsKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
@@ -37,28 +37,20 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(project(":gemini"))
-                api(compose.foundation)
-                implementation(compose.materialIconsExtended)
-                api(compose.material3)
-                api(compose.ui)
-                api(libs.kamel.image)
-            }
+        commonMain.dependencies {
+            api(project(":gemini"))
+            api(libs.compose.foundation)
+            implementation(libs.compose.material.icons.extended)
+            api(libs.compose.material3)
+            api(libs.compose.ui)
+            api(libs.kamel.image)
         }
-        val androidMain by getting {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(libs.activity)
-                implementation(libs.activity.compose)
-            }
+        androidMain.dependencies {
+            implementation(libs.activity)
+            implementation(libs.activity.compose)
         }
-        val desktopMain by getting {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(compose.desktop.currentOs)
-            }
+        named("desktopMain").dependencies {
+            implementation(compose.desktop.currentOs)
         }
     }
 }

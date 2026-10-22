@@ -6,14 +6,16 @@ leverage standard Compose state, modifiers, input handling, and layouts across A
 
 ## Architecture & Tech Stack
 
-- **Language:** Kotlin `2.1.0` (`kotlin.code.style=official`, `kotlin.mpp.applyDefaultHierarchyTemplate=false`)
-- **UI & Rendering:** JetBrains Compose Multiplatform `1.7.3` (Compose `Canvas`, `DrawScope`, 3D/2D `Matrix` transforms,
+- **Language:** Kotlin `2.4.21` (`kotlin.code.style=official`)
+- **UI & Rendering:** JetBrains Compose Multiplatform `1.12.2` (Compose `Canvas`, `DrawScope`, 3D/2D `Matrix`
+  transforms,
   `TextMeasurer`)
 - **Targets:**
-    - **Android:** `compileSdk = 34`, `minSdk = 23` (AGP `8.1.4`)
+    - **Android:** `compileSdk = 37`, `minSdk = 23` (AGP `9.1.1`)
     - **Desktop / JVM:** Java 17 toolchain (`jvmTarget = "17"`)
-- **Concurrency:** `kotlinx-coroutines` `1.9.0`
-- **Image Loading:** Kamel (`media.kamel:kamel-image` `0.7.3`) + Ktor Client `3.0.1` (`okhttp` on Android, `java` on
+- **Concurrency:** `kotlinx-coroutines` `1.11.0`
+- **Image Loading:** Kamel (`media.kamel:kamel-image-default` `1.0.9`) + Ktor Client `3.6.0` (`okhttp` on Android,
+  `java` on
   JVM)
 - **Audio:** Platform-specific `expect class Sound` (`android.media.SoundPool` on Android,
   `javax.sound.sampled.AudioSystem` / `Clip` on JVM)
