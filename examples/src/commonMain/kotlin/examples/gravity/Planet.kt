@@ -28,6 +28,10 @@ class Planet(
     var isAbsorbed: Boolean = false
         private set
 
+    internal fun markRemoved() {
+        isAbsorbed = true
+    }
+
     override suspend fun act(elapsed: Duration) {
         if (isAbsorbed) return
         if (isGrabbed) {
@@ -51,6 +55,7 @@ class Planet(
         }
         position.location.move(velocity.xs * dt, velocity.ys * dt)
         system.updateCamera()
+        system.pruneIndependentPlanets()
     }
 
     override fun collideWith(collider: Collider): Boolean {
@@ -96,8 +101,7 @@ class Planet(
         radius = (radius * radius * radius + other.radius * other.radius * other.radius).pow(1f / 3f)
         val diameter = radius * 2f
         position.space.set(diameter, diameter)
-        system.remove(other)
-        Stage.instance?.remove(other)
+        system.removePlanet(other)
         system.updateCamera()
     }
 
@@ -136,6 +140,7 @@ class PlanetSystem {
 
     val centerOfMass: Location = Location()
     private var attachedCamera: Camera? = null
+    private var attachedScene: Scene? = null
 
     @Volatile
     private var pointerDown = false
@@ -157,7 +162,10 @@ class PlanetSystem {
         }
     }
 
-    fun add(planet: Planet) {
+    fun add(planet: Planet, scene: Scene? = null) {
+        if (scene != null) {
+            attachedScene = scene
+        }
         synchronized(lock) {
             mutablePlanets.add(planet)
             snapshot = null
@@ -169,6 +177,150 @@ class PlanetSystem {
             mutablePlanets.remove(planet)
             snapshot = null
         }
+    }
+
+    internal fun removePlanet(planet: Planet) {
+        planet.markRemoved()
+        remove(planet)
+        attachedScene?.remove(planet)
+        Stage.instance?.remove(planet)
+    }
+
+    fun isOffScreen(planet: Planet): Boolean {
+        val visible = activeVisible() ?: return false
+        val x = planet.position.location.x
+        val y = planet.position.location.y
+        val r = planet.radius
+        return x + r < visible.left ||
+                x - r > visible.right ||
+                y + r < visible.top ||
+                y - r > visible.bottom
+    }
+
+    private fun activeVisible(): World? {
+        val cam = attachedCamera
+        if (cam != null && cam.visible.width > 2f && cam.visible.height > 2f) {
+            return cam.visible
+        }
+        val stageCam = Stage.instance?.camera
+        if (stageCam != null && stageCam.visible.width > 2f && stageCam.visible.height > 2f) {
+            return stageCam.visible
+        }
+        return null
+    }
+
+    fun pruneIndependentPlanets() {
+        if (pointerDown) return
+        if (activeVisible() == null) return
+        while (true) {
+            val current = all()
+            var activeCount = 0
+            current.fastForEach { if (!it.isAbsorbed) activeCount++ }
+            if (activeCount <= 1) return
+
+            var candidateToRemove: Planet? = null
+            var candidateMaxAccel = Float.MAX_VALUE
+            var candidateSpeedSq = -1f
+            var candidateMass = Float.MAX_VALUE
+
+            current.fastForEach { planet ->
+                if (!planet.isAbsorbed && !planet.isGrabbed && isOffScreen(planet)) {
+                    val maxAccel = evaluateIndependence(planet, current)
+                    if (maxAccel >= 0f) {
+                        val vx = planet.velocity.xs
+                        val vy = planet.velocity.ys
+                        val speedSq = vx * vx + vy * vy
+                        val isBetterCandidate = when {
+                            candidateToRemove == null -> true
+                            maxAccel < candidateMaxAccel - 1e-4f -> true
+                            maxAccel > candidateMaxAccel + 1e-4f -> false
+                            speedSq > candidateSpeedSq + 1e-4f -> true
+                            speedSq < candidateSpeedSq - 1e-4f -> false
+                            else -> planet.mass < candidateMass
+                        }
+                        if (isBetterCandidate) {
+                            candidateToRemove = planet
+                            candidateMaxAccel = maxAccel
+                            candidateSpeedSq = speedSq
+                            candidateMass = planet.mass
+                        }
+                    }
+                }
+            }
+
+            val toRemove = candidateToRemove ?: return
+            removePlanet(toRemove)
+            updateCamera()
+        }
+    }
+
+    private fun evaluateIndependence(planet: Planet, current: List<Planet>): Float {
+        val px = planet.position.location.x
+        val py = planet.position.location.y
+        val pMass = planet.mass
+
+        var minDistSq = Float.MAX_VALUE
+        var maxPairAccel = 0f
+        var otherMass = 0f
+        var otherComX = 0f
+        var otherComY = 0f
+        var otherVelX = 0f
+        var otherVelY = 0f
+
+        current.fastForEach { other ->
+            if (other !== planet && !other.isAbsorbed) {
+                val dx = px - other.position.location.x
+                val dy = py - other.position.location.y
+                val distSq = dx * dx + dy * dy
+                if (distSq < minDistSq) {
+                    minDistSq = distSq
+                }
+                if (distSq > 0f) {
+                    val pairAccel = Planet.GRAVITY * (pMass + other.mass) / distSq
+                    if (pairAccel > maxPairAccel) {
+                        maxPairAccel = pairAccel
+                    }
+                } else {
+                    maxPairAccel = Float.MAX_VALUE
+                }
+                val m = other.mass
+                otherMass += m
+                otherComX += other.position.location.x * m
+                otherComY += other.position.location.y * m
+                otherVelX += other.velocity.xs * m
+                otherVelY += other.velocity.ys * m
+            }
+        }
+
+        if (otherMass <= 0f || minDistSq < MIN_INDEPENDENT_DISTANCE_SQ) {
+            return -1f
+        }
+        if (minDistSq >= MAX_INDEPENDENT_DISTANCE_SQ) {
+            return maxPairAccel
+        }
+
+        val relX = px - otherComX / otherMass
+        val relY = py - otherComY / otherMass
+        val relVx = planet.velocity.xs - otherVelX / otherMass
+        val relVy = planet.velocity.ys - otherVelY / otherMass
+        val radialDot = relX * relVx + relY * relVy
+
+        if (maxPairAccel <= MIN_GRAVITY_ACCEL && radialDot >= 0f) {
+            return maxPairAccel
+        }
+
+        if (radialDot > 0f) {
+            val comDist = sqrt(relX * relX + relY * relY)
+            if (comDist > 0f) {
+                val relSpeedSq = relVx * relVx + relVy * relVy
+                val escapeSpeedSq = 2f * Planet.GRAVITY * (pMass + otherMass) / comDist
+                if (relSpeedSq >= escapeSpeedSq) {
+                    return maxPairAccel
+                }
+            }
+        }
+
+        return -1f
     }
 
     fun clear() {
@@ -359,6 +511,11 @@ class PlanetSystem {
     }
 
     companion object {
+        const val MIN_INDEPENDENT_DISTANCE = 1000f
+        const val MAX_INDEPENDENT_DISTANCE = 2500f
+        const val MIN_GRAVITY_ACCEL = 5f
+        private const val MIN_INDEPENDENT_DISTANCE_SQ = MIN_INDEPENDENT_DISTANCE * MIN_INDEPENDENT_DISTANCE
+        private const val MAX_INDEPENDENT_DISTANCE_SQ = MAX_INDEPENDENT_DISTANCE * MAX_INDEPENDENT_DISTANCE
         private const val HISTORY_SIZE = 10
         private const val DRAG_THRESHOLD_SQ = 100f
         private const val STOP_THRESHOLD_SECONDS = 0.15f
@@ -412,7 +569,7 @@ fun SceneScope.planet(
         color = color,
         system = system,
     ).also { thing ->
-        system.add(thing)
+        system.add(thing, this)
         add(thing)
         system.updateCamera(camera)
     }

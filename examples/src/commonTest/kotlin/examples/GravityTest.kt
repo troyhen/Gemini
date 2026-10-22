@@ -40,11 +40,12 @@ class GravityTest {
         assertTrue(p1.mass > 0f)
         assertTrue(p2.mass > 0f)
 
-        // Total linear momentum of the initial binary orbit should be zero
-        val px = p1.mass * p1.velocity.xs + p2.mass * p2.velocity.xs
-        val py = p1.mass * p1.velocity.ys + p2.mass * p2.velocity.ys
-        assertFloatEquals(0f, px, tolerance = 0.5f)
-        assertFloatEquals(0f, py, tolerance = 0.5f)
+        // Center-of-mass velocity of the initial binary orbit should be zero
+        val totalMass = p1.mass + p2.mass
+        val vxCom = (p1.mass * p1.velocity.xs + p2.mass * p2.velocity.xs) / totalMass
+        val vyCom = (p1.mass * p1.velocity.ys + p2.mass * p2.velocity.ys) / totalMass
+        assertFloatEquals(0f, vxCom, tolerance = 1e-3f)
+        assertFloatEquals(0f, vyCom, tolerance = 1e-3f)
     }
 
     @Test
@@ -241,5 +242,97 @@ class GravityTest {
         val spawned = system.all().last()
         assertFloatEquals(400f, spawned.position.location.x)
         assertFloatEquals(400f, spawned.position.location.y)
+    }
+
+    @Test
+    fun distantIndependentPlanetIsRemovedFromSystemAndScene() = runTest {
+        val system = PlanetSystem()
+        val scope = SceneScope()
+        scope.camera.visible.set(0f, 1000f, 0f, 800f)
+        val (p1, p2) = scope.orbitingPlanets(system, center = Offset(500f, 500f))
+        val runaway = scope.planet(
+            system = system,
+            location = Location(2200f, 500f),
+            velocity = Velocity(600f, 0f),
+            radius = 20f,
+            mass = 10_000f,
+        )
+        assertEquals(3, system.all().size)
+        assertEquals(3, scope.things.size)
+        assertTrue(system.isOffScreen(runaway))
+
+        p1.act(16.milliseconds)
+
+        // The runaway planet is off screen, far away, and escaping, so it is removed while the bound pair remains
+        assertTrue(runaway.isAbsorbed)
+        assertEquals(listOf(p1, p2), system.all())
+        assertEquals(listOf(p1, p2), scope.things)
+
+        // Camera now looks at the center of mass of only the remaining bound pair
+        val expectedComX = (p1.position.location.x * p1.mass + p2.position.location.x * p2.mass) / (p1.mass + p2.mass)
+        val expectedComY = (p1.position.location.y * p1.mass + p2.position.location.y * p2.mass) / (p1.mass + p2.mass)
+        assertFloatEquals(expectedComX, scope.camera.target.x)
+        assertFloatEquals(expectedComY, scope.camera.target.y)
+    }
+
+    @Test
+    fun independentPlanetOnScreenIsNotRemovedUntilOffScreen() = runTest {
+        val system = PlanetSystem()
+        val scope = SceneScope()
+        // Large screen viewport where all planets remain visible on screen
+        scope.camera.visible.set(0f, 4000f, 0f, 3000f)
+        val (p1, p2) = scope.orbitingPlanets(system, center = Offset(500f, 500f))
+        val runaway = scope.planet(
+            system = system,
+            location = Location(2200f, 500f),
+            velocity = Velocity(600f, 0f),
+            radius = 20f,
+            mass = 10_000f,
+        )
+
+        assertFalse(system.isOffScreen(runaway))
+        p1.act(16.milliseconds)
+
+        // Even though the planet is gravitationally independent, it is still on screen so it is not removed
+        assertFalse(runaway.isAbsorbed)
+        assertEquals(3, system.all().size)
+
+        // Once the planet is outside the screen bounds, it is removed on the next step
+        scope.camera.visible.set(0f, 1000f, 0f, 800f)
+        system.updateCamera(scope.camera)
+        assertTrue(system.isOffScreen(runaway))
+
+        p1.act(16.milliseconds)
+        assertTrue(runaway.isAbsorbed)
+        assertEquals(listOf(p1, p2), system.all())
+    }
+
+    @Test
+    fun twoBodyEscapeRemovesRunawayPlanetAndKeepsRemainingPlanet() = runTest {
+        val system = PlanetSystem()
+        val scope = SceneScope()
+        scope.camera.visible.set(0f, 1000f, 0f, 800f)
+        val stationary = scope.planet(
+            system = system,
+            location = Location(500f, 500f),
+            velocity = Velocity(0f, 0f),
+            radius = 25f,
+            mass = 15_000f,
+        )
+        val flung = scope.planet(
+            system = system,
+            location = Location(2000f, 500f),
+            velocity = Velocity(800f, 0f),
+            radius = 30f,
+            mass = 25_000f,
+        )
+
+        stationary.act(16.milliseconds)
+
+        assertTrue(flung.isAbsorbed)
+        assertFalse(stationary.isAbsorbed)
+        assertEquals(listOf(stationary), system.all())
+        assertFloatEquals(stationary.position.location.x, scope.camera.target.x)
+        assertFloatEquals(stationary.position.location.y, scope.camera.target.y)
     }
 }
