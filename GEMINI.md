@@ -44,9 +44,10 @@ leverage standard Compose state, modifiers, input handling, and layouts across A
         │   ├── astroids/                  # Asteroids game (Game, Ship, Asteroid, Bullet, ShipState)
         │   ├── beads/                     # 2D bead & bowl physics/collision simulation
         │   ├── checkers/                  # Turn-based Checkers board game (event-driven stepping)
+        │   ├── gravity/                   # N-body orbital gravity simulation with planet flinging & merging
         │   ├── sandbox/                   # Interactive sandbox (shapes, remote images, sound, pointer input)
         │   └── starfield/                 # 3D perspective starfield simulation
-        ├── androidMain/                   # Android activities (Asteroids, Beads, Checkers, Sandbox, StarField, Town) & assets
+        ├── androidMain/                   # Android activities (Asteroids, Beads, Checkers, Gravity, Sandbox, StarField, Town) & assets
         └── desktopMain/                   # Desktop singleWindowApplication entry points & resources
 ```
 
@@ -74,6 +75,7 @@ passing `-DmainClass`:
 | **Asteroids** | `./gradlew :examples:desktopRun -DmainClass=examples.AsteroidsKt` |
 | **Beads**     | `./gradlew :examples:desktopRun -DmainClass=examples.BeadsKt`     |
 | **Checkers**  | `./gradlew :examples:desktopRun -DmainClass=examples.CheckersKt`  |
+| **Gravity**   | `./gradlew :examples:desktopRun -DmainClass=examples.GravityKt`   |
 | **Sandbox**   | `./gradlew :examples:desktopRun -DmainClass=examples.SandboxKt`   |
 | **Starfield** | `./gradlew :examples:desktopRun -DmainClass=examples.StarfieldKt` |
 | **Town**      | `./gradlew :examples:desktopRun -DmainClass=examples.TownKt`      |

@@ -45,6 +45,10 @@ kotlin {
             api(libs.compose.ui)
             api(libs.kamel.image)
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.coroutines.test)
+        }
         androidMain.dependencies {
             implementation(libs.activity)
             implementation(libs.activity.compose)
