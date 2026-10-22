@@ -1,5 +1,7 @@
 package examples.beads
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import gemini.engine.Collider
@@ -10,8 +12,10 @@ import kotlin.time.Duration
 
 class Bead(position: Position, private val color: Color) : MovingThing(position), Collider {
 
-    private val radius = position.space.width / 2
+    private var dragging: Offset? = null
     private val mass = position.space.width * position.space.width * position.space.width
+    private val radius = position.space.width / 2
+    private val rectangle = Rectangle()
     private val tempVelocity1 = Velocity()
     private val tempVelocity2 = Velocity()
     private val tempVelocity3 = Velocity()
@@ -66,6 +70,15 @@ class Bead(position: Position, private val color: Color) : MovingThing(position)
 
     override fun DrawScope.draw() {
         drawCircle(color, radius, position.location.offset)
+        rectangle.set(center - Offset(radius, radius) / 2f, Size(radius, radius) * 2f)
+    }
+
+    fun isHit(offset: Offset): Boolean {
+        return rectangle.contains(offset).also {
+            if (it) {
+                dragging = offset
+            }
+        }
     }
 
     companion object {
