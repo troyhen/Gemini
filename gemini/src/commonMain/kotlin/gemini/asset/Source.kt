@@ -1,6 +1,6 @@
 package gemini.asset
 
-import io.ktor.http.Url
+import io.ktor.http.*
 import java.io.File
 import java.net.URI
 import java.net.URL
@@ -23,7 +23,7 @@ val <T : Any> T.asSource: Source
         is String -> when {
             startsWith("asset:") -> SourceAsset(substring(6))
             startsWith("assets://") -> SourceAsset(substring(9))
-            startsWith("file:") || this.startsWith("http") -> SourceURL(URL(this))
+            startsWith("file:") || this.startsWith("http") -> SourceURL(URI(this).toURL())
             startsWith("resource:") -> SourceUrl(Url(this))
             startsWith("/") -> SourceFile(File(this))
             else -> SourceData(this)

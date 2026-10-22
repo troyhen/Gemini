@@ -9,7 +9,7 @@ value class Angle(val degrees: Float = 0f) {
     val radians: Float get() = degrees * DEGREES_TO_RADIANS
 }
 
-const val PI = Math.PI.toFloat()
+const val PI = kotlin.math.PI.toFloat()
 const val PI2 = PI * 2
 const val DEGREES_TO_RADIANS = PI / 180
 const val RADIANS_TO_DEGREES = 180 / PI

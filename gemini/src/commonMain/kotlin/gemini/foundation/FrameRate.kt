@@ -10,6 +10,7 @@ import gemini.engine.AfterCamera
 import gemini.engine.SceneScope
 import gemini.engine.Stage
 import gemini.geometry.Pivot
+import kotlin.math.roundToInt
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
@@ -17,21 +18,34 @@ class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.South
     private var lastMark: TimeSource.Monotonic.ValueTimeMark? = null
     private var frameRate = 0f
     private var samples = 0
+    private var lastTenths = -1
+    private var cachedLayout: TextLayoutResult? = null
 
     override suspend fun act(elapsed: Duration) {
         val end = Stage.time.markNow()
         lastMark?.let { start ->
-            if (samples < maxSamples) {
-                samples++
+            val micros = (end - start).inWholeMicroseconds
+            if (micros > 0L) {
+                if (samples < maxSamples) {
+                    samples++
+                }
+                frameRate = (frameRate * (samples - 1) + 1e6f / micros) / samples // trigger recompose
             }
-            frameRate = (frameRate * (samples - 1) + 1e6f / (end - start).inWholeMicroseconds) / samples // trigger recompose
         }
         lastMark = end
     }
 
     private fun measureFrameRate(): TextLayoutResult? {
-        val text = "%.1f f/s".format(frameRate)
-        return Stage.instance?.textMeasurer?.measure(text)
+        val textMeasurer = Stage.instance?.textMeasurer ?: return null
+        val tenths = (frameRate * 10f).roundToInt().coerceAtLeast(0)
+        if (tenths == lastTenths && cachedLayout != null) {
+            return cachedLayout
+        }
+        lastTenths = tenths
+        val text = "${tenths / 10}.${tenths % 10} f/s"
+        return textMeasurer.measure(text).also {
+            cachedLayout = it
+        }
     }
 
     override fun DrawScope.draw() {

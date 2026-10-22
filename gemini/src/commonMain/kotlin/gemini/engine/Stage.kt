@@ -10,13 +10,11 @@ import androidx.compose.ui.text.TextMeasurer
 import gemini.foundation.Draw
 import gemini.foundation.Thing
 import gemini.geometry.Rectangle
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
+import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.TimeSource
 
@@ -27,7 +25,12 @@ class Stage(
     private val coroutineContext: CoroutineContext = Dispatchers.Default,
 ) : SceneScope(), Draw {
 
+    private val thingsLock = Any()
+
+    @Volatile
     private var toAct: List<Thing>? = null
+
+    @Volatile
     private var toDraw: List<Thing>? = null
 
     private val collisionArea1 = Rectangle()
@@ -55,6 +58,8 @@ class Stage(
                 actor.act(elapsed)
             }
             collider(actors)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -63,17 +68,19 @@ class Stage(
     }
 
     private fun actors(): List<Thing> {
-        return toAct ?: let {
-            things.toList().also {
+        return toAct ?: synchronized(thingsLock) {
+            toAct ?: things.toList().also {
                 toAct = it
             }
         }
     }
 
     override fun add(thing: Thing) {
-        toAct = null
-        toDraw = null
-        super.add(thing)
+        synchronized(thingsLock) {
+            super.add(thing)
+            toAct = null
+            toDraw = null
+        }
         step()
     }
 
@@ -120,10 +127,20 @@ class Stage(
     }
 
     private fun drawables(): List<Thing> {
-        return toDraw ?: let {
-            things.toList().also {
+        return toDraw ?: synchronized(thingsLock) {
+            toDraw ?: things.toList().also {
                 toDraw = it
             }
+        }
+    }
+
+    fun dispose() {
+        stop()
+        job?.cancel()
+        job = null
+        release()
+        if (instance === this) {
+            instance = null
         }
     }
 
@@ -143,26 +160,42 @@ class Stage(
         }.launchIn(scope)
     }
 
+    override fun release() {
+        synchronized(thingsLock) {
+            super.release()
+            toAct = null
+            toDraw = null
+        }
+    }
+
     override fun remove(thing: Thing) {
-        toAct = null
-        toDraw = null
-        super.remove(thing)
+        synchronized(thingsLock) {
+            super.remove(thing)
+            toAct = null
+            toDraw = null
+        }
         step()
     }
 
     override fun replaceAll(scene: Scene) {
-        toAct = null
-        toDraw = null
-        super.replaceAll(scene)
+        synchronized(thingsLock) {
+            super.replaceAll(scene)
+            toAct = null
+            toDraw = null
+        }
         step()
     }
 
     fun start() {
-        isRunning = true
+        if (!isRunning) {
+            timeMark = time.markNow()
+            isRunning = true
+        }
     }
 
     fun step() {
         if (isRunning) return
+        timeMark = time.markNow()
         ++frame // Trigger recompose. Actions will also be triggered once after draw.
     }
 
@@ -171,10 +204,11 @@ class Stage(
     }
 
     companion object {
+        private val defaultCamera = Camera()
         var instance: Stage? = null
             private set
         val time = TimeSource.Monotonic
-        val camera get() = instance?.camera ?: Camera()
+        val camera get() = instance?.camera ?: defaultCamera
         val visible get() = camera.visible
         val world get() = camera.world
     }

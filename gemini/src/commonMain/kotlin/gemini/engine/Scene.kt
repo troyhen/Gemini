@@ -34,7 +34,7 @@ open class Scene {
 
     open fun <K: Any> imageMap(source: Source, find: (key: K, rectangle: IntRectangle) -> Unit): Atlas<K> = imageMap(image(source), find)
 
-    fun release() {
+    open fun release() {
         assets.values.forEach {
             it.release()
         }
@@ -47,6 +47,7 @@ open class Scene {
     }
 
     open fun replaceAll(scene: Scene) {
+        if (scene === this) return
         release()
         scene.assets.forEach { (t, u) ->
             _assets[t] = u

@@ -1,6 +1,7 @@
 package gemini.asset
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
@@ -60,7 +61,7 @@ class Image : Asset(), Draw {
             is SourceUrl -> source.url
             is SourceURL -> source.url
         }
-        println("data $data")
+//        println("data $data")
         val ending = getDataSourceEnding(data)
 
         resource = when (ending) {
@@ -76,7 +77,7 @@ class Image : Asset(), Draw {
                 else -> kamelConfig.loadImageBitmapResource(data, resourceConfig)
             }.collect {
                 resource = it
-                println("resource $resource")
+//                println("resource $resource")
             }
         }
     }
@@ -95,10 +96,14 @@ class Image : Asset(), Draw {
 fun SetupImages() {
     val screenDensity = LocalDensity.current
     val scope = rememberCoroutineScope()
-    Image.kamelConfig = LocalKamelConfig.current
-    Image.resourceConfig = remember(screenDensity, scope) {
+    val kamelConfig = LocalKamelConfig.current
+    val resourceConfig = remember(screenDensity, scope) {
         ResourceConfigBuilder(scope.coroutineContext)
             .apply { density = screenDensity }
             .build()
+    }
+    SideEffect {
+        Image.kamelConfig = kamelConfig
+        Image.resourceConfig = resourceConfig
     }
 }
