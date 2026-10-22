@@ -1,7 +1,12 @@
 package examples.astroids
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.RadioButtonChecked
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -20,10 +25,10 @@ class ShipState {
 }
 
 enum class Control(val contentDescription: String, val icon: ImageVector) {
-    Exit("Quit", Icons.Outlined.ArrowBack),
+    Exit("Quit", Icons.AutoMirrored.Outlined.ArrowBack),
     Fire("Fire", Icons.Outlined.RadioButtonChecked),
     GoForward("Forward", Icons.Outlined.KeyboardArrowUp),
     GoBackward("Backward", Icons.Outlined.KeyboardArrowDown),
-    TurnLeft("Turn Left", Icons.Outlined.KeyboardArrowLeft),
-    TurnRight("Turn Right", Icons.Outlined.KeyboardArrowRight),
+    TurnLeft("Turn Left", Icons.AutoMirrored.Outlined.KeyboardArrowLeft),
+    TurnRight("Turn Right", Icons.AutoMirrored.Outlined.KeyboardArrowRight),
 }

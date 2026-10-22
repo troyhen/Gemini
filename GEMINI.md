@@ -34,8 +34,9 @@ leverage standard Compose state, modifiers, input handling, and layouts across A
 │       │   └── geometry/                  # Value-class math & transforms (Position, Location, Velocity, Space, Scale, Rotation, Angle, Rectangle, IntRectangle, World)
 │       ├── androidMain/kotlin/gemini/
 │       │   └── asset/Sound.android.kt     # Android SoundPool implementation
-│       └── jvmMain/kotlin/gemini/
-│           └── asset/Sound.jvm.kt         # Desktop JVM Java Sound Clip implementation
+│       ├── jvmMain/kotlin/gemini/
+│       │   └── asset/Sound.jvm.kt         # Desktop JVM Java Sound Clip implementation
+│       └── commonTest/kotlin/gemini/      # Unit tests for geometry, engine, foundation, and assets
 └── examples/                              # Sample games & demos (:examples)
     └── src/
         ├── commonMain/kotlin/examples/
@@ -45,7 +46,7 @@ leverage standard Compose state, modifiers, input handling, and layouts across A
         │   ├── checkers/                  # Turn-based Checkers board game (event-driven stepping)
         │   ├── sandbox/                   # Interactive sandbox (shapes, remote images, sound, pointer input)
         │   └── starfield/                 # 3D perspective starfield simulation
-        ├── androidMain/                   # Android activities (AsteroidsActivity, SandboxActivity, StarFieldActivity, TownActivity) & assets
+        ├── androidMain/                   # Android activities (Asteroids, Beads, Checkers, Sandbox, StarField, Town) & assets
         └── desktopMain/                   # Desktop singleWindowApplication entry points & resources
 ```
 

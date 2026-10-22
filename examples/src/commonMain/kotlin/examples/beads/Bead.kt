@@ -12,7 +12,6 @@ import kotlin.time.Duration
 
 class Bead(position: Position, private val color: Color) : MovingThing(position), Collider {
 
-    private var dragging: Offset? = null
     private val mass = position.space.width * position.space.width * position.space.width
     private val radius = position.space.width / 2
     private val rectangle = Rectangle()
@@ -73,13 +72,7 @@ class Bead(position: Position, private val color: Color) : MovingThing(position)
         rectangle.set(position.location.offset - Offset(radius, radius), Size(radius, radius) * 2f)
     }
 
-    fun isHit(offset: Offset): Boolean {
-        return rectangle.contains(offset).also {
-            if (it) {
-                dragging = offset
-            }
-        }
-    }
+    fun isHit(offset: Offset): Boolean = rectangle.contains(offset)
 
     companion object {
         const val BOUNCE = .3f

@@ -19,10 +19,32 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
         >
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN"/>-->
-            <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--            </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name="examples.BeadsActivity"
+                android:label="@string/beads_title"
+                android:exported="true"
+                android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name="examples.CheckersActivity"
+                android:label="@string/checkers_title"
+                android:exported="true"
+                android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
             android:name="examples.SandboxActivity"
@@ -30,10 +52,10 @@
             android:exported="true"
             android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
         >
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN"/>-->
-            <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--            </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
             android:name="examples.StarFieldActivity"
@@ -41,10 +63,10 @@
             android:exported="true"
             android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen"
         >
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN"/>-->
-            <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--            </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
             android:name="examples.TownActivity"

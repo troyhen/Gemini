@@ -3,7 +3,6 @@ package examples
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.window.singleWindowApplication
 import examples.sandbox.Sandbox
-import gemini.asset.SourceUrl
 import gemini.asset.asSource
 import io.kamel.core.config.KamelConfig
 import io.kamel.core.config.takeFrom

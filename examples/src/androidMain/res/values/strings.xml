@@ -3,6 +3,9 @@
     <string name="app_label">Gemini</string>
     <string name="app_name">Gemini Examples</string>
     <string name="asteroids_title">Asteroids</string>
+    <string name="beads_title">Beads</string>
+    <string name="checkers_title">Checkers</string>
     <string name="sandbox_title">Sandbox</string>
     <string name="star_field_title">Star Field</string>
+    <string name="town_title">Town</string>
 </resources>

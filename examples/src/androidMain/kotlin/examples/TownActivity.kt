@@ -15,25 +15,13 @@ import gemini.engine.Stage
 class TownActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        val desktopConfig = KamelConfig {
-//            takeFrom(KamelConfig.Default)
-//            httpFetcher {
-//                Logging {
-//                    level = LogLevel.INFO
-//                    logger = Logger.SIMPLE
-//                }
-//            }
-//            resourcesFetcher(this@TownActivity)
-//        }
         Sound.context = this
         setContent {
-//            CompositionLocalProvider(LocalKamelConfig provides desktopConfig) {
             MaterialTheme {
                 Scaffold { padding ->
                     Town("asset:action/professor_walk_cycle_no_hat.png".asSource, Modifier.padding(padding))
                 }
             }
-//            }
         }
     }
 

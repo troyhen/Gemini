@@ -37,3 +37,7 @@ kotlin {
         }
     }
 }
+
+tasks.register("test") {
+    dependsOn("allTests")
+}
