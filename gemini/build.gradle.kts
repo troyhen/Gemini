@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "gemini"
-    compileSdk = 34
+    compileSdk = 37
     defaultConfig {
         minSdk = 23
     }

@@ -1,12 +1,12 @@
 [versions]
-activity = "1.9.3"
-agp = "8.1.4" # https://developer.android.com/reference/tools/gradle-api
-compose = "1.7.3"
-coroutines = "1.9.0"
-kamel = "0.7.3"
+activity = "1.13.0"
+agp = "9.1.0" # https://developer.android.com/reference/tools/gradle-api
+compose = "1.12.2"
+coroutines = "1.11.0"
+kamel = "1.0.9"
 korge = "4.0.10"
-kotlin = "2.1.0"
-ktor = "3.0.1"
+kotlin = "2.4.21"
+ktor = "3.6.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -24,7 +24,7 @@ activity-compose = { module = "androidx.activity:activity-compose", version.ref 
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel" }
+kamel-image = { module = "media.kamel:kamel-image-default", version.ref = "kamel" }
 korge-audio = { module = "com.soywiz.korlibs.korau:korau", version.ref = "korge" }
 ktor-client-apache = { module = "io.ktor:ktor-client-apache5", version.ref = "ktor" }
 ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
