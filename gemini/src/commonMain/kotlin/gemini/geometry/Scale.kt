@@ -18,15 +18,19 @@ value class Scale private constructor(private val data: FloatArray) {
             data[2] = value
         }
 
-    constructor(x: Float = ONE.x, y: Float = ONE.y, z: Float = ONE.z) : this(floatArrayOf(x, y, z))
+    val isOne: Boolean get() = x == 1f && y == 1f && z == 1f
 
-    fun scale(x: Float, y: Float, z: Float = ONE.z) {
+    constructor(x: Float = 1f, y: Float = 1f, z: Float = 1f) : this(floatArrayOf(x, y, z))
+
+    fun contentEquals(other: Scale): Boolean = x == other.x && y == other.y && z == other.z
+
+    fun scale(x: Float, y: Float, z: Float = 1f) {
         this.x *= x
         this.y *= y
         this.z *= z
     }
 
-    fun set(x: Float, y: Float, z: Float = ONE.z) {
+    fun set(x: Float, y: Float, z: Float = 1f) {
         this.x = x
         this.y = y
         this.z = z
@@ -39,6 +43,6 @@ value class Scale private constructor(private val data: FloatArray) {
     }
 
     companion object {
-        val ONE = Scale(1f, 1f, 1f)
+        val ONE get() = Scale(1f, 1f, 1f)
     }
 }

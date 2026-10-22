@@ -66,13 +66,13 @@ open class Scene {
 
 @Composable
 fun rememberScene(vararg keys: Any, builder: SceneScope.() -> Unit): Scene {
-    return remember(keys) {
+    return remember(*keys) {
         SceneScope().run {
             builder()
             build()
         }
     }.also {
-        DisposableEffect(keys) {
+        DisposableEffect(*keys) {
             onDispose {
                 it.release()
             }

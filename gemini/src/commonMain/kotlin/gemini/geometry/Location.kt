@@ -23,10 +23,13 @@ value class Location private constructor(private val data: FloatArray) {
             data[2] = value
         }
 
+    val isZero: Boolean get() = x == 0f && y == 0f && z == 0f
     val offset: Offset get() = Offset(x, y)
 
     constructor(offset: Offset, z: Float = 0f) : this(offset.x, offset.y, z)
     constructor(x: Float = 0f, y: Float = 0f, z: Float = 0f) : this(floatArrayOf(x, y, z))
+
+    fun contentEquals(other: Location): Boolean = x == other.x && y == other.y && z == other.z
 
     fun move(xs: Float, ys: Float, zs: Float = 0f) {
         this.x += xs
@@ -47,7 +50,7 @@ value class Location private constructor(private val data: FloatArray) {
     }
 
     companion object {
-        val Zero = Location()
+        val Zero get() = Location()
     }
 }
 

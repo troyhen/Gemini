@@ -9,38 +9,51 @@ import javax.sound.sampled.Clip
 
 actual class Sound : Asset() {
 
-    private var clip: Clip = AudioSystem.getClip()
-    actual override val isLoaded: Boolean get() = clip.isOpen
+    private var clip: Clip? = null
+    actual override val isLoaded: Boolean get() = clip?.isOpen == true
 
     actual override suspend fun load(source: Source): Unit {
         withContext(Dispatchers.IO) {
-            Sound().apply {
-                val audioInputStream = when (source) {
-                    is SourceFile -> AudioSystem.getAudioInputStream(source.file)
-                    is SourceUrl -> AudioSystem.getAudioInputStream(javaClass.classLoader.getResource(source.url.path))
-                    is SourceURL -> AudioSystem.getAudioInputStream(source.url)
-                    else -> error("Not supported: $source")
+            release()
+            val audioInputStream = when (source) {
+                is SourceFile -> AudioSystem.getAudioInputStream(source.file)
+                is SourceUrl -> {
+                    val resource = javaClass.classLoader.getResource(source.url.path)
+                        ?: error("Resource not found: ${source.url.path}")
+                    AudioSystem.getAudioInputStream(resource)
                 }
-                open(audioInputStream)
+
+                is SourceURL -> AudioSystem.getAudioInputStream(source.url)
+                else -> error("Not supported: $source")
+            }
+            audioInputStream.use { stream ->
+                open(stream)
             }
         }
     }
 
     private fun open(audioInputStream: AudioInputStream) {
-        clip.open(audioInputStream)
+        clip = AudioSystem.getClip().apply {
+            open(audioInputStream)
+        }
     }
 
     actual fun play(times: Int) {
-//        clip.setLoopPoints(0, -1)
-        clip.loop(times)
+        if (times <= 0) return
+        clip?.apply {
+            stop()
+            framePosition = 0
+            loop(times - 1)
+        }
     }
 
     actual override fun release() {
-        clip.stop()
+        clip?.close()
+        clip = null
     }
 
     actual fun stop() {
-        clip.stop()
+        clip?.stop()
     }
 }
 

@@ -17,11 +17,11 @@ open class MovingThing(
 
     fun bounce(world: World = Stage.visible) {
         if (position.location.x < world.left) {
-            position.location.x = -position.location.x
+            position.location.x = world.left * 2 - position.location.x
             velocity.xs = -velocity.xs
         }
         if (position.location.y < world.top) {
-            position.location.y -= position.location.y
+            position.location.y = world.top * 2 - position.location.y
             velocity.ys = -velocity.ys
         }
         if (position.location.x > world.right) {

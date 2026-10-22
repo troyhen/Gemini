@@ -22,7 +22,7 @@ import kotlin.math.max
 
 class Image : Asset(), Draw {
     private var resource: Resource<*>? = null
-    override val isLoaded: Boolean = resource != null && resource?.isSuccess == true
+    override val isLoaded: Boolean get() = resource?.isSuccess == true
 
     val size: IntSize get() {
         return when (val value = resource?.getOrNull()) {

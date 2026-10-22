@@ -46,7 +46,7 @@ class Checker(
         if (isKing) {
             drawCircle(Color.Gray, radius * .75f, center)
         }
-        rectangle.set(center - Offset(radius, radius) / 2f, Size(radius, radius) * 2f)
+        rectangle.set(center - Offset(radius, radius), Size(radius, radius) * 2f)
     }
 
     fun drop(position: IntOffset) {
@@ -77,7 +77,7 @@ class Checker(
         val swj = Move(IntOffset(boardPosition.x - 2, boardPosition.y + 2), IntOffset(boardPosition.x - 1, boardPosition.y + 1))
         val sej = Move(IntOffset(boardPosition.x + 2, boardPosition.y + 2), IntOffset(boardPosition.x + 1, boardPosition.y + 1))
         val all = if (isKing) {
-            listOf(nw, ne, sw, se, nwj, nej, swj, nej)
+            listOf(nw, ne, sw, se, nwj, nej, swj, sej)
         } else when (side) {
             Top -> listOf(sw, se, swj, sej)
             Bottom -> listOf(nw, ne, nwj, nej)

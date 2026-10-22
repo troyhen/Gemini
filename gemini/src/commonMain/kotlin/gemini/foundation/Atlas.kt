@@ -6,7 +6,10 @@ import androidx.compose.ui.unit.IntSize
 import gemini.asset.Asset
 import gemini.asset.Image
 import gemini.asset.Source
-import gemini.geometry.*
+import gemini.geometry.IntRectangle
+import gemini.geometry.size
+import gemini.geometry.times
+import gemini.geometry.topLeft
 
 abstract class Atlas<K : Any> : Asset() {
     abstract fun DrawScope.draw(key: K)
@@ -34,7 +37,7 @@ fun tileMap(image: Image, tileSize: IntSize, inset: IntOffset = IntOffset.Zero):
     val offset = key * tileSize + inset
     val size = image.size
     if (key.x < 0 || key.y < 0 || offset.x + tileSize.width > size.width || offset.y + tileSize.height > size.height) {
-        rectangle.setFrom(IntRectangle.Zero)
+        rectangle.set(0, 0, 0, 0)
     } else {
         rectangle.set(offset, tileSize)
     }

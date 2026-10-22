@@ -35,11 +35,11 @@ data class Position(
 
     fun transform(): Matrix = matrix.apply {
         reset()
-        if (location != Location.Zero) translate(location.x, location.y, location.z)
+        if (!location.isZero) translate(location.x, location.y, location.z)
         if (rotation.p.degrees != 0f) rotateX(rotation.p.degrees)
         if (rotation.y.degrees != 0f) rotateY(rotation.y.degrees)
         if (rotation.r.degrees != 0f) rotateZ(rotation.r.degrees)
-        if (scale != Scale.ONE) scale(scale.x, scale.y, scale.z)
+        if (!scale.isOne) scale(scale.x, scale.y, scale.z)
         if (pivot != Pivot.NorthWest) translate(-pivot.offset.x * space.width, -pivot.offset.y * space.height)
     }
 }

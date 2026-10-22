@@ -70,7 +70,7 @@ class Bead(position: Position, private val color: Color) : MovingThing(position)
 
     override fun DrawScope.draw() {
         drawCircle(color, radius, position.location.offset)
-        rectangle.set(center - Offset(radius, radius) / 2f, Size(radius, radius) * 2f)
+        rectangle.set(position.location.offset - Offset(radius, radius), Size(radius, radius) * 2f)
     }
 
     fun isHit(offset: Offset): Boolean {

@@ -20,7 +20,7 @@ value class Rotation private constructor(private val data: FloatArray) {
 
     constructor(r: Float = ZERO.degrees, p: Float = ZERO.degrees, y: Float = ZERO.degrees) : this(floatArrayOf(r, p, y))
 
-    fun rotate(r: Angle, y: Angle = ZERO, p: Angle = ZERO) {
+    fun rotate(r: Angle, p: Angle = ZERO, y: Angle = ZERO) {
         this.r += r
         this.p += p
         this.y += y
@@ -30,6 +30,12 @@ value class Rotation private constructor(private val data: FloatArray) {
         this.r = r
         this.p = p
         this.y = y
+    }
+
+    fun setFrom(rotation: Rotation) {
+        data[0] = rotation.data[0]
+        data[1] = rotation.data[1]
+        data[2] = rotation.data[2]
     }
 
     companion object {

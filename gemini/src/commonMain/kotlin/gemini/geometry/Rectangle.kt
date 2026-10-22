@@ -71,7 +71,7 @@ value class Rectangle private constructor(private val data: FloatArray) {
     }
 
     companion object {
-        val Zero = Rectangle()
+        val Zero get() = Rectangle()
     }
 }
 

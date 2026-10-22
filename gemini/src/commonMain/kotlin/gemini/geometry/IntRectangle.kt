@@ -71,7 +71,7 @@ value class IntRectangle private constructor(private val data: IntArray) {
     }
 
     companion object {
-        val Zero = IntRectangle()
+        val Zero get() = IntRectangle()
     }
 }
 
