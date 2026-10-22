@@ -31,6 +31,9 @@ class Stage(
     private var toAct: List<Thing>? = null
 
     @Volatile
+    private var toCollide: List<Thing>? = null
+
+    @Volatile
     private var toDraw: List<Thing>? = null
 
     private val collisionArea1 = Rectangle()
@@ -57,7 +60,7 @@ class Stage(
             actors.fastForEach { actor ->
                 actor.act(elapsed)
             }
-            collider(actors)
+            collider()
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -79,16 +82,18 @@ class Stage(
         synchronized(thingsLock) {
             super.add(thing)
             toAct = null
+            toCollide = null
             toDraw = null
         }
         step()
     }
 
-    private fun collider(actors: List<Thing>) {
-        actors.fastForEachIndexed { index, actor ->
+    private fun collider() {
+        val colliders = colliders()
+        colliders.fastForEachIndexed { index, actor ->
             if (actor is Collider) {
                 actor.position.rectangle(collisionArea1)
-                actors.fastForEach(index + 1) { other ->
+                colliders.fastForEach(index + 1) { other ->
                     if (other is Collider) {
                         other.position.rectangle(collisionArea2)
                         if (collisionArea1.overlaps(collisionArea2)) {
@@ -98,6 +103,14 @@ class Stage(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun colliders(): List<Thing> {
+        return toCollide ?: synchronized(thingsLock) {
+            toCollide ?: things.filter { it is Collider }.also {
+                toCollide = it
             }
         }
     }
@@ -164,6 +177,7 @@ class Stage(
         synchronized(thingsLock) {
             super.release()
             toAct = null
+            toCollide = null
             toDraw = null
         }
     }
@@ -172,6 +186,7 @@ class Stage(
         synchronized(thingsLock) {
             super.remove(thing)
             toAct = null
+            toCollide = null
             toDraw = null
         }
         step()
@@ -181,6 +196,7 @@ class Stage(
         synchronized(thingsLock) {
             super.replaceAll(scene)
             toAct = null
+            toCollide = null
             toDraw = null
         }
         step()

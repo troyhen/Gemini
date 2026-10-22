@@ -101,7 +101,7 @@ fun Matrix.perspective(left: Float = -1f, right: Float = 1f, top: Float = -1f, b
     set(2, 3, -far * n2 / fmn)
     set(3, 2, 1f)
     set(3, 3, 0f)
-    println("perspective\n$this")
+//    println("perspective\n$this")
 }
 
 fun perspectiveMatrix(left: Float = -1f, right: Float = 1f, top: Float = -1f, bottom: Float = 1f, near: Float = -1f, far: Float = 1f): Matrix {
@@ -121,7 +121,7 @@ fun Matrix.orthographic(left: Float = -1f, right: Float = 1f, top: Float = -1f, 
     set(1, 3, -(bottom + top) / height)
     set(2, 2, 2 / depth)
     set(2, 3, -(far + near) / depth)
-    println("orthographic\n$this")
+//    println("orthographic\n$this")
 }
 
 fun orthographicMatrix(left: Float = -1f, right: Float = 1f, top: Float = -1f, bottom: Float = 1f, near: Float = -1f, far: Float = 1f): Matrix {
@@ -131,4 +131,4 @@ fun orthographicMatrix(left: Float = -1f, right: Float = 1f, top: Float = -1f, b
 }
 
 operator fun IntOffset.times(size: IntSize): IntOffset = IntOffset(x * size.width, y * size.height)
-inline fun Size.round(): IntSize = IntSize(width.roundToInt(), height.roundToInt())
+fun Size.round(): IntSize = IntSize(width.roundToInt(), height.roundToInt())

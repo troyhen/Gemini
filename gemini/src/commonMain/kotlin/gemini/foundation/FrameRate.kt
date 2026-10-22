@@ -65,7 +65,7 @@ class FrameRate(private val color: Color, private val pivot: Pivot = Pivot.South
             Pivot.South -> Offset(center.x, size.height - textSize.height)
             Pivot.SouthEast -> Offset(size.width - textSize.width, size.height - textSize.height)
         }
-        drawRect(Color.Black, offset, layout.size.toSize() / density)
+        drawRect(Color.Black, offset, textSize / density)
         drawText(layout, color, offset)
     }
 }
