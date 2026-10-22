@@ -160,4 +160,86 @@ class GravityTest {
         assertTrue(planet.velocity.xs > 0f)
         assertTrue(planet.velocity.ys < 0f)
     }
+
+    @Test
+    fun cameraAlwaysLooksAtCenterOfMass() = runTest {
+        val system = PlanetSystem()
+        val scope = SceneScope()
+        val p1 = scope.planet(
+            system = system,
+            location = Location(100f, 200f),
+            velocity = Velocity(50f, 0f),
+            radius = 20f,
+            mass = 10_000f,
+        )
+        val p2 = scope.planet(
+            system = system,
+            location = Location(400f, 200f),
+            velocity = Velocity(50f, 0f),
+            radius = 30f,
+            mass = 20_000f,
+        )
+
+        // Initial center of mass: (100 * 10000 + 400 * 20000) / 30000 = 300, y = 200
+        assertFloatEquals(300f, system.centerOfMass.x)
+        assertFloatEquals(200f, system.centerOfMass.y)
+        assertFloatEquals(300f, scope.camera.target.x)
+        assertFloatEquals(200f, scope.camera.target.y)
+
+        // Advance simulation: both planets have net +x velocity so center of mass moves right
+        p1.act(50.milliseconds)
+        p2.act(50.milliseconds)
+
+        val expectedComX = (p1.position.location.x * p1.mass + p2.position.location.x * p2.mass) / (p1.mass + p2.mass)
+        val expectedComY = (p1.position.location.y * p1.mass + p2.position.location.y * p2.mass) / (p1.mass + p2.mass)
+        assertTrue(expectedComX > 300f)
+        assertFloatEquals(expectedComX, scope.camera.target.x)
+        assertFloatEquals(expectedComY, scope.camera.target.y)
+
+        // While mouse/touch is down, camera view stays fixed even as planets move or are dragged
+        val p1X = p1.position.location.x
+        val p1Y = p1.position.location.y
+        system.drag(Offset(p1X, p1Y), scope)
+        system.drag(Offset(p1X - 150f, p1Y + 90f), scope)
+        p2.act(50.milliseconds)
+        assertFloatEquals(expectedComX, scope.camera.target.x)
+        assertFloatEquals(expectedComY, scope.camera.target.y)
+
+        // Releasing mouse/touch updates camera target to the new center of mass
+        system.drop(Offset(p1X - 150f, p1Y + 90f))
+
+        val draggedComX = (p1.position.location.x * p1.mass + p2.position.location.x * p2.mass) / (p1.mass + p2.mass)
+        val draggedComY = (p1.position.location.y * p1.mass + p2.position.location.y * p2.mass) / (p1.mass + p2.mass)
+        assertFloatEquals(draggedComX, scope.camera.target.x)
+        assertFloatEquals(draggedComY, scope.camera.target.y)
+    }
+
+    @Test
+    fun pointerInputTranslatesScreenOffsetThroughShiftedCamera() {
+        val system = PlanetSystem()
+        val scope = SceneScope()
+        // Simulate a 1000x800 screen viewport
+        scope.camera.visible.set(0f, 1000f, 0f, 800f)
+
+        scope.planet(
+            system = system,
+            location = Location(800f, 700f),
+            velocity = Velocity(0f, 0f),
+            radius = 25f,
+            mass = 10_000f,
+        )
+        // Camera is now looking at (800, 700) on a 1000x800 viewport (center = 500, 400),
+        // so visible is [300..1300] x [300..1100].
+        assertFloatEquals(800f, scope.camera.target.x)
+        assertFloatEquals(700f, scope.camera.target.y)
+
+        // Clicking at screen (100, 100) should spawn a planet at world (400, 400)
+        system.drag(Offset(100f, 100f), scope)
+        system.drop(Offset(100f, 100f))
+
+        assertEquals(2, system.all().size)
+        val spawned = system.all().last()
+        assertFloatEquals(400f, spawned.position.location.x)
+        assertFloatEquals(400f, spawned.position.location.y)
+    }
 }

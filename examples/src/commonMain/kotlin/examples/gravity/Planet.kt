@@ -3,10 +3,7 @@ package examples.gravity
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import gemini.engine.Collider
-import gemini.engine.SceneScope
-import gemini.engine.Stage
-import gemini.engine.fastForEach
+import gemini.engine.*
 import gemini.foundation.MovingThing
 import gemini.geometry.*
 import kotlin.concurrent.Volatile
@@ -32,7 +29,11 @@ class Planet(
         private set
 
     override suspend fun act(elapsed: Duration) {
-        if (isAbsorbed || isGrabbed) return
+        if (isAbsorbed) return
+        if (isGrabbed) {
+            system.updateCamera()
+            return
+        }
         val dt = elapsed.seconds.coerceAtMost(MAX_DELTA_SECONDS)
         val x = position.location.x
         val y = position.location.y
@@ -49,6 +50,7 @@ class Planet(
             }
         }
         position.location.move(velocity.xs * dt, velocity.ys * dt)
+        system.updateCamera()
     }
 
     override fun collideWith(collider: Collider): Boolean {
@@ -96,6 +98,7 @@ class Planet(
         position.space.set(diameter, diameter)
         system.remove(other)
         Stage.instance?.remove(other)
+        system.updateCamera()
     }
 
     override fun DrawScope.draw() {
@@ -131,10 +134,15 @@ class PlanetSystem {
     @Volatile
     private var snapshot: List<Planet>? = null
 
+    val centerOfMass: Location = Location()
+    private var attachedCamera: Camera? = null
+
+    @Volatile
     private var pointerDown = false
     private var dragging: Planet? = null
     private var spawnedPlanet: Planet? = null
     private var pressStartOffset = Offset.Zero
+    private var grabStartWorld = Offset.Zero
 
     private val sampleX = FloatArray(HISTORY_SIZE)
     private val sampleY = FloatArray(HISTORY_SIZE)
@@ -168,10 +176,46 @@ class PlanetSystem {
             mutablePlanets.clear()
             snapshot = null
         }
+        centerOfMass.set(0f, 0f, 0f)
         dragging = null
         spawnedPlanet = null
         pointerDown = false
+        pressStartOffset = Offset.Zero
+        grabStartWorld = Offset.Zero
         sampleCount = 0
+    }
+
+    fun updateCenterOfMass(): Location {
+        val current = all()
+        var totalMass = 0f
+        var sumX = 0f
+        var sumY = 0f
+        var sumZ = 0f
+        current.fastForEach { planet ->
+            if (!planet.isAbsorbed) {
+                val m = planet.mass
+                totalMass += m
+                sumX += planet.position.location.x * m
+                sumY += planet.position.location.y * m
+                sumZ += planet.position.location.z * m
+            }
+        }
+        if (totalMass > 0f) {
+            centerOfMass.set(sumX / totalMass, sumY / totalMass, sumZ / totalMass)
+        }
+        return centerOfMass
+    }
+
+    fun updateCamera(camera: Camera? = null) {
+        if (camera != null) {
+            attachedCamera = camera
+        }
+        val current = all()
+        if (current.isEmpty()) return
+        val com = updateCenterOfMass()
+        if (pointerDown) return
+        attachedCamera?.lookAt(com)
+        Stage.camera.lookAt(com)
     }
 
     fun findHit(offset: Offset): Planet? {
@@ -197,19 +241,23 @@ class PlanetSystem {
     }
 
     fun drag(offset: Offset, stage: SceneScope?) {
+        val activeCamera = stage?.camera ?: attachedCamera ?: Stage.camera
         if (!pointerDown) {
             pointerDown = true
             pressStartOffset = offset
             resetSamples(offset)
-            val hit = findHit(offset)
+            val worldOffset = activeCamera.toWorld(offset)
+            grabStartWorld = worldOffset
+            val hit = findHit(worldOffset)
             if (hit != null) {
                 dragging = hit
                 spawnedPlanet = null
                 hit.isGrabbed = true
-                hit.position.location.set(offset.x, offset.y)
+                hit.position.location.set(worldOffset.x, worldOffset.y)
                 hit.velocity.set(0f, 0f)
+                updateCamera(activeCamera)
             } else {
-                spawnedPlanet = stage?.planet(this, Location(offset.x, offset.y))
+                spawnedPlanet = stage?.planet(this, Location(worldOffset.x, worldOffset.y))
                 dragging = null
             }
         } else {
@@ -224,8 +272,11 @@ class PlanetSystem {
                 }
             }
             dragging?.let { planet ->
-                planet.position.location.set(offset.x, offset.y)
+                val worldX = grabStartWorld.x + (offset.x - pressStartOffset.x)
+                val worldY = grabStartWorld.y + (offset.y - pressStartOffset.y)
+                planet.position.location.set(worldX, worldY)
                 planet.velocity.set(computeFlingVelocity())
+                updateCamera(activeCamera)
             }
         }
     }
@@ -235,7 +286,9 @@ class PlanetSystem {
             if (sampleCount > 0 && (offset.x != sampleX[sampleCount - 1] || offset.y != sampleY[sampleCount - 1])) {
                 recordSample(offset)
             }
-            planet.position.location.set(offset.x, offset.y)
+            val worldX = grabStartWorld.x + (offset.x - pressStartOffset.x)
+            val worldY = grabStartWorld.y + (offset.y - pressStartOffset.y)
+            planet.position.location.set(worldX, worldY)
             planet.velocity.set(computeFlingVelocity())
             planet.isGrabbed = false
         }
@@ -243,6 +296,7 @@ class PlanetSystem {
         spawnedPlanet = null
         pointerDown = false
         sampleCount = 0
+        updateCamera()
     }
 
     private fun resetSamples(offset: Offset) {
@@ -360,6 +414,7 @@ fun SceneScope.planet(
     ).also { thing ->
         system.add(thing)
         add(thing)
+        system.updateCamera(camera)
     }
 }
 
